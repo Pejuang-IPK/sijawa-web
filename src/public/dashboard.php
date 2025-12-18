@@ -1,3 +1,16 @@
+<?php
+session_start();
+
+// Proteksi: Redirect ke login jika belum login
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit();
+}
+
+// Ambil data user dari session
+$userName = $_SESSION['user_name'] ?? 'User';
+$userEmail = $_SESSION['user_email'] ?? '';
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -38,7 +51,7 @@
             </a>
         </nav>
 
-        <a href="index.php" class="nav-item" title="Logout" style="margin-top: auto; color: var(--danger);">
+        <a href="logout.php" class="nav-item" title="Logout" style="margin-top: auto; color: var(--danger);">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </a>
     </aside>
@@ -46,7 +59,10 @@
     <main class="main">
         
         <header class="dashboard-header">
-            <h1 class="dashboard-title">Dashboard</h1>
+            <div>
+                <h1 class="dashboard-title">Dashboard</h1>
+                <p style="color: #666; font-size: 14px;">Halo, <?php echo htmlspecialchars($userName); ?>! 👋</p>
+            </div>
             <div class="header-actions">
                 <button class="icon-btn"><i class="fa-solid fa-gear"></i></button>
                 <button class="icon-btn"><i class="fa-solid fa-arrows-rotate"></i></button>

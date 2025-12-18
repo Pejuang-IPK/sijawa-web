@@ -1,5 +1,7 @@
 <?php
-    require_once __DIR__ . '/../config/database.php';
+// Redirect ke halaman login
+header('Location: login.php');
+exit();
 ?>
 
 <!DOCTYPE html>
