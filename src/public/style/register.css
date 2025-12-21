@@ -1,0 +1,199 @@
+/* =============================== */
+/* REGISTER PAGE ONLY (register.php) */
+/* =============================== */
+
+body.auth-page.register-page {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Container */
+.auth-page.register-page .container {
+    display: flex;
+    max-width: 1000px;
+    width: 100%;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Left Section */
+.auth-page.register-page .left-section {
+    flex: 1;
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-page.register-page .left-section h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.auth-page.register-page .left-section p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Right Section */
+.auth-page.register-page .right-section {
+    flex: 1;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Form */
+.auth-page.register-page .form-container h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.auth-page.register-page .subtitle {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.auth-page.register-page .form-group {
+    margin-bottom: 20px;
+}
+
+.auth-page.register-page .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 500;
+}
+
+.auth-page.register-page .form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+/* Fokus input khusus register (biru) */
+.auth-page.register-page .form-group input:focus {
+    outline: none;
+    border-color: #4285f4;
+}
+
+/* Divider */
+.auth-page.register-page .divider {
+    text-align: center;
+    margin: 20px 0;
+    color: #999;
+    position: relative;
+}
+
+.auth-page.register-page .divider::before,
+.auth-page.register-page .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: #e0e0e0;
+}
+
+.auth-page.register-page .divider::before {
+    left: 0;
+}
+
+.auth-page.register-page .divider::after {
+    right: 0;
+}
+
+/* Google Button */
+.auth-page.register-page .google-btn {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background 0.3s;
+}
+
+.auth-page.register-page .google-btn:hover {
+    background: #f5f5f5;
+}
+
+/* Submit Button (Register - Blue) */
+.auth-page.register-page .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.auth-page.register-page .submit-btn:hover {
+    background: #357ae8;
+}
+
+/* Bottom Text */
+.auth-page.register-page .bottom-text {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+}
+
+.auth-page.register-page .bottom-text a {
+    color: #4285f4;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Alert */
+.auth-page.register-page .alert {
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.auth-page.register-page .alert-error {
+    background: #fee;
+    color: #c33;
+    border: 1px solid #fcc;
+}
+
+.auth-page.register-page .alert-success {
+    background: #efe;
+    color: #3c3;
+    border: 1px solid #cfc;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .auth-page.register-page .container {
+        flex-direction: column;
+    }
+
+    .auth-page.register-page .left-section {
+        padding: 40px 30px;
+    }
+}
