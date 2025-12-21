@@ -27,22 +27,16 @@ unset($_SESSION['success']);
 <body class="auth-page">
     <div class="container">
         <div class="left-section">
-            <h1>Selamat datang kembali di SIJAWA</h1>
+            <h1>Selamat datang kembali di SIJAWA👋</h1>
             <p>Yuk lanjutkan perjalananmu jadi mahasiswa yang teratur dan produktif!</p>
         </div>
 
         <div class="right-section">
             <div class="form-container">
-                <h2>Login</h2>
-                <p class="subtitle">Selamat datang kembali</p>
-
-                <?php if ($error): ?>
-                    <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
-                <?php endif; ?>
-
-                <?php if ($success): ?>
-                    <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
-                <?php endif; ?>
+                <div class="header-content">
+                    <h2>Login</h2>
+                    <p class="subtitle">Selamat datang kembali</p>
+                </div>
 
                 <form action="login_process.php" method="POST">
                     <div class="form-group">
@@ -53,6 +47,12 @@ unset($_SESSION['success']);
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" required>
+                    </div>
+
+                    <div class="gap-line">
+                        <hr class="left-line">
+                        <span>atau masuk dengan</span>
+                        <hr class="right-line">
                     </div>
 
                     <button type="submit" class="submit-btn">Masuk</button>
