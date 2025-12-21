@@ -25,14 +25,16 @@ unset($_SESSION['error']);
 <body class="auth-page register-page">
     <div class="container">
         <div class="left-section">
-            <h1>Mulai atur kuliahmu dengan SIJAWA</h1>
+            <h1>Mulai atur kuliahmu dengan SIJAWA 🚀</h1>
             <p>Satu akun untuk jadwal, tugas, keuangan, dan waktu santai yang seimbang.</p>
         </div>
 
         <div class="right-section">
             <div class="form-container">
-                <h2>Register</h2>
-                <p class="subtitle">Selamat datang</p>
+                <div class="head-content">
+                    <h2>Register</h2>
+                    <p class="subtitle">Selamat datang</p>
+                </div>
 
                 <?php if ($error): ?>
                     <div class="alert"><?php echo htmlspecialchars($error); ?></div>
@@ -52,6 +54,12 @@ unset($_SESSION['error']);
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" required minlength="6">
+                    </div>
+
+                    <div class="gap-line">
+                        <hr>
+                        <span>atau dengan</span>
+                        <hr>
                     </div>
 
                     <button type="submit" class="submit-btn">Daftar</button>
