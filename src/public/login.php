@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+require "AuthController.php";
+
 // Jika sudah login, redirect ke dashboard
 if (isset($_SESSION['user_id'])) {
     header('Location: dashboard.php');
@@ -12,6 +14,20 @@ $error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
 $success = isset($_SESSION['success']) ? $_SESSION['success'] : '';
 unset($_SESSION['error']);
 unset($_SESSION['success']);
+
+if(isset($_POST['submit'])){
+    if(login($_POST)){
+        $_SESSION['user_id'] = login($_POST)['id_mahasiswa'];
+        $_SESSION['success'] = "Login berhasil!";
+        header('Location: dashboard.php');
+        exit();
+    } else {
+        $_SESSION['error'] = "Email atau password salah.";
+        header('Location: login.php');
+        exit();
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -38,7 +54,7 @@ unset($_SESSION['success']);
                     <p class="subtitle">Selamat datang kembali</p>
                 </div>
 
-                <form action="login_process.php" method="POST">
+                <form action="AuthController.php" method="POST">
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" required>

@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+require "AuthController.php";
+
 // Jika sudah login, redirect ke dashboard
 if (isset($_SESSION['user_id'])) {
     header('Location: dashboard.php');
@@ -10,6 +12,18 @@ if (isset($_SESSION['user_id'])) {
 // Cek jika ada pesan error
 $error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
 unset($_SESSION['error']);
+
+if(isset($_POST['submit'])){
+    if(register($_POST)){
+        $_SESSION['success'] = "Registrasi berhasil! Silakan login.";
+        header('Location: login.php');
+        exit();
+    } else {
+        $_SESSION['error'] = "Email sudah terdaftar.";
+        header('Location: register.php');
+        exit();
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -40,7 +54,7 @@ unset($_SESSION['error']);
                     <div class="alert"><?php echo htmlspecialchars($error); ?></div>
                 <?php endif; ?>
 
-                <form action="register_process.php" method="POST">
+                <form action="AuthController.php" method="POST">
                     <div class="form-group">
                         <label for="nama">Nama</label>
                         <input type="text" id="nama" name="nama" required>
