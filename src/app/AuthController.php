@@ -1,6 +1,6 @@
 <?php
 
-require "database.php";
+require_once __DIR__ . '/../config/database.php';
 
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 function query($query)
@@ -21,7 +21,7 @@ function login($loginData)
     $email = htmlspecialchars($loginData['email']);
     $password = $loginData['password'];
 
-    $user = query("SELECT * FROM users WHERE email = '$email'")[0];
+    $user = query("SELECT * FROM Mahasiswa WHERE email = '$email'")[0];
 
     if ($user && password_verify($password, $user['password'])) {
         return $user;
@@ -37,16 +37,16 @@ function register($registerData)
     $nama = htmlspecialchars($registerData['nama']);
     $email = htmlspecialchars($registerData['email']);
     $password = password_hash($registerData['password'], PASSWORD_BCRYPT);
-    $id_mahasiswa = uniqid('mhs_');
+    $id_mahasiswa = random_int(100000, 999999);
 
     // Cek apakah email sudah terdaftar
-    $existingUser = query("SELECT * FROM users WHERE email = '$email'");
+    $existingUser = query("SELECT * FROM Mahasiswa WHERE email = '$email'");
     if (count($existingUser) > 0) {
         return false;
     }
 
     // Masukkan user baru ke database
-    $query = "INSERT INTO users (id_mahasiswa, nama, email, password) VALUES ('$id_mahasiswa', '$nama', '$email', '$password')";
+    $query = "INSERT INTO Mahasiswa (id_mahasiswa, nama, email, password) VALUES ('$id_mahasiswa', '$nama', '$email', '$password')";
     mysqli_query($conn, $query);
 
     return true;

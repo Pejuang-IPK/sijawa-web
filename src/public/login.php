@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require "AuthController.php";
+require_once __DIR__ . '/../app/AuthController.php';
 
 // Jika sudah login, redirect ke dashboard
 if (isset($_SESSION['user_id'])) {
@@ -54,7 +54,7 @@ if(isset($_POST['submit'])){
                     <p class="subtitle">Selamat datang kembali</p>
                 </div>
 
-                <form action="AuthController.php" method="POST">
+                <form action="" method="POST">
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" required>
@@ -71,7 +71,7 @@ if(isset($_POST['submit'])){
                         <hr class="right-line">
                     </div>
 
-                    <button type="submit" class="submit-btn">Masuk</button>
+                    <button type="submit" class="submit-btn" name="submit">Masuk</button>
                 </form>
 
                 <p class="bottom-text">
