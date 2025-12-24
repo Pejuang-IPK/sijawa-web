@@ -5,19 +5,6 @@ function scrollToFeatures() {
 
 // Fungsi Navigasi Mockup sesuai Flowchart
 // Flow: Landing Page -> Check Account -> Login OR Register
-function handleNavigation(action) {
-  if (action === "login") {
-    // Dalam implementasi nyata: window.location.href = 'login.html';
-    alert(
-      "Mengarah ke Halaman Login (Login Page)... \n\nSesuai Flow: User yang sudah punya akun masuk lewat sini."
-    );
-  } else if (action === "register") {
-    // Dalam implementasi nyata: window.location.href = 'onboarding.html';
-    alert(
-      "Mengarah ke Halaman Onboarding/Register... \n\nSesuai Flow: User baru diarahkan ke Onboarding Page -> Register Page."
-    );
-  }
-}
 
 // Fungsi Slider Fitur
 function scrollSlider(direction) {
