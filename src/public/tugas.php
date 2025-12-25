@@ -1,124 +1,10 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../app/controller/TaskController.php';
 
 // DEMO: tanpa session. Gunakan ID mahasiswa contoh untuk insert.
 $DEMO_USER_ID = 456574;
 
-// Helper: sanitize string
-function clean($val) {
-	return trim(htmlspecialchars($val ?? '', ENT_QUOTES, 'UTF-8'));
-}
-
-// Hitung status berdasarkan tenggat
-function computeStatus($dueDateStr, $today) {
-	$due = DateTime::createFromFormat('Y-m-d', $dueDateStr);
-	if (!$due) $due = new DateTime($dueDateStr);
-
-	$diffDays = (int)ceil(($due->getTimestamp() - $today->getTimestamp()) / 86400);
-
-	if ($diffDays <= 1) return ['Harus Dikerjakan', 'urgent'];
-	if ($diffDays <= 3) return ['Tolong Dikerjakan', 'approaching'];
-	return ['Masih Bisa Ditunda', 'safe'];
-}
-
-// Dapatkan ID berikutnya untuk tugas
-function getNextTaskId($conn) {
-	$nextId = 1;
-	if ($res = $conn->query('SELECT COALESCE(MAX(id_tugas),0)+1 AS next_id FROM Tugas')) {
-		if ($row = $res->fetch_assoc()) $nextId = (int)$row['next_id'];
-		$res->free();
-	}
-	return $nextId;
-}
-
-// Dapatkan id_status dari label status (auto-create jika belum ada)
-function getStatusId($conn, $statusLabel) {
-	$stmt = $conn->prepare('SELECT id_status FROM StatusTugas WHERE status = ? LIMIT 1');
-	$stmt->bind_param('s', $statusLabel);
-	$stmt->execute();
-	$res = $stmt->get_result();
-	$statusId = null;
-	if ($row = $res->fetch_assoc()) {
-		$statusId = (int)$row['id_status'];
-	} else {
-		// Hitung id_status berikutnya
-		$nextStatusId = 1;
-		if ($res2 = $conn->query('SELECT COALESCE(MAX(id_status),0)+1 AS next_id FROM StatusTugas')) {
-			if ($row2 = $res2->fetch_assoc()) $nextStatusId = (int)$row2['next_id'];
-			$res2->free();
-		}
-		
-		// Auto-insert dengan id_status manual
-		$insertStmt = $conn->prepare('INSERT INTO StatusTugas (id_status, status) VALUES (?, ?)');
-		$insertStmt->bind_param('is', $nextStatusId, $statusLabel);
-		$insertStmt->execute();
-		$statusId = $nextStatusId;
-		$insertStmt->close();
-	}
-	$stmt->close();
-	return $statusId;
-}
-
-// Tambah tugas baru
-function addTask($conn, $userId, $title, $course, $dueDate) {
-	$dueDateTime = $dueDate . ' 23:59:59';
-	[$statusText] = computeStatus($dueDate, new DateTime('today'));
-	
-	$nextId = getNextTaskId($conn);
-	$statusId = getStatusId($conn, $statusText);
-
-	if ($statusId !== null) {
-		$stmt = $conn->prepare('INSERT INTO Tugas (id_tugas, id_mahasiswa, id_status, namaTugas, matkulTugas, tenggatTugas) VALUES (?, ?, ?, ?, ?, ?)');
-		$stmt->bind_param('iiisss', $nextId, $userId, $statusId, $title, $course, $dueDateTime);
-	} else {
-		$stmt = $conn->prepare('INSERT INTO Tugas (id_tugas, id_mahasiswa, namaTugas, matkulTugas, tenggatTugas) VALUES (?, ?, ?, ?, ?)');
-		$stmt->bind_param('iisss', $nextId, $userId, $title, $course, $dueDateTime);
-	}
-	$stmt->execute();
-	$stmt->close();
-}
-
-// Hapus tugas
-function deleteTask($conn, $taskId) {
-	$stmt = $conn->prepare('DELETE FROM Tugas WHERE id_tugas = ?');
-	$stmt->bind_param('i', $taskId);
-	$stmt->execute();
-	$stmt->close();
-}
-
-// Ambil semua tugas dan update status yang sudah berubah
-function getAllTasks($conn) {
-	$tasks = [];
-	$stmt = $conn->prepare('SELECT t.id_tugas AS id, t.namaTugas AS title, t.matkulTugas AS course, t.tenggatTugas AS due_date, t.id_status AS current_status_id, s.status AS statusName FROM Tugas t LEFT JOIN StatusTugas s ON s.id_status = t.id_status ORDER BY t.tenggatTugas ASC');
-	$stmt->execute();
-	$result = $stmt->get_result();
-	
-	$today = new DateTime('today');
-	while ($row = $result->fetch_assoc()) {
-		// Hitung status terkini berdasarkan deadline
-		[$actualStatusLabel] = computeStatus($row['due_date'], $today);
-		
-		// Cek apakah status di DB berbeda dengan status aktual
-		if ($row['statusName'] !== $actualStatusLabel) {
-			// Update status di database
-			$newStatusId = getStatusId($conn, $actualStatusLabel);
-			if ($newStatusId !== null) {
-				$updateStmt = $conn->prepare('UPDATE Tugas SET id_status = ? WHERE id_tugas = ?');
-				$updateStmt->bind_param('ii', $newStatusId, $row['id']);
-				$updateStmt->execute();
-				$updateStmt->close();
-				
-				// Update row data dengan status baru
-				$row['current_status_id'] = $newStatusId;
-				$row['statusName'] = $actualStatusLabel;
-			}
-		}
-		
-		$tasks[] = $row;
-	}
-	$stmt->close();
-	return $tasks;
-}
 
 // Handle: tambah tugas manual
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add') {
@@ -161,10 +47,12 @@ $today = new DateTime('today');
 $countUrgent = 0;
 $countApproach = 0;
 $countSafe = 0;
+$countOverdue = 0;
 
 foreach ($tasks as $t) {
 	[$label, $key] = computeStatus($t['due_date'], $today);
-	if ($key === 'urgent') $countUrgent++;
+	if ($key === 'overdue') $countOverdue++;
+	elseif ($key === 'urgent') $countUrgent++;
 	elseif ($key === 'approaching') $countApproach++;
 	else $countSafe++;
 }
@@ -255,6 +143,10 @@ foreach ($tasks as $t) {
 					<div class="label">AMAN</div>
 					<div class="value"><?= $countSafe ?></div>
 				</div>
+				<div class="stat overdue">
+					<div class="label">TERLEWAT</div>
+					<div class="value"><?= $countOverdue ?></div>
+				</div>
 				<div class="stat total">
 					<div class="label">TOTAL TUGAS</div>
 					<div class="value"><?= count($tasks) ?></div>
@@ -270,6 +162,8 @@ foreach ($tasks as $t) {
 								<i class="fa-solid fa-radiation"></i>
 							<?php elseif ($key === 'approaching'): ?>
 								<i class="fa-solid fa-hourglass-half"></i>
+							<?php elseif ($key === 'overdue'): ?>
+								<i class="fa-solid fa-skull-crossbones"></i>
 							<?php else: ?>
 								<i class="fa-solid fa-shield-heart"></i>
 							<?php endif; ?>
