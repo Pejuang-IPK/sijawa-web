@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Check if user is logged in
+// Cek apakah user sudah login
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: login.php");
     exit();
@@ -89,7 +89,7 @@ $kategori_pengeluaran = $history['kategori_pengeluaran'];
                         <option value="semua" <?php echo $period == 'semua' ? 'selected' : ''; ?>>Semua</option>
                     </select>
                     <select class="filter-select" id="valueSelect" onchange="applyFilter()" style="min-width: 180px; <?php echo $period == 'semua' ? 'display:none;' : ''; ?>">
-                        <option value="">Loading...</option>
+                        <option value="">Memuat...</option>
                     </select>
                     <span style="color: #64748b; font-size: 14px; margin-left: auto;">
                         <i class="fa-solid fa-filter"></i> <?php echo $filter_label; ?>
@@ -291,14 +291,14 @@ $kategori_pengeluaran = $history['kategori_pengeluaran'];
             })
             .then(response => response.json())
             .then(result => {
-                if (result.success) {
+                if (result.sukses) {
                     showTransactionDetailModal(result.data);
                 } else {
-                    window.alert('Gagal mengambil data transaksi: ' + result.message);
+                    window.alert('Gagal mengambil data transaksi: ' + result.pesan);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Kesalahan:', error);
                 window.alert('Terjadi kesalahan saat mengambil data transaksi');
             });
         }
@@ -354,14 +354,14 @@ $kategori_pengeluaran = $history['kategori_pengeluaran'];
             })
             .then(response => response.json())
             .then(result => {
-                if (result.success) {
+                if (result.sukses) {
                     showEditModal(result.data);
                 } else {
-                    window.alert('Gagal mengambil data transaksi: ' + result.message);
+                    window.alert('Gagal mengambil data transaksi: ' + result.pesan);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Kesalahan:', error);
                 window.alert('Terjadi kesalahan saat mengambil data transaksi');
             });
         }
@@ -501,18 +501,18 @@ $kategori_pengeluaran = $history['kategori_pengeluaran'];
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
+                if (data.sukses) {
                     document.querySelector('.modal-overlay').remove();
-                    window.alert('✓ Transaksi berhasil diupdate!');
+                    window.alert('✓ Transaksi berhasil diperbarui!');
                     window.location.reload();
                 } else {
                     btnUpdate.disabled = false;
                     btnUpdate.textContent = 'Simpan Perubahan';
-                    window.alert('Error: ' + data.message);
+                    window.alert('Kesalahan: ' + data.pesan);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Kesalahan:', error);
                 btnUpdate.disabled = false;
                 btnUpdate.textContent = 'Simpan Perubahan';
                 window.alert('Terjadi kesalahan saat mengupdate transaksi');
@@ -535,15 +535,15 @@ $kategori_pengeluaran = $history['kategori_pengeluaran'];
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
+                if (data.sukses) {
                     window.alert('✓ Transaksi berhasil dihapus!');
                     window.location.reload();
                 } else {
-                    window.alert('Error: ' + data.message);
+                    window.alert('Kesalahan: ' + data.pesan);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Kesalahan:', error);
                 window.alert('Terjadi kesalahan saat menghapus transaksi');
             });
         }

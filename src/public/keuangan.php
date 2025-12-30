@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Check if user is logged in
+// Cek apakah user sudah login
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: login.php");
     exit();
@@ -38,9 +38,9 @@ if (isset($_POST['api']) && $_POST['api'] === 'charge') {
 // Get all dashboard data from controller
 $dashboard = getDashboardData($id_mahasiswa);
 
-// Extract variables for easier access in template
-$message = $dashboard['message'];
-$message_type = $dashboard['message_type'];
+// Ekstrak variabel untuk kemudahan akses di template
+$pesan = $dashboard['pesan'];
+$tipe_pesan = $dashboard['tipe_pesan'];
 $period = $dashboard['period'];
 $value = $dashboard['value'];
 $filter_label = $dashboard['filter_label'];
@@ -99,9 +99,9 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
                 </button>
             </div>
 
-            <?php if($message): ?>
-                <div class="alert alert-<?php echo $message_type; ?>">
-                    <?php echo $message; ?>
+            <?php if($pesan): ?>
+                <div class="alert alert-<?php echo $tipe_pesan; ?>">
+                    <?php echo $pesan; ?>
                 </div>
             <?php endif; ?>
 
@@ -158,7 +158,7 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
                                     <option value="semua" <?php echo $period == 'semua' ? 'selected' : ''; ?>>Semua</option>
                                 </select>
                                 <select class="filter-select" id="valueSelectIncome" onchange="applyFilter()" style="<?php echo $period == 'semua' ? 'display:none;' : ''; ?>">
-                                    <option value="">Loading...</option>
+                                    <option value="">Memuat...</option>
                                 </select>
                             </div>
                             <button class="btn-add-category" onclick="openKategoriModal('Pemasukan')">
@@ -210,7 +210,7 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
                                     <option value="semua" <?php echo $period == 'semua' ? 'selected' : ''; ?>>Semua</option>
                                 </select>
                                 <select class="filter-select" id="valueSelectExpense" onchange="applyFilter()" style="<?php echo $period == 'semua' ? 'display:none;' : ''; ?>">
-                                    <option value="">Loading...</option>
+                                    <option value="">Memuat...</option>
                                 </select>
                             </div>
                             <button class="btn-add-category" onclick="openKategoriModal('Pengeluaran')">
@@ -727,16 +727,16 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
                         console.error('API returned error:', data.message);
                     }
                 })
-                .catch(error => console.error('Error loading subscriptions:', error));
+                .catch(error => console.error('Kesalahan memuat langganan:', error));
         }
 
         function displaySubscriptions(subscriptions, total) {
-            console.log('Displaying subscriptions:', subscriptions, 'Total:', total);
+            console.log('Menampilkan langganan:', subscriptions, 'Total:', total);
             const listContainer = document.getElementById('subscriptionList');
             const totalElement = document.getElementById('totalLangganan');
             
             if (!listContainer || !totalElement) {
-                console.error('Elements not found! subscriptionList:', listContainer, 'totalLangganan:', totalElement);
+                console.error('Elemen tidak ditemukan! subscriptionList:', listContainer, 'totalLangganan:', totalElement);
                 return;
             }
             
@@ -901,30 +901,30 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
                     console.log('Response text:', text);
                     try {
                         const data = JSON.parse(text);
-                        console.log('Response JSON:', data);
-                        if (data.success) {
-                            console.log('SUCCESS! Menutup modal dan reload data...');
+                        console.log('Respons JSON:', data);
+                        if (data.sukses) {
+                            console.log('SUKSES! Menutup modal dan muat ulang data...');
                             modal.remove();
                             loadSubscriptions();
-                            // Show success message after modal is closed
+                            // Tampilkan pesan sukses setelah modal ditutup
                             setTimeout(() => {
                                 window.alert('✓ Langganan berhasil ditambahkan!');
                             }, 100);
                         } else {
-                            console.error('ERROR:', data.message);
-                            window.alert('Error: ' + data.message);
+                            console.error('KESALAHAN:', data.pesan);
+                            window.alert('Kesalahan: ' + data.pesan);
                             btnSimpan.disabled = false;
                             btnSimpan.innerHTML = '<i class="fa-solid fa-check"></i> Simpan';
                         }
                     } catch (e) {
-                        console.error('JSON Parse Error:', e);
-                        window.alert('Error: Response bukan JSON - ' + text);
+                        console.error('Kesalahan Parse JSON:', e);
+                        window.alert('Kesalahan: Respons bukan JSON - ' + text);
                         btnSimpan.disabled = false;
                         btnSimpan.innerHTML = '<i class="fa-solid fa-check"></i> Simpan';
                     }
                 })
                 .catch(error => {
-                    console.error('Fetch Error:', error);
+                    console.error('Kesalahan Fetch:', error);
                     window.alert('Terjadi kesalahan koneksi: ' + error.message);
                     btnSimpan.disabled = false;
                     btnSimpan.innerHTML = '<i class="fa-solid fa-check"></i> Simpan';
@@ -960,16 +960,16 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
+                if (data.sukses) {
                     alert('Langganan berhasil ditambahkan!');
                     closeSubscriptionModal(e.target);
                     loadSubscriptions();
                 } else {
-                    alert('Error: ' + data.message);
+                    alert('Kesalahan: ' + data.pesan);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Kesalahan:', error);
                 alert('Terjadi kesalahan saat menambahkan langganan');
             });
         }
@@ -987,18 +987,18 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    console.log('Langganan berhasil dihapus, reload data...');
+                if (data.sukses) {
+                    console.log('Langganan berhasil dihapus, muat ulang data...');
                     loadSubscriptions();
                     setTimeout(() => {
                         window.alert('✓ Langganan berhasil dihapus!');
                     }, 100);
                 } else {
-                    window.alert('Error: ' + data.message);
+                    window.alert('Kesalahan: ' + data.pesan);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Kesalahan:', error);
                 window.alert('Terjadi kesalahan saat menghapus langganan');
             });
         }
@@ -1025,15 +1025,15 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
+                if (data.sukses) {
                     window.alert('✓ Tagihan langganan berhasil dibayar dan masuk ke pengeluaran!');
                     window.location.reload();
                 } else {
-                    window.alert('Error: ' + data.message);
+                    window.alert('Kesalahan: ' + data.pesan);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Kesalahan:', error);
                 window.alert('Terjadi kesalahan: ' + error.message);
             });
         }
@@ -1061,14 +1061,14 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
             })
             .then(response => response.json())
             .then(result => {
-                if (result.success) {
+                if (result.sukses) {
                     showEditModal(result.data);
                 } else {
-                    window.alert('Gagal mengambil data transaksi: ' + result.message);
+                    window.alert('Gagal mengambil data transaksi: ' + result.pesan);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Kesalahan:', error);
                 window.alert('Terjadi kesalahan saat mengambil data transaksi');
             });
         }
@@ -1216,18 +1216,18 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
+                if (data.sukses) {
                     document.querySelector('.modal-overlay').remove();
-                    window.alert('✓ Transaksi berhasil diupdate!');
+                    window.alert('✓ Transaksi berhasil diperbarui!');
                     window.location.reload();
                 } else {
                     btnUpdate.disabled = false;
                     btnUpdate.textContent = 'Simpan Perubahan';
-                    window.alert('Error: ' + data.message);
+                    window.alert('Kesalahan: ' + data.pesan);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Kesalahan:', error);
                 btnUpdate.disabled = false;
                 btnUpdate.textContent = 'Simpan Perubahan';
                 window.alert('Terjadi kesalahan saat mengupdate transaksi');
@@ -1250,22 +1250,22 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
+                if (data.sukses) {
                     window.alert('✓ Transaksi berhasil dihapus!');
                     window.location.reload();
                 } else {
-                    window.alert('Error: ' + data.message);
+                    window.alert('Kesalahan: ' + data.pesan);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Kesalahan:', error);
                 window.alert('Terjadi kesalahan saat menghapus transaksi');
             });
         }
 
         // Transaction Detail Modal
         function openTransactionDetailModal(id_keuangan) {
-            console.log('Opening detail for transaction:', id_keuangan);
+            console.log('Membuka detail transaksi:', id_keuangan);
             // Fetch transaction data
             fetch('keuangan.php', {
                 method: 'POST',
@@ -1275,20 +1275,20 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
                 body: 'ajax=1&action=get&id_keuangan=' + id_keuangan
             })
             .then(response => {
-                console.log('Response status:', response.status);
+                console.log('Status respons:', response.status);
                 return response.text();
             })
             .then(text => {
-                console.log('Response text:', text);
+                console.log('Teks respons:', text);
                 const result = JSON.parse(text);
-                if (result.success) {
+                if (result.sukses) {
                     showTransactionDetailModal(result.data);
                 } else {
-                    window.alert('Gagal mengambil data transaksi: ' + result.message);
+                    window.alert('Gagal mengambil data transaksi: ' + result.pesan);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Kesalahan:', error);
                 window.alert('Terjadi kesalahan saat mengambil data transaksi');
             });
         }
@@ -1337,7 +1337,7 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
             document.body.appendChild(modalOverlay);
         }
 
-        // Auto hide alert after 3 seconds
+        // Sembunyikan alert otomatis setelah 3 detik
         const alert = document.querySelector('.alert');
         if (alert) {
             setTimeout(() => {

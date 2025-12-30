@@ -6,18 +6,18 @@ function tambahTransaksi($data) {
     $conn = mysqli_connect($servername, $username, $password, $dbname);
     
     if (!$conn) {
-        return ['success' => false, 'message' => 'Koneksi database gagal'];
+        return ['sukses' => false, 'pesan' => 'Koneksi database gagal'];
     }
     
     $id_mahasiswa = mysqli_real_escape_string($conn, $data['id_mahasiswa']);
     
-    // Check if mahasiswa exists
+    // Cek apakah mahasiswa ada
     $checkQuery = "SELECT id_mahasiswa FROM Mahasiswa WHERE id_mahasiswa = '$id_mahasiswa'";
     $checkResult = mysqli_query($conn, $checkQuery);
     
     if (mysqli_num_rows($checkResult) == 0) {
         mysqli_close($conn);
-        return ['success' => false, 'message' => 'Data mahasiswa tidak ditemukan. Silakan login ulang.'];
+        return ['sukses' => false, 'pesan' => 'Data mahasiswa tidak ditemukan. Silakan login ulang.'];
     }
     
     $id_keuangan = random_int(100000, 999999);
@@ -33,40 +33,12 @@ function tambahTransaksi($data) {
     
     if (mysqli_query($conn, $query)) {
         mysqli_close($conn);
-        return ['success' => true, 'message' => 'Transaksi berhasil ditambahkan'];
+        return ['sukses' => true, 'pesan' => 'Transaksi berhasil ditambahkan'];
     } else {
         $error = mysqli_error($conn);
         mysqli_close($conn);
-        return ['success' => false, 'message' => 'Gagal menambahkan transaksi: ' . $error];
+        return ['sukses' => false, 'pesan' => 'Gagal menambahkan transaksi: ' . $error];
     }
-}
-
-function getTransaksiByMahasiswa($id_mahasiswa, $limit = null) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
-    if (!$conn) {
-        return [];
-    }
-    
-    $id_mahasiswa = mysqli_real_escape_string($conn, $id_mahasiswa);
-    $query = "SELECT * FROM Keuangan WHERE id_mahasiswa = '$id_mahasiswa' ORDER BY tanggalKeuangan DESC";
-    
-    if ($limit) {
-        $query .= " LIMIT $limit";
-    }
-    
-    $result = mysqli_query($conn, $query);
-    $data = [];
-    
-    if ($result) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $data[] = $row;
-        }
-    }
-    
-    mysqli_close($conn);
-    return $data;
 }
 
 function getTransaksiWithFilter($id_mahasiswa, $date_condition = '', $limit = null) {
@@ -102,7 +74,7 @@ function hapusTransaksi($id_keuangan) {
     $conn = mysqli_connect($servername, $username, $password, $dbname);
     
     if (!$conn) {
-        return ['success' => false, 'message' => 'Koneksi database gagal'];
+        return ['sukses' => false, 'pesan' => 'Koneksi database gagal'];
     }
     
     $id_keuangan = mysqli_real_escape_string($conn, $id_keuangan);
@@ -110,10 +82,10 @@ function hapusTransaksi($id_keuangan) {
     
     if (mysqli_query($conn, $query)) {
         mysqli_close($conn);
-        return ['success' => true, 'message' => 'Transaksi berhasil dihapus'];
+        return ['sukses' => true, 'pesan' => 'Transaksi berhasil dihapus'];
     } else {
         mysqli_close($conn);
-        return ['success' => false, 'message' => 'Gagal menghapus transaksi'];
+        return ['sukses' => false, 'pesan' => 'Gagal menghapus transaksi'];
     }
 }
 
@@ -122,7 +94,7 @@ function editTransaksi($id_keuangan, $data) {
     $conn = mysqli_connect($servername, $username, $password, $dbname);
     
     if (!$conn) {
-        return ['success' => false, 'message' => 'Koneksi database gagal'];
+        return ['sukses' => false, 'pesan' => 'Koneksi database gagal'];
     }
     
     $id_keuangan = mysqli_real_escape_string($conn, $id_keuangan);
@@ -140,11 +112,11 @@ function editTransaksi($id_keuangan, $data) {
     
     if (mysqli_query($conn, $query)) {
         mysqli_close($conn);
-        return ['success' => true, 'message' => 'Transaksi berhasil diupdate'];
+        return ['sukses' => true, 'pesan' => 'Transaksi berhasil diperbarui'];
     } else {
         $error = mysqli_error($conn);
         mysqli_close($conn);
-        return ['success' => false, 'message' => 'Gagal mengupdate transaksi: ' . $error];
+        return ['sukses' => false, 'pesan' => 'Gagal memperbarui transaksi: ' . $error];
     }
 }
 
@@ -176,7 +148,7 @@ function handleTransaksiAPI() {
     // Cek session (session_start sudah dipanggil di keuangan.php)
     if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || !isset($_SESSION['id_mahasiswa'])) {
         http_response_code(401);
-        echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+        echo json_encode(['sukses' => false, 'pesan' => 'Tidak diizinkan']);
         exit;
     }
     
@@ -190,22 +162,22 @@ function handleTransaksiAPI() {
                 case 'get':
                     $id_keuangan = $_POST['id_keuangan'] ?? '';
                     if (empty($id_keuangan)) {
-                        echo json_encode(['success' => false, 'message' => 'ID transaksi tidak valid']);
+                        echo json_encode(['sukses' => false, 'pesan' => 'ID transaksi tidak valid']);
                         exit;
                     }
                     
                     $transaksi = getTransaksiById($id_keuangan);
                     if ($transaksi) {
-                        echo json_encode(['success' => true, 'data' => $transaksi]);
+                        echo json_encode(['sukses' => true, 'data' => $transaksi]);
                     } else {
-                        echo json_encode(['success' => false, 'message' => 'Transaksi tidak ditemukan']);
+                        echo json_encode(['sukses' => false, 'pesan' => 'Transaksi tidak ditemukan']);
                     }
                     break;
                     
                 case 'edit':
                     $id_keuangan = $_POST['id_keuangan'] ?? '';
                     if (empty($id_keuangan)) {
-                        echo json_encode(['success' => false, 'message' => 'ID transaksi tidak valid']);
+                        echo json_encode(['sukses' => false, 'pesan' => 'ID transaksi tidak valid']);
                         exit;
                     }
                     
@@ -223,7 +195,7 @@ function handleTransaksiAPI() {
                 case 'hapus':
                     $id_keuangan = $_POST['id_keuangan'] ?? '';
                     if (empty($id_keuangan)) {
-                        echo json_encode(['success' => false, 'message' => 'ID transaksi tidak valid']);
+                        echo json_encode(['sukses' => false, 'pesan' => 'ID transaksi tidak valid']);
                         exit;
                     }
                     
@@ -232,41 +204,15 @@ function handleTransaksiAPI() {
                     break;
                     
                 default:
-                    echo json_encode(['success' => false, 'message' => 'Action tidak valid']);
+                    echo json_encode(['sukses' => false, 'pesan' => 'Aksi tidak valid']);
             }
         } else {
-            echo json_encode(['success' => false, 'message' => 'Method tidak valid']);
+            echo json_encode(['sukses' => false, 'pesan' => 'Metode tidak valid']);
         }
     } catch (Exception $e) {
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        echo json_encode(['sukses' => false, 'pesan' => 'Kesalahan: ' . $e->getMessage()]);
     }
     exit;
-}
-
-function getTotalSaldo($id_mahasiswa) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
-    if (!$conn) {
-        return 0;
-    }
-    
-    $id_mahasiswa = mysqli_real_escape_string($conn, $id_mahasiswa);
-    
-    // Get total pemasukan
-    $query_pemasukan = "SELECT SUM(transaksi) as total FROM Keuangan 
-                        WHERE id_mahasiswa = '$id_mahasiswa' AND jenisTransaksi = 'Pemasukan'";
-    $result_pemasukan = mysqli_query($conn, $query_pemasukan);
-    $pemasukan = mysqli_fetch_assoc($result_pemasukan)['total'] ?? 0;
-    
-    // Get total pengeluaran
-    $query_pengeluaran = "SELECT SUM(transaksi) as total FROM Keuangan 
-                          WHERE id_mahasiswa = '$id_mahasiswa' AND jenisTransaksi = 'Pengeluaran'";
-    $result_pengeluaran = mysqli_query($conn, $query_pengeluaran);
-    $pengeluaran = mysqli_fetch_assoc($result_pengeluaran)['total'] ?? 0;
-    
-    mysqli_close($conn);
-    return $pemasukan - $pengeluaran;
 }
 
 function getKategoriByMahasiswa($id_mahasiswa, $jenisTransaksi = null) {
@@ -373,37 +319,6 @@ function getMonthlyAnalysis($id_mahasiswa) {
     ];
 }
 
-function getTransaksiByKategori($id_mahasiswa, $kategori, $date_condition = '') {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
-    if (!$conn) {
-        return [];
-    }
-    
-    $id_mahasiswa = mysqli_real_escape_string($conn, $id_mahasiswa);
-    $kategori = mysqli_real_escape_string($conn, $kategori);
-    
-    $query = "SELECT * FROM Keuangan 
-              WHERE id_mahasiswa = '$id_mahasiswa' 
-              AND kategoriTransaksi = '$kategori'
-              AND transaksi > 0
-              $date_condition
-              ORDER BY tanggalKeuangan DESC";
-    
-    $result = mysqli_query($conn, $query);
-    $data = [];
-    
-    if ($result) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $data[] = $row;
-        }
-    }
-    
-    mysqli_close($conn);
-    return $data;
-}
-
 // === LANGGANAN FUNCTIONS ===
 
 function tambahLangganan($data) {
@@ -411,7 +326,7 @@ function tambahLangganan($data) {
     $conn = mysqli_connect($servername, $username, $password, $dbname);
     
     if (!$conn) {
-        return ['success' => false, 'message' => 'Koneksi database gagal'];
+        return ['sukses' => false, 'pesan' => 'Koneksi database gagal'];
     }
     
     $id_langganan = random_int(100000000, 999999999);
@@ -425,11 +340,11 @@ function tambahLangganan($data) {
     
     if (mysqli_query($conn, $query)) {
         mysqli_close($conn);
-        return ['success' => true, 'message' => 'Langganan berhasil ditambahkan'];
+        return ['sukses' => true, 'pesan' => 'Langganan berhasil ditambahkan'];
     } else {
         $error = mysqli_error($conn);
         mysqli_close($conn);
-        return ['success' => false, 'message' => 'Gagal menambahkan langganan: ' . $error];
+        return ['sukses' => false, 'pesan' => 'Gagal menambahkan langganan: ' . $error];
     }
 }
 
@@ -484,7 +399,7 @@ function hapusLangganan($id_langganan) {
     $conn = mysqli_connect($servername, $username, $password, $dbname);
     
     if (!$conn) {
-        return ['success' => false, 'message' => 'Koneksi database gagal'];
+        return ['sukses' => false, 'pesan' => 'Koneksi database gagal'];
     }
     
     $id_langganan = mysqli_real_escape_string($conn, $id_langganan);
@@ -492,11 +407,11 @@ function hapusLangganan($id_langganan) {
     
     if (mysqli_query($conn, $query)) {
         mysqli_close($conn);
-        return ['success' => true, 'message' => 'Langganan berhasil dihapus'];
+        return ['sukses' => true, 'pesan' => 'Langganan berhasil dihapus'];
     } else {
         $error = mysqli_error($conn);
         mysqli_close($conn);
-        return ['success' => false, 'message' => 'Gagal menghapus langganan: ' . $error];
+        return ['sukses' => false, 'pesan' => 'Gagal menghapus langganan: ' . $error];
     }
 }
 
@@ -505,12 +420,12 @@ function handleLanggananAPI() {
     
     // Cek session (session_start sudah dipanggil sebelumnya)
     if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || !isset($_SESSION['id_mahasiswa'])) {
-        echo json_encode(['success' => false, 'message' => 'Not logged in']);
+        echo json_encode(['sukses' => false, 'pesan' => 'Belum login']);
         exit();
     }
     
     $id_mahasiswa = $_SESSION['id_mahasiswa'];
-    $response = ['success' => false, 'message' => ''];
+    $response = ['sukses' => false, 'pesan' => ''];
     
     // Handle POST requests
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -534,10 +449,10 @@ function handleLanggananAPI() {
                     break;
                     
                 default:
-                    $response = ['success' => false, 'message' => 'Invalid action: ' . $action];
+                    $response = ['sukses' => false, 'pesan' => 'Aksi tidak valid: ' . $action];
             }
         } catch (Exception $e) {
-            $response = ['success' => false, 'message' => 'Exception: ' . $e->getMessage()];
+            $response = ['sukses' => false, 'pesan' => 'Kesalahan: ' . $e->getMessage()];
         }
         
         echo json_encode($response);
@@ -551,18 +466,18 @@ function handleLanggananAPI() {
             $total = getTotalLangganan($id_mahasiswa);
             
             echo json_encode([
-                'success' => true,
+                'sukses' => true,
                 'data' => $langganan,
                 'total' => $total
             ]);
         } catch (Exception $e) {
-            echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+            echo json_encode(['sukses' => false, 'pesan' => 'Kesalahan: ' . $e->getMessage()]);
         }
         exit();
     }
     
-    // If neither POST nor GET
-    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+    // Jika bukan POST atau GET
+    echo json_encode(['sukses' => false, 'pesan' => 'Metode request tidak valid']);
     exit();
 }
 
@@ -571,7 +486,7 @@ function handleChargeSubscription() {
     
     // Cek session
     if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || !isset($_SESSION['id_mahasiswa'])) {
-        echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+        echo json_encode(['sukses' => false, 'pesan' => 'Tidak diizinkan']);
         exit();
     }
     
@@ -590,57 +505,16 @@ function handleChargeSubscription() {
         $result = tambahTransaksi($data);
         echo json_encode($result);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Tidak ada langganan aktif']);
+        echo json_encode(['sukses' => false, 'pesan' => 'Tidak ada langganan aktif']);
     }
     exit();
-}
-
-function chargeMonthlySubscriptions() {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
-    if (!$conn) {
-        return ['success' => false, 'message' => 'Koneksi database gagal'];
-    }
-    
-    // Get all subscriptions
-    $query = "SELECT * FROM Langganan";
-    $result = mysqli_query($conn, $query);
-    
-    $charged = 0;
-    $errors = [];
-    
-    if ($result) {
-        while ($langganan = mysqli_fetch_assoc($result)) {
-            // Create transaction for this subscription
-            $id_keuangan = random_int(100000, 999999);
-            $tanggalKeuangan = date('Y-m-d H:i:s');
-            
-            $insertQuery = "INSERT INTO Keuangan (id_keuangan, id_mahasiswa, tanggalKeuangan, saldo, transaksi, keteranganTransaksi, jenisTransaksi, kategoriTransaksi) 
-                          VALUES ('$id_keuangan', '{$langganan['id_mahasiswa']}', '$tanggalKeuangan', 0, {$langganan['harga_bulanan']}, 'Tagihan {$langganan['nama_langganan']}', 'Pengeluaran', 'Langganan')";
-            
-            if (mysqli_query($conn, $insertQuery)) {
-                $charged++;
-            } else {
-                $errors[] = mysqli_error($conn);
-            }
-        }
-    }
-    
-    mysqli_close($conn);
-    return [
-        'success' => true, 
-        'message' => "$charged langganan berhasil di-charge",
-        'charged' => $charged,
-        'errors' => $errors
-    ];
 }
 
 // === PAGE DATA FUNCTIONS ===
 
 function handleFormSubmission($id_mahasiswa) {
-    $message = '';
-    $message_type = '';
+    $pesan = '';
+    $tipe_pesan = '';
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         if ($_POST['action'] === 'tambah') {
@@ -654,8 +528,8 @@ function handleFormSubmission($id_mahasiswa) {
             ];
             
             $result = tambahTransaksi($data);
-            $message = $result['message'];
-            $message_type = $result['success'] ? 'success' : 'error';
+            $pesan = $result['pesan'];
+            $tipe_pesan = $result['sukses'] ? 'success' : 'error';
         } elseif ($_POST['action'] === 'tambah_kategori') {
             // Tambah kategori dengan membuat transaksi dummy
             $data = [
@@ -668,12 +542,12 @@ function handleFormSubmission($id_mahasiswa) {
             ];
             
             $result = tambahTransaksi($data);
-            $message = $result['success'] ? 'Kategori berhasil ditambahkan!' : $result['message'];
-            $message_type = $result['success'] ? 'success' : 'error';
+            $pesan = $result['sukses'] ? 'Kategori berhasil ditambahkan!' : $result['pesan'];
+            $tipe_pesan = $result['sukses'] ? 'success' : 'error';
         }
     }
     
-    return ['message' => $message, 'message_type' => $message_type];
+    return ['pesan' => $pesan, 'tipe_pesan' => $tipe_pesan];
 }
 
 function getDateFilter() {
@@ -881,8 +755,8 @@ function getDashboardData($id_mahasiswa) {
     $financial_summary = getFinancialSummary($id_mahasiswa);
     
     return [
-        'message' => $form_result['message'],
-        'message_type' => $form_result['message_type'],
+        'pesan' => $form_result['pesan'],
+        'tipe_pesan' => $form_result['tipe_pesan'],
         'period' => $filter['period'],
         'value' => $filter['value'],
         'filter_label' => $filter['filter_label'],
