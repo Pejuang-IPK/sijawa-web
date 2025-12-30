@@ -3,7 +3,7 @@
  * Subscription Charge Handler
  * 
  * Mode 1 - Manual (via browser): Charge current logged-in user
- * Mode 2 - Cron Job: Charge all users
+ * Mode 2 - Cron Job: Charge all users automatically
  * 
  * Crontab example: 0 0 1 * * /usr/bin/php /path/to/charge_subscriptions.php
  */

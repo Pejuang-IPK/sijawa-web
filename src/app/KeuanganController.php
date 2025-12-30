@@ -170,6 +170,79 @@ function getTransaksiById($id_keuangan) {
     return $data;
 }
 
+function handleTransaksiAPI() {
+    header('Content-Type: application/json');
+    
+    // Cek session (session_start sudah dipanggil di keuangan.php)
+    if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || !isset($_SESSION['id_mahasiswa'])) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+        exit;
+    }
+    
+    $id_mahasiswa = $_SESSION['id_mahasiswa'];
+    
+    try {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $action = $_POST['action'] ?? '';
+            
+            switch ($action) {
+                case 'get':
+                    $id_keuangan = $_POST['id_keuangan'] ?? '';
+                    if (empty($id_keuangan)) {
+                        echo json_encode(['success' => false, 'message' => 'ID transaksi tidak valid']);
+                        exit;
+                    }
+                    
+                    $transaksi = getTransaksiById($id_keuangan);
+                    if ($transaksi) {
+                        echo json_encode(['success' => true, 'data' => $transaksi]);
+                    } else {
+                        echo json_encode(['success' => false, 'message' => 'Transaksi tidak ditemukan']);
+                    }
+                    break;
+                    
+                case 'edit':
+                    $id_keuangan = $_POST['id_keuangan'] ?? '';
+                    if (empty($id_keuangan)) {
+                        echo json_encode(['success' => false, 'message' => 'ID transaksi tidak valid']);
+                        exit;
+                    }
+                    
+                    $data = [
+                        'transaksi' => $_POST['transaksi'] ?? 0,
+                        'keteranganTransaksi' => $_POST['keteranganTransaksi'] ?? '',
+                        'jenisTransaksi' => $_POST['jenisTransaksi'] ?? '',
+                        'kategoriTransaksi' => $_POST['kategoriTransaksi'] ?? ''
+                    ];
+                    
+                    $result = editTransaksi($id_keuangan, $data);
+                    echo json_encode($result);
+                    break;
+                    
+                case 'hapus':
+                    $id_keuangan = $_POST['id_keuangan'] ?? '';
+                    if (empty($id_keuangan)) {
+                        echo json_encode(['success' => false, 'message' => 'ID transaksi tidak valid']);
+                        exit;
+                    }
+                    
+                    $result = hapusTransaksi($id_keuangan);
+                    echo json_encode($result);
+                    break;
+                    
+                default:
+                    echo json_encode(['success' => false, 'message' => 'Action tidak valid']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Method tidak valid']);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
 function getTotalSaldo($id_mahasiswa) {
     global $servername, $username, $password, $dbname;
     $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -369,7 +442,7 @@ function getLanggananByMahasiswa($id_mahasiswa) {
     }
     
     $id_mahasiswa = mysqli_real_escape_string($conn, $id_mahasiswa);
-    $query = "SELECT * FROM Langganan WHERE id_mahasiswa = '$id_mahasiswa' AND status = 'Aktif' ORDER BY tanggal_dibuat DESC";
+    $query = "SELECT * FROM Langganan WHERE id_mahasiswa = '$id_mahasiswa' ORDER BY id_langganan DESC";
     
     $result = mysqli_query($conn, $query);
     $data = [];
@@ -393,7 +466,7 @@ function getTotalLangganan($id_mahasiswa) {
     }
     
     $id_mahasiswa = mysqli_real_escape_string($conn, $id_mahasiswa);
-    $query = "SELECT SUM(harga_bulanan) as total FROM Langganan WHERE id_mahasiswa = '$id_mahasiswa' AND status = 'Aktif'";
+    $query = "SELECT SUM(harga_bulanan) as total FROM Langganan WHERE id_mahasiswa = '$id_mahasiswa'";
     
     $result = mysqli_query($conn, $query);
     $total = 0;
@@ -415,7 +488,7 @@ function hapusLangganan($id_langganan) {
     }
     
     $id_langganan = mysqli_real_escape_string($conn, $id_langganan);
-    $query = "UPDATE Langganan SET status = 'Nonaktif' WHERE id_langganan = '$id_langganan'";
+    $query = "DELETE FROM Langganan WHERE id_langganan = '$id_langganan'";
     
     if (mysqli_query($conn, $query)) {
         mysqli_close($conn);
@@ -427,6 +500,72 @@ function hapusLangganan($id_langganan) {
     }
 }
 
+function handleLanggananAPI() {
+    header('Content-Type: application/json');
+    
+    // Cek session (session_start sudah dipanggil sebelumnya)
+    if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || !isset($_SESSION['id_mahasiswa'])) {
+        echo json_encode(['success' => false, 'message' => 'Not logged in']);
+        exit();
+    }
+    
+    $id_mahasiswa = $_SESSION['id_mahasiswa'];
+    $response = ['success' => false, 'message' => ''];
+    
+    // Handle POST requests
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $action = $_POST['action'] ?? '';
+        
+        try {
+            switch($action) {
+                case 'tambah':
+                    $data = [
+                        'id_mahasiswa' => $id_mahasiswa,
+                        'nama_langganan' => $_POST['nama_langganan'] ?? '',
+                        'icon' => $_POST['icon'] ?? 'fa-circle',
+                        'harga_bulanan' => (int)($_POST['harga_bulanan'] ?? 0)
+                    ];
+                    $response = tambahLangganan($data);
+                    break;
+                    
+                case 'hapus':
+                    $id_langganan = $_POST['id_langganan'] ?? '';
+                    $response = hapusLangganan($id_langganan);
+                    break;
+                    
+                default:
+                    $response = ['success' => false, 'message' => 'Invalid action: ' . $action];
+            }
+        } catch (Exception $e) {
+            $response = ['success' => false, 'message' => 'Exception: ' . $e->getMessage()];
+        }
+        
+        echo json_encode($response);
+        exit();
+    }
+    
+    // Handle GET requests (fetch data)
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        try {
+            $langganan = getLanggananByMahasiswa($id_mahasiswa);
+            $total = getTotalLangganan($id_mahasiswa);
+            
+            echo json_encode([
+                'success' => true,
+                'data' => $langganan,
+                'total' => $total
+            ]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        }
+        exit();
+    }
+    
+    // If neither POST nor GET
+    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+    exit();
+}
+
 function chargeMonthlySubscriptions() {
     global $servername, $username, $password, $dbname;
     $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -435,8 +574,8 @@ function chargeMonthlySubscriptions() {
         return ['success' => false, 'message' => 'Koneksi database gagal'];
     }
     
-    // Get all active subscriptions
-    $query = "SELECT * FROM Langganan WHERE status = 'Aktif'";
+    // Get all subscriptions
+    $query = "SELECT * FROM Langganan";
     $result = mysqli_query($conn, $query);
     
     $charged = 0;

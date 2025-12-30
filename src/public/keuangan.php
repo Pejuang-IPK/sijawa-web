@@ -16,6 +16,20 @@ $email_mahasiswa = $_SESSION['email'];
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../app/KeuanganController.php';
 
+// Handle AJAX API requests untuk transaksi
+if (isset($_POST['ajax']) && $_POST['ajax'] === '1') {
+    handleTransaksiAPI();
+}
+
+// Handle AJAX API requests untuk langganan
+if (isset($_GET['api']) && $_GET['api'] === 'langganan') {
+    handleLanggananAPI();
+}
+
+if (isset($_POST['api']) && $_POST['api'] === 'langganan') {
+    handleLanggananAPI();
+}
+
 // Handle form submission
 $message = '';
 $message_type = '';
@@ -434,7 +448,7 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
                                         $icon_rotation = $is_income ? 'transform: rotate(45deg);' : 'transform: rotate(45deg);';
                                         $amount_prefix = $is_income ? '+' : '-';
                                         ?>
-                                        <div class="transaction-item">
+                                        <div class="transaction-item" onclick="openTransactionDetailModal('<?php echo $trans['id_keuangan']; ?>')" style="cursor: pointer;">
                                             <div class="transaction-icon <?php echo $icon_class; ?>">
                                                 <i class="fa-solid <?php echo $icon; ?>" style="<?php echo $icon_rotation; ?>"></i>
                                             </div>
@@ -832,21 +846,34 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
         // === SUBSCRIPTION FUNCTIONS ===
         
         function loadSubscriptions() {
-            fetch('langganan_api.php')
-                .then(response => response.json())
+            console.log('Loading subscriptions...');
+            fetch('keuangan.php?api=langganan')
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Subscription data:', data);
                     if (data.success) {
                         displaySubscriptions(data.data, data.total);
+                    } else {
+                        console.error('API returned error:', data.message);
                     }
                 })
                 .catch(error => console.error('Error loading subscriptions:', error));
         }
 
         function displaySubscriptions(subscriptions, total) {
+            console.log('Displaying subscriptions:', subscriptions, 'Total:', total);
             const listContainer = document.getElementById('subscriptionList');
             const totalElement = document.getElementById('totalLangganan');
             
-            totalElement.textContent = 'Rp ' + total.toLocaleString('id-ID');
+            if (!listContainer || !totalElement) {
+                console.error('Elements not found! subscriptionList:', listContainer, 'totalLangganan:', totalElement);
+                return;
+            }
+            
+            totalElement.textContent = 'Rp ' + (total || 0).toLocaleString('id-ID');
             
             if (subscriptions.length === 0) {
                 listContainer.innerHTML = `
@@ -994,7 +1021,7 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
                 
                 console.log('Mengirim ke server...');
                 
-                fetch('langganan_api.php', {
+                fetch('keuangan.php?api=langganan', {
                     method: 'POST',
                     body: formData
                 })
@@ -1053,7 +1080,7 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
             const formData = new FormData(e.target);
             formData.append('action', 'tambah');
             
-            fetch('langganan_api.php', {
+            fetch('keuangan.php?api=langganan', {
                 method: 'POST',
                 body: formData
             })
@@ -1080,7 +1107,7 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
             formData.append('action', 'hapus');
             formData.append('id_langganan', id);
             
-            fetch('langganan_api.php', {
+            fetch('keuangan.php?api=langganan', {
                 method: 'POST',
                 body: formData
             })
@@ -1147,12 +1174,12 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
         // Edit Transaksi Functions
         function openEditTransaksiModal(id_keuangan) {
             // Fetch transaction data
-            fetch('transaksi_api.php', {
+            fetch('keuangan.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'action=get&id_keuangan=' + id_keuangan
+                body: 'ajax=1&action=get&id_keuangan=' + id_keuangan
             })
             .then(response => response.json())
             .then(result => {
@@ -1297,6 +1324,7 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
             btnUpdate.textContent = 'Menyimpan...';
             
             const formData = new FormData();
+            formData.append('ajax', '1');
             formData.append('action', 'edit');
             formData.append('id_keuangan', document.getElementById('editIdKeuangan').value);
             formData.append('transaksi', document.getElementById('editJumlah').value);
@@ -1304,7 +1332,7 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
             formData.append('jenisTransaksi', document.getElementById('editJenisTransaksi').value);
             formData.append('kategoriTransaksi', document.getElementById('editKategoriTransaksi').value);
             
-            fetch('transaksi_api.php', {
+            fetch('keuangan.php', {
                 method: 'POST',
                 body: formData
             })
@@ -1334,10 +1362,11 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
             }
             
             const formData = new FormData();
+            formData.append('ajax', '1');
             formData.append('action', 'hapus');
             formData.append('id_keuangan', id_keuangan);
             
-            fetch('transaksi_api.php', {
+            fetch('keuangan.php', {
                 method: 'POST',
                 body: formData
             })
@@ -1354,6 +1383,80 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
                 console.error('Error:', error);
                 window.alert('Terjadi kesalahan saat menghapus transaksi');
             });
+        }
+
+        // Transaction Detail Modal
+        function openTransactionDetailModal(id_keuangan) {
+            console.log('Opening detail for transaction:', id_keuangan);
+            // Fetch transaction data
+            fetch('keuangan.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'ajax=1&action=get&id_keuangan=' + id_keuangan
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.text();
+            })
+            .then(text => {
+                console.log('Response text:', text);
+                const result = JSON.parse(text);
+                if (result.success) {
+                    showTransactionDetailModal(result.data);
+                } else {
+                    window.alert('Gagal mengambil data transaksi: ' + result.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.alert('Terjadi kesalahan saat mengambil data transaksi');
+            });
+        }
+
+        function showTransactionDetailModal(transaksi) {
+            const isIncome = transaksi.jenisTransaksi === 'Pemasukan';
+            const amountColor = isIncome ? '#10b981' : '#ef4444';
+            const icon = isIncome ? '✓' : '✕';
+            const iconBg = isIncome ? '#d1fae5' : '#fee2e2';
+            const iconColor = isIncome ? '#10b981' : '#ef4444';
+            
+            // Create modal overlay
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay';
+            modalOverlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;';
+            
+            // Format date
+            const date = new Date(transaksi.tanggalKeuangan);
+            const formattedDate = date.toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
+            
+            // Create modal content
+            modalOverlay.innerHTML = `
+                <div style="background: white; border-radius: 16px; padding: 32px; width: 90%; max-width: 400px; text-align: center; position: relative;">
+                    <button onclick="this.closest('.modal-overlay').remove()" style="position: absolute; top: 16px; right: 16px; background: #f3f4f6; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; color: #6b7280;">×</button>
+                    
+                    <div style="width: 64px; height: 64px; background: ${iconBg}; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 32px; font-weight: bold; color: ${iconColor};">
+                        ${icon}
+                    </div>
+                    
+                    <h3 style="margin: 0 0 8px 0; font-size: 20px; color: #1e293b;">${transaksi.keteranganTransaksi}</h3>
+                    <p style="margin: 0 0 16px 0; font-size: 14px; color: #64748b;">${formattedDate}</p>
+                    <p style="margin: 0 0 8px 0; font-size: 13px; color: #94a3b8;">${transaksi.kategoriTransaksi}</p>
+                    <p style="margin: 0 0 32px 0; font-size: 28px; font-weight: 600; color: ${amountColor};">Rp ${parseInt(transaksi.transaksi).toLocaleString('id-ID')}</p>
+                    
+                    <div style="display: flex; gap: 12px;">
+                        <button onclick="this.closest('.modal-overlay').remove(); openEditTransaksiModal('${transaksi.id_keuangan}');" style="flex: 1; padding: 12px; background: #3b82f6; border: none; border-radius: 8px; color: white; font-weight: 500; cursor: pointer; font-size: 15px;">
+                            Edit
+                        </button>
+                        <button onclick="this.closest('.modal-overlay').remove(); deleteTransaksi('${transaksi.id_keuangan}');" style="flex: 1; padding: 12px; background: #ef4444; border: none; border-radius: 8px; color: white; font-weight: 500; cursor: pointer; font-size: 15px;">
+                            Hapus
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modalOverlay);
         }
 
         // Auto hide alert after 3 seconds
