@@ -16,95 +16,16 @@ $email_mahasiswa = $_SESSION['email'];
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../app/KeuanganController.php';
 
-// Get date filter
-$period = isset($_GET['period']) ? $_GET['period'] : 'semua';
-$value = isset($_GET['value']) ? $_GET['value'] : ($period === 'semua' ? '' : '0');
-$filter_label = 'Semua Waktu';
-$date_condition = '';
+// Get all history page data from controller
+$history = getHistoryPageData($id_mahasiswa);
 
-switch($period) {
-    case 'hari':
-        $days_ago = (int)$value;
-        $target_date = date('Y-m-d', strtotime("-$days_ago days"));
-        $date_condition = " AND DATE(tanggalKeuangan) = '$target_date'";
-        if ($days_ago == 0) {
-            $filter_label = 'Hari Ini';
-        } elseif ($days_ago == 1) {
-            $filter_label = 'Kemarin';
-        } else {
-            $filter_label = $days_ago . ' Hari Lalu';
-        }
-        break;
-    
-    case 'minggu':
-        $weeks_ago = (int)$value;
-        $start_date = date('Y-m-d', strtotime("-$weeks_ago weeks monday"));
-        $end_date = date('Y-m-d', strtotime("-$weeks_ago weeks sunday"));
-        $date_condition = " AND DATE(tanggalKeuangan) BETWEEN '$start_date' AND '$end_date'";
-        if ($weeks_ago == 0) {
-            $filter_label = 'Minggu Ini';
-        } elseif ($weeks_ago == 1) {
-            $filter_label = 'Minggu Lalu';
-        } else {
-            $filter_label = $weeks_ago . ' Minggu Lalu';
-        }
-        break;
-    
-    case 'bulan':
-        $months_ago = (int)$value;
-        $target_month = date('m', strtotime("-$months_ago months"));
-        $target_year = date('Y', strtotime("-$months_ago months"));
-        $date_condition = " AND MONTH(tanggalKeuangan) = '$target_month' AND YEAR(tanggalKeuangan) = '$target_year'";
-        $filter_label = date('F Y', strtotime("-$months_ago months"));
-        break;
-    
-    case 'tahun':
-        $years_ago = (int)$value;
-        $target_year = date('Y') - $years_ago;
-        $date_condition = " AND YEAR(tanggalKeuangan) = '$target_year'";
-        if ($years_ago == 0) {
-            $filter_label = 'Tahun Ini';
-        } elseif ($years_ago == 1) {
-            $filter_label = 'Tahun Lalu';
-        } else {
-            $filter_label = 'Tahun ' . $target_year;
-        }
-        break;
-    
-    case 'semua':
-        $date_condition = '';
-        $filter_label = 'Semua Waktu';
-        break;
-}
-
-// Get all transactions with filter
-$riwayat_transaksi = getTransaksiWithFilter($id_mahasiswa, $date_condition);
-
-// Get kategori untuk edit modal
-$kategori_pemasukan = [];
-$kategori_pengeluaran = [];
-
-// Query kategori pemasukan
-$sql = "SELECT DISTINCT kategoriTransaksi FROM Keuangan WHERE id_mahasiswa = ? AND jenisTransaksi = 'Pemasukan' AND kategoriTransaksi IS NOT NULL ORDER BY kategoriTransaksi";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id_mahasiswa);
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    $kategori_pemasukan[] = $row['kategoriTransaksi'];
-}
-$stmt->close();
-
-// Query kategori pengeluaran
-$sql = "SELECT DISTINCT kategoriTransaksi FROM Keuangan WHERE id_mahasiswa = ? AND jenisTransaksi = 'Pengeluaran' AND kategoriTransaksi IS NOT NULL ORDER BY kategoriTransaksi";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id_mahasiswa);
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    $kategori_pengeluaran[] = $row['kategoriTransaksi'];
-}
-$stmt->close();
+// Extract variables for easier access in template
+$period = $history['period'];
+$value = $history['value'];
+$filter_label = $history['filter_label'];
+$riwayat_transaksi = $history['riwayat_transaksi'];
+$kategori_pemasukan = $history['kategori_pemasukan'];
+$kategori_pengeluaran = $history['kategori_pengeluaran'];
 ?>
 
 <!DOCTYPE html>

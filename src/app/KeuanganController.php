@@ -635,4 +635,358 @@ function chargeMonthlySubscriptions() {
         'errors' => $errors
     ];
 }
+
+// === PAGE DATA FUNCTIONS ===
+
+function handleFormSubmission($id_mahasiswa) {
+    $message = '';
+    $message_type = '';
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+        if ($_POST['action'] === 'tambah') {
+            $data = [
+                'id_mahasiswa' => $id_mahasiswa,
+                'saldo' => 0,
+                'transaksi' => $_POST['transaksi'],
+                'keteranganTransaksi' => $_POST['keteranganTransaksi'],
+                'jenisTransaksi' => $_POST['jenisTransaksi'],
+                'kategoriTransaksi' => $_POST['kategoriTransaksi']
+            ];
+            
+            $result = tambahTransaksi($data);
+            $message = $result['message'];
+            $message_type = $result['success'] ? 'success' : 'error';
+        } elseif ($_POST['action'] === 'tambah_kategori') {
+            // Tambah kategori dengan membuat transaksi dummy
+            $data = [
+                'id_mahasiswa' => $id_mahasiswa,
+                'saldo' => 0,
+                'transaksi' => 0,
+                'keteranganTransaksi' => 'Kategori: ' . $_POST['namaKategori'],
+                'jenisTransaksi' => $_POST['jenisTransaksi'],
+                'kategoriTransaksi' => $_POST['namaKategori']
+            ];
+            
+            $result = tambahTransaksi($data);
+            $message = $result['success'] ? 'Kategori berhasil ditambahkan!' : $result['message'];
+            $message_type = $result['success'] ? 'success' : 'error';
+        }
+    }
+    
+    return ['message' => $message, 'message_type' => $message_type];
+}
+
+function getDateFilter() {
+    $period = isset($_GET['period']) ? $_GET['period'] : 'bulan';
+    $value = isset($_GET['value']) ? $_GET['value'] : ($period === 'semua' ? '' : '0');
+    $filter_label = 'Bulan Ini';
+    $date_condition = '';
+
+    switch($period) {
+        case 'hari':
+            $days_ago = (int)$value;
+            $target_date = date('Y-m-d', strtotime("-$days_ago days"));
+            $date_condition = " AND DATE(tanggalKeuangan) = '$target_date'";
+            if ($days_ago == 0) {
+                $filter_label = 'Hari Ini';
+            } elseif ($days_ago == 1) {
+                $filter_label = 'Kemarin';
+            } else {
+                $filter_label = $days_ago . ' Hari Lalu';
+            }
+            break;
+        
+        case 'minggu':
+            $weeks_ago = (int)$value;
+            $start_date = date('Y-m-d', strtotime("-$weeks_ago weeks monday"));
+            $end_date = date('Y-m-d', strtotime("-$weeks_ago weeks sunday"));
+            $date_condition = " AND DATE(tanggalKeuangan) BETWEEN '$start_date' AND '$end_date'";
+            if ($weeks_ago == 0) {
+                $filter_label = 'Minggu Ini';
+            } elseif ($weeks_ago == 1) {
+                $filter_label = 'Minggu Lalu';
+            } else {
+                $filter_label = $weeks_ago . ' Minggu Lalu';
+            }
+            break;
+        
+        case 'bulan':
+            $months_ago = (int)$value;
+            $target_month = date('m', strtotime("-$months_ago months"));
+            $target_year = date('Y', strtotime("-$months_ago months"));
+            $date_condition = " AND MONTH(tanggalKeuangan) = '$target_month' AND YEAR(tanggalKeuangan) = '$target_year'";
+            $filter_label = date('F Y', strtotime("-$months_ago months"));
+            break;
+        
+        case 'tahun':
+            $years_ago = (int)$value;
+            $target_year = date('Y') - $years_ago;
+            $date_condition = " AND YEAR(tanggalKeuangan) = '$target_year'";
+            if ($years_ago == 0) {
+                $filter_label = 'Tahun Ini';
+            } elseif ($years_ago == 1) {
+                $filter_label = 'Tahun Lalu';
+            } else {
+                $filter_label = 'Tahun ' . $target_year;
+            }
+            break;
+        
+        case 'semua':
+            $date_condition = '';
+            $filter_label = 'Semua Waktu';
+            break;
+    }
+    
+    return [
+        'period' => $period,
+        'value' => $value,
+        'filter_label' => $filter_label,
+        'date_condition' => $date_condition
+    ];
+}
+
+function getStatistikWithFilter($id_mahasiswa, $date_condition) {
+    // Get semua kategori unik yang pernah dibuat (tanpa filter waktu)
+    $all_statistik = getStatistikKategori($id_mahasiswa, '');
+
+    // Get statistik berdasarkan filter untuk menghitung total
+    $filtered_statistik = getStatistikKategori($id_mahasiswa, $date_condition);
+
+    // Gabungkan: tampilkan semua kategori, tapi dengan angka sesuai filter
+    $statistik_kategori = [];
+    foreach ($all_statistik as $kategori) {
+        // Cari data kategori ini di hasil filter
+        $found = false;
+        foreach ($filtered_statistik as $filtered) {
+            if ($filtered['kategoriTransaksi'] == $kategori['kategoriTransaksi'] && 
+                $filtered['jenisTransaksi'] == $kategori['jenisTransaksi']) {
+                $statistik_kategori[] = $filtered;
+                $found = true;
+                break;
+            }
+        }
+        // Jika tidak ada di filter, tampilkan dengan total 0
+        if (!$found) {
+            $statistik_kategori[] = [
+                'kategoriTransaksi' => $kategori['kategoriTransaksi'],
+                'jenisTransaksi' => $kategori['jenisTransaksi'],
+                'total' => 0,
+                'jumlah' => 0
+            ];
+        }
+    }
+    
+    return $statistik_kategori;
+}
+
+function getFinancialSummary($id_mahasiswa) {
+    global $servername, $username, $password, $dbname;
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+    
+    if (!$conn) {
+        return [
+            'total_pemasukan' => 0,
+            'total_pengeluaran' => 0,
+            'total_saldo' => 0,
+            'pemasukan_change' => 0,
+            'pengeluaran_change' => 0,
+            'last_pemasukan' => 0,
+            'last_pengeluaran' => 0
+        ];
+    }
+    
+    // Get financial data for current month
+    $current_month = date('m');
+    $current_year = date('Y');
+    $query_current = "SELECT * FROM Keuangan WHERE id_mahasiswa = '$id_mahasiswa' AND MONTH(tanggalKeuangan) = '$current_month' AND YEAR(tanggalKeuangan) = '$current_year'";
+    $result_current = mysqli_query($conn, $query_current);
+    $keuangan_current = mysqli_fetch_all($result_current, MYSQLI_ASSOC);
+
+    // Get financial data for last month
+    $last_month = date('m', strtotime('-1 month'));
+    $last_year = date('Y', strtotime('-1 month'));
+    $query_last = "SELECT * FROM Keuangan WHERE id_mahasiswa = '$id_mahasiswa' AND MONTH(tanggalKeuangan) = '$last_month' AND YEAR(tanggalKeuangan) = '$last_year'";
+    $result_last = mysqli_query($conn, $query_last);
+    $keuangan_last = mysqli_fetch_all($result_last, MYSQLI_ASSOC);
+
+    // Calculate totals for current month
+    $total_pemasukan = 0;
+    $total_pengeluaran = 0;
+    foreach ($keuangan_current as $data) {
+        if ($data['jenisTransaksi'] == 'Pemasukan') {
+            $total_pemasukan += $data['transaksi'];
+        } else {
+            $total_pengeluaran += $data['transaksi'];
+        }
+    }
+
+    // Calculate totals for last month
+    $last_pemasukan = 0;
+    $last_pengeluaran = 0;
+    foreach ($keuangan_last as $data) {
+        if ($data['jenisTransaksi'] == 'Pemasukan') {
+            $last_pemasukan += $data['transaksi'];
+        } else {
+            $last_pengeluaran += $data['transaksi'];
+        }
+    }
+
+    // Calculate percentage change
+    $pemasukan_change = 0;
+    if ($last_pemasukan > 0) {
+        $pemasukan_change = (($total_pemasukan - $last_pemasukan) / $last_pemasukan) * 100;
+    }
+
+    $pengeluaran_change = 0;
+    if ($last_pengeluaran > 0) {
+        $pengeluaran_change = (($total_pengeluaran - $last_pengeluaran) / $last_pengeluaran) * 100;
+    }
+
+    $total_saldo = $total_pemasukan - $total_pengeluaran;
+    
+    mysqli_close($conn);
+    
+    return [
+        'total_pemasukan' => $total_pemasukan,
+        'total_pengeluaran' => $total_pengeluaran,
+        'total_saldo' => $total_saldo,
+        'pemasukan_change' => $pemasukan_change,
+        'pengeluaran_change' => $pengeluaran_change,
+        'last_pemasukan' => $last_pemasukan,
+        'last_pengeluaran' => $last_pengeluaran
+    ];
+}
+
+function getDashboardData($id_mahasiswa) {
+    // Handle form submission
+    $form_result = handleFormSubmission($id_mahasiswa);
+    
+    // Get date filter
+    $filter = getDateFilter();
+    
+    // Get kategori untuk dropdown - ambil semua kategori tanpa filter
+    $kategori_pemasukan = getKategoriByMahasiswa($id_mahasiswa, 'Pemasukan');
+    $kategori_pengeluaran = getKategoriByMahasiswa($id_mahasiswa, 'Pengeluaran');
+    
+    // Get statistik dengan filter
+    $statistik_kategori = getStatistikWithFilter($id_mahasiswa, $filter['date_condition']);
+    
+    // Get transaction history
+    $riwayat_transaksi = getTransaksiWithFilter($id_mahasiswa, '', 8); // Get latest 8 transactions
+    
+    // Get monthly analysis
+    $monthly_analysis = getMonthlyAnalysis($id_mahasiswa);
+    
+    // Get financial summary
+    $financial_summary = getFinancialSummary($id_mahasiswa);
+    
+    return [
+        'message' => $form_result['message'],
+        'message_type' => $form_result['message_type'],
+        'period' => $filter['period'],
+        'value' => $filter['value'],
+        'filter_label' => $filter['filter_label'],
+        'date_condition' => $filter['date_condition'],
+        'kategori_pemasukan' => $kategori_pemasukan,
+        'kategori_pengeluaran' => $kategori_pengeluaran,
+        'statistik_kategori' => $statistik_kategori,
+        'riwayat_transaksi' => $riwayat_transaksi,
+        'monthly_analysis' => $monthly_analysis,
+        'total_pemasukan' => $financial_summary['total_pemasukan'],
+        'total_pengeluaran' => $financial_summary['total_pengeluaran'],
+        'total_saldo' => $financial_summary['total_saldo'],
+        'pemasukan_change' => $financial_summary['pemasukan_change'],
+        'pengeluaran_change' => $financial_summary['pengeluaran_change']
+    ];
+}
+
+function getDateFilterForHistory() {
+    $period = isset($_GET['period']) ? $_GET['period'] : 'semua';
+    $value = isset($_GET['value']) ? $_GET['value'] : ($period === 'semua' ? '' : '0');
+    $filter_label = 'Semua Waktu';
+    $date_condition = '';
+
+    switch($period) {
+        case 'hari':
+            $days_ago = (int)$value;
+            $target_date = date('Y-m-d', strtotime("-$days_ago days"));
+            $date_condition = " AND DATE(tanggalKeuangan) = '$target_date'";
+            if ($days_ago == 0) {
+                $filter_label = 'Hari Ini';
+            } elseif ($days_ago == 1) {
+                $filter_label = 'Kemarin';
+            } else {
+                $filter_label = $days_ago . ' Hari Lalu';
+            }
+            break;
+        
+        case 'minggu':
+            $weeks_ago = (int)$value;
+            $start_date = date('Y-m-d', strtotime("-$weeks_ago weeks monday"));
+            $end_date = date('Y-m-d', strtotime("-$weeks_ago weeks sunday"));
+            $date_condition = " AND DATE(tanggalKeuangan) BETWEEN '$start_date' AND '$end_date'";
+            if ($weeks_ago == 0) {
+                $filter_label = 'Minggu Ini';
+            } elseif ($weeks_ago == 1) {
+                $filter_label = 'Minggu Lalu';
+            } else {
+                $filter_label = $weeks_ago . ' Minggu Lalu';
+            }
+            break;
+        
+        case 'bulan':
+            $months_ago = (int)$value;
+            $target_month = date('m', strtotime("-$months_ago months"));
+            $target_year = date('Y', strtotime("-$months_ago months"));
+            $date_condition = " AND MONTH(tanggalKeuangan) = '$target_month' AND YEAR(tanggalKeuangan) = '$target_year'";
+            $filter_label = date('F Y', strtotime("-$months_ago months"));
+            break;
+        
+        case 'tahun':
+            $years_ago = (int)$value;
+            $target_year = date('Y') - $years_ago;
+            $date_condition = " AND YEAR(tanggalKeuangan) = '$target_year'";
+            if ($years_ago == 0) {
+                $filter_label = 'Tahun Ini';
+            } elseif ($years_ago == 1) {
+                $filter_label = 'Tahun Lalu';
+            } else {
+                $filter_label = 'Tahun ' . $target_year;
+            }
+            break;
+        
+        case 'semua':
+            $date_condition = '';
+            $filter_label = 'Semua Waktu';
+            break;
+    }
+    
+    return [
+        'period' => $period,
+        'value' => $value,
+        'filter_label' => $filter_label,
+        'date_condition' => $date_condition
+    ];
+}
+
+function getHistoryPageData($id_mahasiswa) {
+    // Get date filter
+    $filter = getDateFilterForHistory();
+    
+    // Get all transactions with filter
+    $riwayat_transaksi = getTransaksiWithFilter($id_mahasiswa, $filter['date_condition']);
+    
+    // Get kategori untuk edit modal
+    $kategori_pemasukan = getKategoriByMahasiswa($id_mahasiswa, 'Pemasukan');
+    $kategori_pengeluaran = getKategoriByMahasiswa($id_mahasiswa, 'Pengeluaran');
+    
+    return [
+        'period' => $filter['period'],
+        'value' => $filter['value'],
+        'filter_label' => $filter['filter_label'],
+        'riwayat_transaksi' => $riwayat_transaksi,
+        'kategori_pemasukan' => $kategori_pemasukan,
+        'kategori_pengeluaran' => $kategori_pengeluaran
+    ];
+}
 ?>
