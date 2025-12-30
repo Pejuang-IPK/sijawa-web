@@ -30,6 +30,11 @@ if (isset($_POST['api']) && $_POST['api'] === 'langganan') {
     handleLanggananAPI();
 }
 
+// Handle charge subscription
+if (isset($_POST['api']) && $_POST['api'] === 'charge') {
+    handleChargeSubscription();
+}
+
 // Handle form submission
 $message = '';
 $message_type = '';
@@ -1142,8 +1147,12 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
                 return;
             }
             
-            fetch('charge_subscriptions.php', {
-                method: 'POST'
+            const formData = new FormData();
+            formData.append('api', 'charge');
+            
+            fetch('keuangan.php', {
+                method: 'POST',
+                body: formData
             })
             .then(response => response.json())
             .then(data => {

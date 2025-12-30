@@ -566,6 +566,35 @@ function handleLanggananAPI() {
     exit();
 }
 
+function handleChargeSubscription() {
+    header('Content-Type: application/json');
+    
+    // Cek session
+    if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || !isset($_SESSION['id_mahasiswa'])) {
+        echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+        exit();
+    }
+    
+    $id_mahasiswa = $_SESSION['id_mahasiswa'];
+    $total = getTotalLangganan($id_mahasiswa);
+    
+    if ($total > 0) {
+        $data = [
+            'id_mahasiswa' => $id_mahasiswa,
+            'transaksi' => $total,
+            'keteranganTransaksi' => 'Tagihan Langganan Bulanan',
+            'jenisTransaksi' => 'Pengeluaran',
+            'kategoriTransaksi' => 'Langganan'
+        ];
+        
+        $result = tambahTransaksi($data);
+        echo json_encode($result);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Tidak ada langganan aktif']);
+    }
+    exit();
+}
+
 function chargeMonthlySubscriptions() {
     global $servername, $username, $password, $dbname;
     $conn = mysqli_connect($servername, $username, $password, $dbname);
