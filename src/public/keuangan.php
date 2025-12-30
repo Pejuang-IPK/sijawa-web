@@ -721,10 +721,10 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
                 })
                 .then(data => {
                     console.log('Subscription data:', data);
-                    if (data.success) {
+                    if (data.sukses) {
                         displaySubscriptions(data.data, data.total);
                     } else {
-                        console.error('API returned error:', data.message);
+                        console.error('API returned error:', data.pesan);
                     }
                 })
                 .catch(error => console.error('Kesalahan memuat langganan:', error));
@@ -754,9 +754,20 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
             
             let html = '';
             subscriptions.forEach(sub => {
+                // Tentukan warna berdasarkan icon
+                let iconColor = '#64748b';
+                if (sub.icon.includes('youtube')) iconColor = '#FF0000';
+                else if (sub.icon.includes('netflix')) iconColor = '#E50914';
+                else if (sub.icon.includes('spotify')) iconColor = '#1DB954';
+                else if (sub.icon.includes('apple')) iconColor = '#000000';
+                else if (sub.icon.includes('google')) iconColor = '#4285F4';
+                else if (sub.icon.includes('microsoft')) iconColor = '#00A4EF';
+                else if (sub.icon.includes('amazon')) iconColor = '#FF9900';
+                else if (sub.icon.includes('discord')) iconColor = '#5865F2';
+                
                 html += `
                     <div class="subscription-item" style="display: flex; align-items: center; gap: 16px; padding: 16px; background: #f8fafc; border-radius: 12px; margin-bottom: 12px;">
-                        <div class="sub-icon" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: white; font-size: 24px;">
+                        <div class="sub-icon" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: white; font-size: 24px; color: ${iconColor};">
                             <i class="fa-brands ${sub.icon}"></i>
                         </div>
                         <div style="flex: 1;">
@@ -812,7 +823,7 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
                         </label>
                         <select name="icon" id="inputIcon" required style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; cursor: pointer; box-sizing: border-box;">
                             <option value="fa-youtube">YouTube Premium</option>
-                            <option value="fa-netflix">Netflix</option>
+                            <option value="fa-film">Netflix</option>
                             <option value="fa-spotify">Spotify</option>
                             <option value="fa-apple">Apple Music</option>
                             <option value="fa-google">Google One</option>
@@ -822,6 +833,10 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
                             <option value="fa-steam">Steam</option>
                             <option value="fa-playstation">PlayStation Plus</option>
                             <option value="fa-xbox">Xbox Game Pass</option>
+                            <option value="fa-tv">TV/Streaming</option>
+                            <option value="fa-music">Music</option>
+                            <option value="fa-cloud">Cloud Storage</option>
+                            <option value="fa-gamepad">Gaming</option>
                         </select>
                     </div>
                     <div style="margin-bottom: 28px;">
