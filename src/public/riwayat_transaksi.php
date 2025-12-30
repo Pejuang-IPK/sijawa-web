@@ -86,67 +86,49 @@ $riwayat_transaksi = getTransaksiWithFilter($id_mahasiswa, $date_condition);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Transaksi - SIJAWA</title>
+    <title>Dashboard Keuangan - SIJAWA</title>
+    <link rel="stylesheet" href="style/tugas.css">
     <link rel="stylesheet" href="style/keuangan.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <div class="container">
+    <div class="page">
         <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="logo">
-                <img src="https://via.placeholder.com/40" alt="Logo">
-            </div>
-            
-            <nav class="nav-menu">
-                <a href="keuangan.php" class="nav-item">
-                    <i class="fa-solid fa-house"></i>
-                </a>
-                <a href="riwayat_transaksi.php" class="nav-item active">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fa-solid fa-chart-simple"></i>
-                </a>
+            <div class="brand">S.</div>
+            <nav class="side-nav">
+                <a href="index.php" title="Beranda"><i class="fa-solid fa-house"></i></a>
+                <a href="#" title="Tugas"><i class="fa-solid fa-list-check"></i></a>
+                <a href="#" title="Kalender"><i class="fa-solid fa-calendar-days"></i></a>
+                <a class="active" href="keuangan.php" title="Keuangan"><i class="fa-solid fa-wallet"></i></a>
+                <a href="#" title="Setting"><i class="fa-solid fa-gear"></i></a>
             </nav>
-
-            <div class="sidebar-footer">
-                <a href="#" class="nav-item profile">
-                    <i class="fa-solid fa-user"></i>
-                </a>
-                <a href="logout.php" class="nav-item logout">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                </a>
+            <div class="logout">
+                <form action="logout.php" method="post">
+                    <button type="submit" class="icon-btn" title="Keluar"><i class="fa-solid fa-right-from-bracket"></i></button>
+                </form>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <header class="header">
-                <div class="header-left">
-                    <button class="btn-back" onclick="window.location.href='keuangan.php'">
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </button>
-                    <div>
-                        <h1>Riwayat Transaksi</h1>
-                        <p class="header-subtitle">Semua transaksi keuangan Anda</p>
-                    </div>
+            <header class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <h1 style="margin: 0 0 4px 0;">Semua Riwayat Transaksi</h1>
                 </div>
-                <div class="header-right">
-                    <div class="user-profile">
-                        <div class="user-info">
-                            <p class="user-name"><?php echo htmlspecialchars($nama_mahasiswa); ?></p>
-                            <p class="user-role"><?php echo htmlspecialchars($email_mahasiswa); ?></p>
-                        </div>
-                        <div class="user-avatar">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                    </div>
-                </div>
+                <button class="btn-kembali" onclick="window.location.href='keuangan.php'" style="background: transparent; border: none; color: #64748b; font-size: 16px; cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: all 0.3s; font-family: 'Poppins', sans-serif;" onmouseover="this.style.background='#f1f5f9'; this.style.color='#1e293b';" onmouseout="this.style.background='transparent'; this.style.color='#64748b';">
+                    Kembali
+                </button>
             </header>
+
+            <!-- Search Box -->
+            <div class="search-box" style="background: white; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                <div style="position: relative;">
+                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
+                    <input type="text" id="searchInput" placeholder="Cari Transaksi..." onkeyup="searchTransactions()" style="width: 100%; padding: 12px 12px 12px 44px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; font-family: 'Poppins', sans-serif; transition: all 0.3s;" onfocus="this.style.borderColor='#3b82f6'; this.style.outline='none';" onblur="this.style.borderColor='#e2e8f0';">
+                </div>
+            </div>
 
             <!-- Filter Section -->
             <div class="filter-section" style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
@@ -199,12 +181,13 @@ $riwayat_transaksi = getTransaksiWithFilter($id_mahasiswa, $date_condition);
                                     <?php 
                                     $is_income = $trans['jenisTransaksi'] == 'Pemasukan';
                                     $icon_class = $is_income ? 'success' : 'danger';
-                                    $icon = $is_income ? 'fa-check' : 'fa-arrow-up';
+                                    $icon = $is_income ? 'fa-arrow-down-long' : 'fa-arrow-up-long';
+                                    $icon_rotation = $is_income ? 'transform: rotate(45deg);' : 'transform: rotate(45deg);';
                                     $amount_prefix = $is_income ? '+' : '-';
                                     ?>
                                     <div class="transaction-item" style="display: flex; align-items: center; gap: 16px; padding: 16px; background: #f8fafc; border-radius: 12px; transition: all 0.3s;">
                                         <div class="transaction-icon <?php echo $icon_class; ?>" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0;">
-                                            <i class="fa-solid <?php echo $icon; ?>"></i>
+                                            <i class="fa-solid <?php echo $icon; ?>" style="<?php echo $icon_rotation; ?>"></i>
                                         </div>
                                         <div class="transaction-details" style="flex: 1; min-width: 0;">
                                             <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 600; color: #1e293b;"><?php echo htmlspecialchars($trans['keteranganTransaksi']); ?></h4>
@@ -236,6 +219,35 @@ $riwayat_transaksi = getTransaksiWithFilter($id_mahasiswa, $date_condition);
     </div>
 
     <script>
+        // Search function
+        function searchTransactions() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const transactionItems = document.querySelectorAll('.transaction-item');
+            const monthGroups = document.querySelectorAll('.month-group');
+            
+            transactionItems.forEach(item => {
+                const keterangan = item.querySelector('.transaction-details h4').textContent.toLowerCase();
+                const kategori = item.querySelector('.transaction-details p').textContent.toLowerCase();
+                const amount = item.querySelector('.transaction-amount').textContent.toLowerCase();
+                
+                if (keterangan.includes(searchTerm) || kategori.includes(searchTerm) || amount.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Hide month groups if all transactions are hidden
+            monthGroups.forEach(group => {
+                const visibleTransactions = group.querySelectorAll('.transaction-item[style*="display: flex"]');
+                if (visibleTransactions.length === 0) {
+                    group.style.display = 'none';
+                } else {
+                    group.style.display = 'block';
+                }
+            });
+        }
+
         // Current filter values from PHP
         const currentPeriod = '<?php echo $period; ?>';
         const currentValue = '<?php echo $value; ?>';

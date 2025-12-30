@@ -112,10 +112,38 @@ switch($period) {
         break;
 }
 
-// Get kategori untuk dropdown
+// Get kategori untuk dropdown - ambil semua kategori tanpa filter
 $kategori_pemasukan = getKategoriByMahasiswa($id_mahasiswa, 'Pemasukan');
 $kategori_pengeluaran = getKategoriByMahasiswa($id_mahasiswa, 'Pengeluaran');
-$statistik_kategori = getStatistikKategori($id_mahasiswa, $date_condition);
+
+// Get semua kategori unik yang pernah dibuat (tanpa filter waktu)
+$all_statistik = getStatistikKategori($id_mahasiswa, '');
+
+// Get statistik berdasarkan filter untuk menghitung total
+$filtered_statistik = getStatistikKategori($id_mahasiswa, $date_condition);
+
+// Gabungkan: tampilkan semua kategori, tapi dengan angka sesuai filter
+$statistik_kategori = [];
+foreach ($all_statistik as $kategori) {
+    // Cari data kategori ini di hasil filter
+    $found = false;
+    foreach ($filtered_statistik as $filtered) {
+        if ($filtered['kategoriTransaksi'] == $kategori['kategoriTransaksi'] && 
+            $filtered['jenisTransaksi'] == $kategori['jenisTransaksi']) {
+            $statistik_kategori[] = $filtered;
+            $found = true;
+            break;
+        }
+    }
+    // Jika tidak ada di filter, tampilkan dengan total 0
+    if (!$found) {
+        $statistik_kategori[] = [
+            'kategoriTransaksi' => $kategori['kategoriTransaksi'],
+            'jenisTransaksi' => $kategori['jenisTransaksi'],
+            'total' => 0
+        ];
+    }
+}
 
 // Get transaction history
 $riwayat_transaksi = getTransaksiWithFilter($id_mahasiswa, '', 8); // Get latest 8 transactions
@@ -125,22 +153,51 @@ $monthly_analysis = getMonthlyAnalysis($id_mahasiswa);
 
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-// Get financial data for logged in user
-$query = "SELECT * FROM Keuangan WHERE id_mahasiswa = '$id_mahasiswa' ORDER BY tanggalKeuangan DESC";
-$result = mysqli_query($conn, $query);
-$keuangan_data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+// Get financial data for current month
+$current_month = date('m');
+$current_year = date('Y');
+$query_current = "SELECT * FROM Keuangan WHERE id_mahasiswa = '$id_mahasiswa' AND MONTH(tanggalKeuangan) = '$current_month' AND YEAR(tanggalKeuangan) = '$current_year'";
+$result_current = mysqli_query($conn, $query_current);
+$keuangan_current = mysqli_fetch_all($result_current, MYSQLI_ASSOC);
 
-// Calculate totals
-$total_saldo = 0;
+// Get financial data for last month
+$last_month = date('m', strtotime('-1 month'));
+$last_year = date('Y', strtotime('-1 month'));
+$query_last = "SELECT * FROM Keuangan WHERE id_mahasiswa = '$id_mahasiswa' AND MONTH(tanggalKeuangan) = '$last_month' AND YEAR(tanggalKeuangan) = '$last_year'";
+$result_last = mysqli_query($conn, $query_last);
+$keuangan_last = mysqli_fetch_all($result_last, MYSQLI_ASSOC);
+
+// Calculate totals for current month
 $total_pemasukan = 0;
 $total_pengeluaran = 0;
-
-foreach ($keuangan_data as $data) {
+foreach ($keuangan_current as $data) {
     if ($data['jenisTransaksi'] == 'Pemasukan') {
         $total_pemasukan += $data['transaksi'];
     } else {
         $total_pengeluaran += $data['transaksi'];
     }
+}
+
+// Calculate totals for last month
+$last_pemasukan = 0;
+$last_pengeluaran = 0;
+foreach ($keuangan_last as $data) {
+    if ($data['jenisTransaksi'] == 'Pemasukan') {
+        $last_pemasukan += $data['transaksi'];
+    } else {
+        $last_pengeluaran += $data['transaksi'];
+    }
+}
+
+// Calculate percentage change
+$pemasukan_change = 0;
+if ($last_pemasukan > 0) {
+    $pemasukan_change = (($total_pemasukan - $last_pemasukan) / $last_pemasukan) * 100;
+}
+
+$pengeluaran_change = 0;
+if ($last_pengeluaran > 0) {
+    $pengeluaran_change = (($total_pengeluaran - $last_pengeluaran) / $last_pengeluaran) * 100;
 }
 
 $total_saldo = $total_pemasukan - $total_pengeluaran;
@@ -151,37 +208,27 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Keuangan - SIJAWA</title>
+    <link rel="stylesheet" href="style/tugas.css">
     <link rel="stylesheet" href="style/keuangan.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <div class="layout">
+    <div class="page">
         <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="logo-sidebar">
-                <span class="logo-text">S</span>
-            </div>
-            
-            <nav class="nav-menu">
-                <a href="index.php" class="nav-item" title="Dashboard">
-                    <i class="fa-solid fa-house"></i>
-                </a>
-                <a href="#" class="nav-item" title="Jadwal">
-                    <i class="fa-solid fa-calendar-days"></i>
-                </a>
-                <a href="keuangan.php" class="nav-item active" title="Keuangan">
-                    <i class="fa-solid fa-wallet"></i>
-                </a>
+            <div class="brand">S.</div>
+            <nav class="side-nav">
+                <a href="index.php" title="Beranda"><i class="fa-solid fa-house"></i></a>
+                <a href="#" title="Tugas"><i class="fa-solid fa-list-check"></i></a>
+                <a href="#" title="Kalender"><i class="fa-solid fa-calendar-days"></i></a>
+                <a class="active" href="keuangan.php" title="Keuangan"><i class="fa-solid fa-wallet"></i></a>
+                <a href="#" title="Setting"><i class="fa-solid fa-gear"></i></a>
             </nav>
-
-            <div class="nav-bottom">
-                <a href="#" class="nav-item" title="Profile">
-                    <i class="fa-solid fa-user"></i>
-                </a>
-                <a href="logout.php" class="nav-item nav-item-danger" title="Logout">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </a>
+            <div class="logout">
+                <form action="logout.php" method="post">
+                    <button type="submit" class="icon-btn" title="Keluar"><i class="fa-solid fa-right-from-bracket"></i></button>
+                </form>
             </div>
         </aside>
 
@@ -223,7 +270,7 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
                 <div class="stat-card stat-success">
                     <div class="stat-header">
                         <i class="fa-solid fa-arrow-trend-up"></i>
-                        <span class="stat-badge success">+43%</span>
+                        <span class="stat-badge success"><?php echo ($pemasukan_change >= 0 ? '+' : '') . number_format($pemasukan_change, 0) . '%'; ?></span>
                     </div>
                     <p class="stat-label">Total Pemasukan Bulan Ini</p>
                     <h2 class="stat-value">Rp <?php echo number_format($total_pemasukan, 0, ',', '.'); ?></h2>
@@ -232,7 +279,7 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
                 <div class="stat-card stat-danger">
                     <div class="stat-header">
                         <i class="fa-solid fa-arrow-trend-down"></i>
-                        <span class="stat-badge danger">+25%</span>
+                        <span class="stat-badge danger"><?php echo ($pengeluaran_change >= 0 ? '+' : '') . number_format($pengeluaran_change, 0) . '%'; ?></span>
                     </div>
                     <p class="stat-label">Total Pengeluaran Bulan Ini</p>
                     <h2 class="stat-value">Rp <?php echo number_format($total_pengeluaran, 0, ',', '.'); ?></h2>
@@ -277,7 +324,7 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
                                     <div class="expense-card" onclick="showKategoriDetail('<?php echo htmlspecialchars($stat['kategoriTransaksi']); ?>', 'Pemasukan')" style="cursor: pointer;">
                                         <div class="expense-header">
                                             <div class="expense-icon-wrapper" style="background: #d1fae5;">
-                                                <i class="fa-solid fa-arrow-down" style="color: #10b981;"></i>
+                                                <i class="fa-solid fa-arrow-down-long" style="color: #10b981; transform: rotate(45deg);"></i>
                                             </div>
                                             <div class="expense-info">
                                                 <h4><?php echo htmlspecialchars($stat['kategoriTransaksi']); ?></h4>
@@ -329,7 +376,7 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
                                     <div class="expense-card" onclick="showKategoriDetail('<?php echo htmlspecialchars($stat['kategoriTransaksi']); ?>', 'Pengeluaran')" style="cursor: pointer;">
                                         <div class="expense-header">
                                             <div class="expense-icon-wrapper" style="background: #fee2e2;">
-                                                <i class="fa-solid fa-arrow-up" style="color: #ef4444;"></i>
+                                                <i class="fa-solid fa-arrow-up-long" style="color: #ef4444; transform: rotate(45deg);"></i>
                                             </div>
                                             <div class="expense-info">
                                                 <h4><?php echo htmlspecialchars($stat['kategoriTransaksi']); ?></h4>
@@ -383,12 +430,13 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
                                         <?php 
                                         $is_income = $trans['jenisTransaksi'] == 'Pemasukan';
                                         $icon_class = $is_income ? 'success' : 'danger';
-                                        $icon = $is_income ? 'fa-check' : 'fa-arrow-up';
+                                        $icon = $is_income ? 'fa-arrow-down-long' : 'fa-arrow-up-long';
+                                        $icon_rotation = $is_income ? 'transform: rotate(45deg);' : 'transform: rotate(45deg);';
                                         $amount_prefix = $is_income ? '+' : '-';
                                         ?>
                                         <div class="transaction-item">
                                             <div class="transaction-icon <?php echo $icon_class; ?>">
-                                                <i class="fa-solid <?php echo $icon; ?>"></i>
+                                                <i class="fa-solid <?php echo $icon; ?>" style="<?php echo $icon_rotation; ?>"></i>
                                             </div>
                                             <div class="transaction-details">
                                                 <h4><?php echo htmlspecialchars($trans['keteranganTransaksi']); ?></h4>
@@ -422,6 +470,7 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
                         $expense_dash = $circumference - $income_dash;
                         ?>
                         <div class="chart-wrapper">
+                            <p class="chart-label">Saldo Bulan Ini</p>
                             <div class="pie-chart">
                                 <svg viewBox="0 0 200 200">
                                     <circle cx="100" cy="100" r="80" fill="none" stroke="#e5e7eb" stroke-width="40"/>
@@ -438,7 +487,6 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
                                     <?php endif; ?>
                                 </svg>
                                 <div class="chart-center">
-                                    <p class="chart-label">Saldo Bulan Ini</p>
                                     <h3 class="chart-value">Rp <?php echo number_format($monthly_analysis['saldo'], 0, ',', '.'); ?></h3>
                                     <p class="chart-status"><?php echo $monthly_analysis['saldo'] >= 0 ? '✓ Surplus' : '✗ Defisit'; ?></p>
                                 </div>
@@ -460,55 +508,25 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
 
                     <!-- Subscription Card -->
                     <div class="subscription-card">
-                        <h3>Total Langganan Bulanan Aplikasi</h3>
-                        <h2 class="subscription-total">Rp 200.000</h2>
-                        
-                        <div class="subscription-list">
-                            <div class="subscription-item">
-                                <div class="subscription-icon danger">
-                                    <i class="fa-brands fa-youtube"></i>
-                                </div>
-                                <div class="subscription-info">
-                                    <p>Pengeluaran Khusus</p>
-                                    <p class="subscription-price">Rp 50.000/bulan</p>
-                                </div>
-                            </div>
-
-                            <div class="subscription-item">
-                                <div class="subscription-icon netflix">
-                                    <span>N</span>
-                                </div>
-                                <div class="subscription-info">
-                                    <p>Netflix</p>
-                                    <p class="subscription-price">Rp 50.000/bulan</p>
-                                </div>
-                            </div>
-
-                            <div class="subscription-item">
-                                <div class="subscription-icon apple">
-                                    <i class="fa-brands fa-apple"></i>
-                                </div>
-                                <div class="subscription-info">
-                                    <p>Apple Music</p>
-                                    <p class="subscription-price">Rp 50.000/bulan</p>
-                                </div>
-                            </div>
-
-                            <div class="subscription-item">
-                                <div class="subscription-icon spotify">
-                                    <i class="fa-brands fa-spotify"></i>
-                                </div>
-                                <div class="subscription-info">
-                                    <p>Spotify</p>
-                                    <p class="subscription-price">Rp 50.000/bulan</p>
-                                </div>
+                        <div class="subscription-header">
+                            <h3>Total Langganan Bulanan Aplikasi</h3>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-charge-now" onclick="chargeNow()" title="Bayar Sekarang" style="background: #10b981; color: white; border: none; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; font-size: 14px;">
+                                    <i class="fa-solid fa-dollar-sign"></i>
+                                </button>
+                                <button class="btn-add-subscription" onclick="openSubscriptionModal()">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
                             </div>
                         </div>
-
-                        <button class="btn-view-details">
-                            <i class="fa-solid fa-plus"></i>
-                            Tambah Langganan
-                        </button>
+                        <h2 class="subscription-total" id="totalLangganan">Rp 0</h2>
+                        
+                        <div class="subscription-list" id="subscriptionList">
+                            <div class="empty-state" style="text-align: center; padding: 20px; color: #94a3b8;">
+                                <i class="fa-solid fa-calendar-check" style="font-size: 32px; margin-bottom: 8px; opacity: 0.5;"></i>
+                                <p style="margin: 0; font-size: 13px;">Belum ada langganan</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -645,20 +663,27 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
                     data.forEach(trans => {
                         const isIncome = trans.jenisTransaksi === 'Pemasukan';
                         const iconClass = isIncome ? 'success' : 'danger';
-                        const icon = isIncome ? 'fa-check' : 'fa-arrow-up';
+                        const icon = isIncome ? 'fa-arrow-down-long' : 'fa-arrow-up-long';
+                        const iconRotation = isIncome ? 'transform: rotate(45deg);' : 'transform: rotate(45deg);';
                         const prefix = isIncome ? '+' : '-';
                         
                         html += `
                             <div class="transaction-item" style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8fafc; border-radius: 8px;">
                                 <div class="transaction-icon ${iconClass}" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                                    <i class="fa-solid ${icon}"></i>
+                                    <i class="fa-solid ${icon}" style="${iconRotation}"></i>
                                 </div>
                                 <div style="flex: 1;">
                                     <h4 style="margin: 0 0 4px 0; font-size: 14px;">${trans.keteranganTransaksi}</h4>
                                     <p style="margin: 0; font-size: 12px; color: #64748b;">${new Date(trans.tanggalKeuangan).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'})}</p>
                                 </div>
-                                <div style="text-align: right;">
-                                    <p class="transaction-amount ${iconClass}" style="margin: 0; font-weight: 600;">${prefix}Rp ${Number(trans.transaksi).toLocaleString('id-ID')}</p>
+                                <div style="text-align: right; display: flex; align-items: center; gap: 8px;">
+                                    <p class="transaction-amount ${iconClass}" style="margin: 0; font-weight: 600; margin-right: 12px;">${prefix}Rp ${Number(trans.transaksi).toLocaleString('id-ID')}</p>
+                                    <button onclick="openEditTransaksiModal('${trans.id_keuangan}')" class="btn-edit-transaksi" style="background: #3b82f6; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                    <button onclick="deleteTransaksi('${trans.id_keuangan}')" class="btn-delete-transaksi" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
                                 </div>
                             </div>
                         `;
@@ -801,7 +826,312 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
         // Initialize on page load
         window.addEventListener('DOMContentLoaded', function() {
             updateValueOptions();
+            loadSubscriptions();
         });
+
+        // === SUBSCRIPTION FUNCTIONS ===
+        
+        function loadSubscriptions() {
+            fetch('langganan_api.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displaySubscriptions(data.data, data.total);
+                    }
+                })
+                .catch(error => console.error('Error loading subscriptions:', error));
+        }
+
+        function displaySubscriptions(subscriptions, total) {
+            const listContainer = document.getElementById('subscriptionList');
+            const totalElement = document.getElementById('totalLangganan');
+            
+            totalElement.textContent = 'Rp ' + total.toLocaleString('id-ID');
+            
+            if (subscriptions.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="empty-state" style="text-align: center; padding: 40px 20px; color: #94a3b8;">
+                        <i class="fa-solid fa-calendar-check" style="font-size: 48px; margin-bottom: 12px; opacity: 0.5;"></i>
+                        <p style="margin: 0;">Belum ada langganan</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            subscriptions.forEach(sub => {
+                html += `
+                    <div class="subscription-item" style="display: flex; align-items: center; gap: 16px; padding: 16px; background: #f8fafc; border-radius: 12px; margin-bottom: 12px;">
+                        <div class="sub-icon" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: white; font-size: 24px;">
+                            <i class="fa-brands ${sub.icon}"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 600; color: #1e293b;">${sub.nama_langganan}</h4>
+                            <p style="margin: 0; font-size: 13px; color: #3b82f6;">Rp ${parseInt(sub.harga_bulanan).toLocaleString('id-ID')}/bulan</p>
+                        </div>
+                        <button onclick="deleteSubscription('${sub.id_langganan}')" class="btn-delete-sub" style="background: #fee2e2; color: #ef4444; border: none; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            
+            listContainer.innerHTML = html;
+        }
+
+        function openSubscriptionModal() {
+            // Remove any existing modal first
+            const existing = document.querySelector('.modal-overlay');
+            if (existing) existing.remove();
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.style.cssText = 'display: flex; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center;';
+            
+            const modalContent = document.createElement('div');
+            modalContent.className = 'modal-content';
+            modalContent.style.cssText = 'max-width: 520px; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; z-index: 1001;';
+            
+            modalContent.innerHTML = `
+                <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 16px 16px 0 0; padding: 24px; display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h2 style="color: white; margin: 0 0 4px 0; font-size: 20px;">Tambah Langganan Baru</h2>
+                        <p style="font-size: 13px; opacity: 0.9; margin: 0;">Kelola langganan aplikasi bulanan Anda</p>
+                    </div>
+                    <button type="button" id="btnCloseModal" style="background: transparent; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; width: 32px; height: 32px;">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+                <form id="subscriptionForm" style="padding: 28px;">
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #1e293b;">
+                            <i class="fa-solid fa-tag" style="color: #667eea;"></i>
+                            <span>Nama Langganan</span>
+                        </label>
+                        <input type="text" name="nama_langganan" id="inputNama" required placeholder="Contoh: Netflix, Spotify, YouTube Premium" 
+                               style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; box-sizing: border-box;">
+                    </div>
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #1e293b;">
+                            <i class="fa-solid fa-icons" style="color: #667eea;"></i>
+                            <span>Pilih Icon</span>
+                        </label>
+                        <select name="icon" id="inputIcon" required style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; cursor: pointer; box-sizing: border-box;">
+                            <option value="fa-youtube">YouTube Premium</option>
+                            <option value="fa-netflix">Netflix</option>
+                            <option value="fa-spotify">Spotify</option>
+                            <option value="fa-apple">Apple Music</option>
+                            <option value="fa-google">Google One</option>
+                            <option value="fa-microsoft">Microsoft 365</option>
+                            <option value="fa-amazon">Amazon Prime</option>
+                            <option value="fa-discord">Discord Nitro</option>
+                            <option value="fa-steam">Steam</option>
+                            <option value="fa-playstation">PlayStation Plus</option>
+                            <option value="fa-xbox">Xbox Game Pass</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 28px;">
+                        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #1e293b;">
+                            <i class="fa-solid fa-money-bill-wave" style="color: #667eea;"></i>
+                            <span>Biaya per Bulan</span>
+                        </label>
+                        <input type="number" name="harga_bulanan" id="inputHarga" required placeholder="50000" min="0" step="1000"
+                               style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; box-sizing: border-box;">
+                        <p style="font-size: 12px; color: #94a3b8; margin: 8px 0 0 0;">
+                            <i class="fa-solid fa-info-circle"></i> Akan otomatis dipotong setiap tanggal 1
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 12px; padding-top: 20px; margin-top: 20px; border-top: 1px solid #f1f5f9;">
+                        <button type="button" id="btnBatal" style="flex: 1; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; background: #f1f5f9; color: #64748b; border: none; font-family: 'Poppins', sans-serif;">
+                            <i class="fa-solid fa-times"></i> Batal
+                        </button>
+                        <button type="button" id="btnSimpan" style="flex: 1; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); cursor: pointer; border: none; color: white; font-family: 'Poppins', sans-serif; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);">
+                            <i class="fa-solid fa-check"></i> Simpan
+                        </button>
+                    </div>
+                </form>
+            `;
+            
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            // Event handlers
+            document.getElementById('btnCloseModal').onclick = function() {
+                modal.remove();
+            };
+            
+            document.getElementById('btnBatal').onclick = function() {
+                modal.remove();
+            };
+            
+            document.getElementById('btnSimpan').onclick = function() {
+                const nama = document.getElementById('inputNama').value.trim();
+                const icon = document.getElementById('inputIcon').value;
+                const harga = document.getElementById('inputHarga').value;
+                
+                console.log('Data yang akan dikirim:', { nama, icon, harga });
+                
+                if (!nama || !icon || !harga) {
+                    window.alert('Mohon lengkapi semua field!');
+                    return;
+                }
+                
+                if (harga < 0) {
+                    window.alert('Harga harus lebih dari 0!');
+                    return;
+                }
+                
+                // Disable button to prevent double click
+                const btnSimpan = this;
+                btnSimpan.disabled = true;
+                btnSimpan.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+                
+                const formData = new FormData();
+                formData.append('action', 'tambah');
+                formData.append('nama_langganan', nama);
+                formData.append('icon', icon);
+                formData.append('harga_bulanan', harga);
+                
+                console.log('Mengirim ke server...');
+                
+                fetch('langganan_api.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.text();
+                })
+                .then(text => {
+                    console.log('Response text:', text);
+                    try {
+                        const data = JSON.parse(text);
+                        console.log('Response JSON:', data);
+                        if (data.success) {
+                            console.log('SUCCESS! Menutup modal dan reload data...');
+                            modal.remove();
+                            loadSubscriptions();
+                            // Show success message after modal is closed
+                            setTimeout(() => {
+                                window.alert('✓ Langganan berhasil ditambahkan!');
+                            }, 100);
+                        } else {
+                            console.error('ERROR:', data.message);
+                            window.alert('Error: ' + data.message);
+                            btnSimpan.disabled = false;
+                            btnSimpan.innerHTML = '<i class="fa-solid fa-check"></i> Simpan';
+                        }
+                    } catch (e) {
+                        console.error('JSON Parse Error:', e);
+                        window.alert('Error: Response bukan JSON - ' + text);
+                        btnSimpan.disabled = false;
+                        btnSimpan.innerHTML = '<i class="fa-solid fa-check"></i> Simpan';
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch Error:', error);
+                    window.alert('Terjadi kesalahan koneksi: ' + error.message);
+                    btnSimpan.disabled = false;
+                    btnSimpan.innerHTML = '<i class="fa-solid fa-check"></i> Simpan';
+                });
+            };
+            
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            };
+        }
+
+        function updateIconPreview(iconClass) {
+            // Not used in simplified version
+        }
+
+        function submitSubscription(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            formData.append('action', 'tambah');
+            
+            fetch('langganan_api.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Langganan berhasil ditambahkan!');
+                    closeSubscriptionModal(e.target);
+                    loadSubscriptions();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat menambahkan langganan');
+            });
+        }
+
+        function deleteSubscription(id) {
+            if (!window.confirm('Yakin ingin menghapus langganan ini?')) return;
+            
+            const formData = new FormData();
+            formData.append('action', 'hapus');
+            formData.append('id_langganan', id);
+            
+            fetch('langganan_api.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Langganan berhasil dihapus, reload data...');
+                    loadSubscriptions();
+                    setTimeout(() => {
+                        window.alert('✓ Langganan berhasil dihapus!');
+                    }, 100);
+                } else {
+                    window.alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.alert('Terjadi kesalahan saat menghapus langganan');
+            });
+        }
+
+        function closeSubscriptionModal(element) {
+            const modal = element.closest('.modal-overlay');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Charge subscription now
+        function chargeNow() {
+            if (!window.confirm('Yakin ingin membayar tagihan langganan bulanan sekarang? Total akan masuk ke pengeluaran.')) {
+                return;
+            }
+            
+            fetch('charge_subscriptions.php', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.alert('✓ Tagihan langganan berhasil dibayar dan masuk ke pengeluaran!');
+                    window.location.reload();
+                } else {
+                    window.alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.alert('Terjadi kesalahan: ' + error.message);
+            });
+        }
 
         // Close modal when clicking outside
         window.onclick = function(event) {
@@ -812,6 +1142,218 @@ $total_saldo = $total_pemasukan - $total_pengeluaran;
             } else if (event.target == modalKategori) {
                 closeKategoriModal();
             }
+        }
+
+        // Edit Transaksi Functions
+        function openEditTransaksiModal(id_keuangan) {
+            // Fetch transaction data
+            fetch('transaksi_api.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=get&id_keuangan=' + id_keuangan
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    showEditModal(result.data);
+                } else {
+                    window.alert('Gagal mengambil data transaksi: ' + result.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.alert('Terjadi kesalahan saat mengambil data transaksi');
+            });
+        }
+
+        function showEditModal(transaksi) {
+            // Create modal overlay
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay';
+            modalOverlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;';
+
+            // Create modal content
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = 'background: white; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto;';
+
+            // Modal header
+            const modalHeader = document.createElement('div');
+            modalHeader.style.cssText = 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;';
+            
+            const modalTitle = document.createElement('h3');
+            modalTitle.textContent = 'Edit Transaksi';
+            modalTitle.style.margin = '0';
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+            closeBtn.style.cssText = 'background: rgba(255,255,255,0.2); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px;';
+            closeBtn.onclick = () => modalOverlay.remove();
+            
+            modalHeader.appendChild(modalTitle);
+            modalHeader.appendChild(closeBtn);
+
+            // Modal body
+            const modalBody = document.createElement('div');
+            modalBody.style.padding = '24px';
+            
+            // Form HTML
+            modalBody.innerHTML = `
+                <form id="formEditTransaksi">
+                    <input type="hidden" id="editIdKeuangan" value="${transaksi.id_keuangan}">
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #334155;">Jumlah</label>
+                        <input type="number" id="editJumlah" value="${transaksi.transaksi}" required
+                            style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #334155;">Keterangan</label>
+                        <input type="text" id="editKeterangan" value="${transaksi.keteranganTransaksi}" required
+                            style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #334155;">Jenis Transaksi</label>
+                        <select id="editJenisTransaksi" required onchange="updateEditKategoriOptions()"
+                            style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                            <option value="">Pilih jenis</option>
+                            <option value="Pemasukan" ${transaksi.jenisTransaksi === 'Pemasukan' ? 'selected' : ''}>Pemasukan</option>
+                            <option value="Pengeluaran" ${transaksi.jenisTransaksi === 'Pengeluaran' ? 'selected' : ''}>Pengeluaran</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #334155;">Kategori</label>
+                        <select id="editKategoriTransaksi" required
+                            style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                            <option value="">Pilih kategori</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button type="button" onclick="this.closest('.modal-overlay').remove()"
+                            style="flex: 1; padding: 12px; background: #e2e8f0; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; color: #334155;">
+                            Batal
+                        </button>
+                        <button type="button" id="btnUpdateTransaksi"
+                            style="flex: 1; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 8px; cursor: pointer; font-weight: 500; color: white;">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            `;
+            
+            // Assemble modal
+            modalContent.appendChild(modalHeader);
+            modalContent.appendChild(modalBody);
+            modalOverlay.appendChild(modalContent);
+            document.body.appendChild(modalOverlay);
+            
+            // Populate kategori dropdown based on current jenis
+            updateEditKategoriOptions();
+            document.getElementById('editKategoriTransaksi').value = transaksi.kategoriTransaksi;
+            
+            // Add submit handler
+            document.getElementById('btnUpdateTransaksi').onclick = function() {
+                updateTransaksi();
+            };
+        }
+
+        function updateEditKategoriOptions() {
+            const jenisTransaksi = document.getElementById('editJenisTransaksi').value;
+            const kategoriSelect = document.getElementById('editKategoriTransaksi');
+            const currentKategori = kategoriSelect.value;
+            
+            kategoriSelect.innerHTML = '<option value="">Pilih kategori</option>';
+            
+            if(!jenisTransaksi) {
+                kategoriSelect.innerHTML = '<option value="">Pilih jenis terlebih dahulu</option>';
+                return;
+            }
+            
+            let categories = jenisTransaksi === 'Pemasukan' ? kategoriPemasukan : kategoriPengeluaran;
+            
+            if(categories.length === 0) {
+                kategoriSelect.innerHTML = '<option value="">Belum ada kategori</option>';
+            } else {
+                categories.forEach(kategori => {
+                    const option = document.createElement('option');
+                    option.value = kategori;
+                    option.textContent = kategori;
+                    if (kategori === currentKategori) {
+                        option.selected = true;
+                    }
+                    kategoriSelect.appendChild(option);
+                });
+            }
+        }
+
+        function updateTransaksi() {
+            const btnUpdate = document.getElementById('btnUpdateTransaksi');
+            btnUpdate.disabled = true;
+            btnUpdate.textContent = 'Menyimpan...';
+            
+            const formData = new FormData();
+            formData.append('action', 'edit');
+            formData.append('id_keuangan', document.getElementById('editIdKeuangan').value);
+            formData.append('transaksi', document.getElementById('editJumlah').value);
+            formData.append('keteranganTransaksi', document.getElementById('editKeterangan').value);
+            formData.append('jenisTransaksi', document.getElementById('editJenisTransaksi').value);
+            formData.append('kategoriTransaksi', document.getElementById('editKategoriTransaksi').value);
+            
+            fetch('transaksi_api.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelector('.modal-overlay').remove();
+                    window.alert('✓ Transaksi berhasil diupdate!');
+                    window.location.reload();
+                } else {
+                    btnUpdate.disabled = false;
+                    btnUpdate.textContent = 'Simpan Perubahan';
+                    window.alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                btnUpdate.disabled = false;
+                btnUpdate.textContent = 'Simpan Perubahan';
+                window.alert('Terjadi kesalahan saat mengupdate transaksi');
+            });
+        }
+
+        function deleteTransaksi(id_keuangan) {
+            if (!window.confirm('Yakin ingin menghapus transaksi ini?')) {
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('action', 'hapus');
+            formData.append('id_keuangan', id_keuangan);
+            
+            fetch('transaksi_api.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.alert('✓ Transaksi berhasil dihapus!');
+                    window.location.reload();
+                } else {
+                    window.alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.alert('Terjadi kesalahan saat menghapus transaksi');
+            });
         }
 
         // Auto hide alert after 3 seconds

@@ -3,9 +3,9 @@ session_start();
 
 require_once __DIR__ . '/../app/AuthController.php';
 
-// Jika sudah login, redirect ke dashboard
-if (isset($_SESSION['user_id'])) {
-    header('Location: dashboard.php');
+// Jika sudah login, redirect ke keuangan
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+    header('Location: keuangan.php');
     exit();
 }
 
@@ -16,10 +16,15 @@ unset($_SESSION['error']);
 unset($_SESSION['success']);
 
 if(isset($_POST['submit'])){
-    if(login($_POST)){
-        $_SESSION['user_id'] = login($_POST)['id_mahasiswa'];
+    $userData = login($_POST);
+    if($userData){
+        $_SESSION['user_id'] = $userData['id_mahasiswa'];
+        $_SESSION['id_mahasiswa'] = $userData['id_mahasiswa'];
+        $_SESSION['nama'] = $userData['nama'];
+        $_SESSION['email'] = $userData['email'];
+        $_SESSION['logged_in'] = true;
         $_SESSION['success'] = "Login berhasil!";
-        header('Location: dashboard.php');
+        header('Location: keuangan.php');
         exit();
     } else {
         $_SESSION['error'] = "Email atau password salah.";

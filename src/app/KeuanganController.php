@@ -117,6 +117,59 @@ function hapusTransaksi($id_keuangan) {
     }
 }
 
+function editTransaksi($id_keuangan, $data) {
+    global $servername, $username, $password, $dbname;
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+    
+    if (!$conn) {
+        return ['success' => false, 'message' => 'Koneksi database gagal'];
+    }
+    
+    $id_keuangan = mysqli_real_escape_string($conn, $id_keuangan);
+    $transaksi = (int)$data['transaksi'];
+    $keteranganTransaksi = mysqli_real_escape_string($conn, $data['keteranganTransaksi']);
+    $jenisTransaksi = mysqli_real_escape_string($conn, $data['jenisTransaksi']);
+    $kategoriTransaksi = mysqli_real_escape_string($conn, $data['kategoriTransaksi']);
+    
+    $query = "UPDATE Keuangan SET 
+              transaksi = $transaksi,
+              keteranganTransaksi = '$keteranganTransaksi',
+              jenisTransaksi = '$jenisTransaksi',
+              kategoriTransaksi = '$kategoriTransaksi'
+              WHERE id_keuangan = '$id_keuangan'";
+    
+    if (mysqli_query($conn, $query)) {
+        mysqli_close($conn);
+        return ['success' => true, 'message' => 'Transaksi berhasil diupdate'];
+    } else {
+        $error = mysqli_error($conn);
+        mysqli_close($conn);
+        return ['success' => false, 'message' => 'Gagal mengupdate transaksi: ' . $error];
+    }
+}
+
+function getTransaksiById($id_keuangan) {
+    global $servername, $username, $password, $dbname;
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+    
+    if (!$conn) {
+        return null;
+    }
+    
+    $id_keuangan = mysqli_real_escape_string($conn, $id_keuangan);
+    $query = "SELECT * FROM Keuangan WHERE id_keuangan = '$id_keuangan' LIMIT 1";
+    
+    $result = mysqli_query($conn, $query);
+    $data = null;
+    
+    if ($result && $row = mysqli_fetch_assoc($result)) {
+        $data = $row;
+    }
+    
+    mysqli_close($conn);
+    return $data;
+}
+
 function getTotalSaldo($id_mahasiswa) {
     global $servername, $username, $password, $dbname;
     $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -276,5 +329,142 @@ function getTransaksiByKategori($id_mahasiswa, $kategori, $date_condition = '') 
     
     mysqli_close($conn);
     return $data;
+}
+
+// === LANGGANAN FUNCTIONS ===
+
+function tambahLangganan($data) {
+    global $servername, $username, $password, $dbname;
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+    
+    if (!$conn) {
+        return ['success' => false, 'message' => 'Koneksi database gagal'];
+    }
+    
+    $id_langganan = random_int(100000000, 999999999);
+    $id_mahasiswa = (int)$data['id_mahasiswa'];
+    $nama_langganan = mysqli_real_escape_string($conn, $data['nama_langganan']);
+    $icon = mysqli_real_escape_string($conn, $data['icon']);
+    $harga_bulanan = (int)$data['harga_bulanan'];
+    
+    $query = "INSERT INTO Langganan (id_langganan, id_mahasiswa, nama_langganan, icon, harga_bulanan) 
+              VALUES ($id_langganan, $id_mahasiswa, '$nama_langganan', '$icon', $harga_bulanan)";
+    
+    if (mysqli_query($conn, $query)) {
+        mysqli_close($conn);
+        return ['success' => true, 'message' => 'Langganan berhasil ditambahkan'];
+    } else {
+        $error = mysqli_error($conn);
+        mysqli_close($conn);
+        return ['success' => false, 'message' => 'Gagal menambahkan langganan: ' . $error];
+    }
+}
+
+function getLanggananByMahasiswa($id_mahasiswa) {
+    global $servername, $username, $password, $dbname;
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+    
+    if (!$conn) {
+        return [];
+    }
+    
+    $id_mahasiswa = mysqli_real_escape_string($conn, $id_mahasiswa);
+    $query = "SELECT * FROM Langganan WHERE id_mahasiswa = '$id_mahasiswa' AND status = 'Aktif' ORDER BY tanggal_dibuat DESC";
+    
+    $result = mysqli_query($conn, $query);
+    $data = [];
+    
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $data[] = $row;
+        }
+    }
+    
+    mysqli_close($conn);
+    return $data;
+}
+
+function getTotalLangganan($id_mahasiswa) {
+    global $servername, $username, $password, $dbname;
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+    
+    if (!$conn) {
+        return 0;
+    }
+    
+    $id_mahasiswa = mysqli_real_escape_string($conn, $id_mahasiswa);
+    $query = "SELECT SUM(harga_bulanan) as total FROM Langganan WHERE id_mahasiswa = '$id_mahasiswa' AND status = 'Aktif'";
+    
+    $result = mysqli_query($conn, $query);
+    $total = 0;
+    
+    if ($result && $row = mysqli_fetch_assoc($result)) {
+        $total = $row['total'] ?? 0;
+    }
+    
+    mysqli_close($conn);
+    return $total;
+}
+
+function hapusLangganan($id_langganan) {
+    global $servername, $username, $password, $dbname;
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+    
+    if (!$conn) {
+        return ['success' => false, 'message' => 'Koneksi database gagal'];
+    }
+    
+    $id_langganan = mysqli_real_escape_string($conn, $id_langganan);
+    $query = "UPDATE Langganan SET status = 'Nonaktif' WHERE id_langganan = '$id_langganan'";
+    
+    if (mysqli_query($conn, $query)) {
+        mysqli_close($conn);
+        return ['success' => true, 'message' => 'Langganan berhasil dihapus'];
+    } else {
+        $error = mysqli_error($conn);
+        mysqli_close($conn);
+        return ['success' => false, 'message' => 'Gagal menghapus langganan: ' . $error];
+    }
+}
+
+function chargeMonthlySubscriptions() {
+    global $servername, $username, $password, $dbname;
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+    
+    if (!$conn) {
+        return ['success' => false, 'message' => 'Koneksi database gagal'];
+    }
+    
+    // Get all active subscriptions
+    $query = "SELECT * FROM Langganan WHERE status = 'Aktif'";
+    $result = mysqli_query($conn, $query);
+    
+    $charged = 0;
+    $errors = [];
+    
+    if ($result) {
+        while ($langganan = mysqli_fetch_assoc($result)) {
+            // Create transaction for this subscription
+            $id_keuangan = random_int(100000, 999999);
+            $tanggalKeuangan = date('Y-m-d H:i:s');
+            
+            $insertQuery = "INSERT INTO Keuangan (id_keuangan, id_mahasiswa, tanggalKeuangan, saldo, transaksi, keteranganTransaksi, jenisTransaksi, kategoriTransaksi) 
+                          VALUES ('$id_keuangan', '{$langganan['id_mahasiswa']}', '$tanggalKeuangan', 0, {$langganan['harga_bulanan']}, 'Tagihan {$langganan['nama_langganan']}', 'Pengeluaran', 'Langganan')";
+            
+            if (mysqli_query($conn, $insertQuery)) {
+                $charged++;
+            } else {
+                $errors[] = mysqli_error($conn);
+            }
+        }
+    }
+    
+    mysqli_close($conn);
+    return [
+        'success' => true, 
+        'message' => "$charged langganan berhasil di-charge",
+        'charged' => $charged,
+        'errors' => $errors
+    ];
 }
 ?>
