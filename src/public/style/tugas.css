@@ -504,4 +504,3 @@ body { margin: 0; font-family: 'Poppins', system-ui, sans-serif; background: var
 	.fields { grid-template-columns: 1fr; }
 	.stats { grid-template-columns: 1fr 1fr; }
 }
-
