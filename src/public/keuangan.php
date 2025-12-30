@@ -394,7 +394,7 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
                 <span class="close" onclick="closeModal()">&times;</span>
             </div>
             
-            <form method="POST" action="">
+            <form method="POST" action="" onsubmit="prepareFormSubmit(event)">
                 <input type="hidden" name="action" value="tambah">
                 
                 <div class="form-group">
@@ -420,7 +420,8 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
 
                 <div class="form-group">
                     <label for="transaksi">Jumlah (Rp)</label>
-                    <input type="number" name="transaksi" id="transaksi" placeholder="0" min="0" required>
+                    <input type="text" name="transaksi_display" id="transaksi" placeholder="0" required oninput="formatCurrency(this)">
+                    <input type="hidden" name="transaksi" id="transaksi_raw">
                 </div>
 
                 <div class="modal-footer">
@@ -475,6 +476,33 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
     </div>
 
     <script>
+        // Format currency input
+        function formatCurrency(input) {
+            let value = input.value.replace(/[^0-9]/g, '');
+            if (value === '') {
+                input.value = '';
+                return;
+            }
+            let formatted = parseInt(value).toLocaleString('id-ID');
+            input.value = formatted;
+            
+            // Store raw value in hidden field if exists
+            const rawInput = document.getElementById(input.id + '_raw');
+            if (rawInput) {
+                rawInput.value = value;
+            }
+        }
+        
+        // Prepare form before submit - ensure raw value is set
+        function prepareFormSubmit(event) {
+            const displayInput = document.querySelector('input[name="transaksi_display"]');
+            const rawInput = document.querySelector('input[name="transaksi"]');
+            if (displayInput && rawInput) {
+                rawInput.value = displayInput.value.replace(/[^0-9]/g, '');
+            }
+            return true;
+        }
+        
         // Data kategori dari PHP
         const kategoriPemasukan = <?php echo json_encode($kategori_pemasukan); ?>;
         const kategoriPengeluaran = <?php echo json_encode($kategori_pengeluaran); ?>;
@@ -712,7 +740,7 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
                 return;
             }
             
-            totalElement.textContent = 'Rp ' + (total || 0).toLocaleString('id-ID');
+            totalElement.textContent = 'Rp ' + parseInt(total || 0).toLocaleString('id-ID');
             
             if (subscriptions.length === 0) {
                 listContainer.innerHTML = `
@@ -801,8 +829,9 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
                             <i class="fa-solid fa-money-bill-wave" style="color: #667eea;"></i>
                             <span>Biaya per Bulan</span>
                         </label>
-                        <input type="number" name="harga_bulanan" id="inputHarga" required placeholder="50000" min="0" step="1000"
+                        <input type="text" name="harga_bulanan" id="inputHarga" required placeholder="50.000" oninput="formatCurrency(this)"
                                style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; box-sizing: border-box;">
+                        <input type="hidden" name="harga_bulanan_raw" id="inputHarga_raw">
                         <p style="font-size: 12px; color: #94a3b8; margin: 8px 0 0 0;">
                             <i class="fa-solid fa-info-circle"></i> Akan otomatis dipotong setiap tanggal 1
                         </p>
@@ -917,6 +946,12 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
             e.preventDefault();
             
             const formData = new FormData(e.target);
+            
+            // Get raw value from formatted input
+            const hargaInput = document.getElementById('inputHarga');
+            const hargaRaw = hargaInput.value.replace(/[^0-9]/g, '');
+            
+            formData.set('harga_bulanan', hargaRaw);
             formData.append('action', 'tambah');
             
             fetch('keuangan.php?api=langganan', {
@@ -1261,7 +1296,7 @@ $pengeluaran_change = $dashboard['pengeluaran_change'];
         function showTransactionDetailModal(transaksi) {
             const isIncome = transaksi.jenisTransaksi === 'Pemasukan';
             const amountColor = isIncome ? '#10b981' : '#ef4444';
-            const icon = isIncome ? '✓' : '✕';
+            const icon = isIncome ? '↙' : '↗';
             const iconBg = isIncome ? '#d1fae5' : '#fee2e2';
             const iconColor = isIncome ? '#10b981' : '#ef4444';
             

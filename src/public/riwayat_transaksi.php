@@ -306,7 +306,7 @@ $kategori_pengeluaran = $history['kategori_pengeluaran'];
         function showTransactionDetailModal(transaksi) {
             const isIncome = transaksi.jenisTransaksi === 'Pemasukan';
             const amountColor = isIncome ? '#10b981' : '#ef4444';
-            const icon = isIncome ? '✓' : '✕';
+            const icon = isIncome ? '↙' : '↗';
             const iconBg = isIncome ? '#d1fae5' : '#fee2e2';
             const iconColor = isIncome ? '#10b981' : '#ef4444';
             
