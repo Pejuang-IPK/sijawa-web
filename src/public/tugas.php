@@ -90,9 +90,6 @@ foreach ($tasks as $t) {
 					<h1>Dashboard Tugas</h1>
 					<p>Pantau dan kelola deadline tugasmu!</p>
 				</div>
-				<a class="classroom-btn" href="#" onclick="alert('Integrasi Classroom belum tersedia');return false;">
-					<i class="fa-solid fa-chalkboard-user"></i> Ambil dari Classroom
-				</a>
 			</header>
 
 			<section class="add-box">
