@@ -572,16 +572,22 @@ function getDateFilter() {
         
         case 'minggu':
             $weeks_ago = (int)$value;
-            $start_date = date('Y-m-d', strtotime("-$weeks_ago weeks monday"));
-            $end_date = date('Y-m-d', strtotime("-$weeks_ago weeks sunday"));
-            $date_condition = " AND DATE(tanggalKeuangan) BETWEEN '$start_date' AND '$end_date'";
             if ($weeks_ago == 0) {
+                // Minggu ini: dari Senin minggu ini sampai Minggu minggu ini
+                $start_date = date('Y-m-d', strtotime('monday this week'));
+                $end_date = date('Y-m-d', strtotime('sunday this week'));
                 $filter_label = 'Minggu Ini';
-            } elseif ($weeks_ago == 1) {
-                $filter_label = 'Minggu Lalu';
             } else {
-                $filter_label = $weeks_ago . ' Minggu Lalu';
+                // Minggu lalu: mundur dari minggu sekarang
+                $start_date = date('Y-m-d', strtotime("-$weeks_ago weeks monday"));
+                $end_date = date('Y-m-d', strtotime("-$weeks_ago weeks sunday"));
+                if ($weeks_ago == 1) {
+                    $filter_label = 'Minggu Lalu';
+                } else {
+                    $filter_label = $weeks_ago . ' Minggu Lalu';
+                }
             }
+            $date_condition = " AND DATE(tanggalKeuangan) BETWEEN '$start_date' AND '$end_date'";
             break;
         
         case 'bulan':
