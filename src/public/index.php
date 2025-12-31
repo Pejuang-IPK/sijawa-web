@@ -213,6 +213,6 @@
         </div>
     </footer>
 
-    <script src="/script/script.js"></script>
+    <script src="/script/script.js?v=2"></script>
 </body>
 </html>

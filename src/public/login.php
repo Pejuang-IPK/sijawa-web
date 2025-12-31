@@ -43,9 +43,12 @@ if(isset($_POST['submit'])){
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style/login.css">
+    <link rel="stylesheet" href="style/login.css?v=<?php echo time(); ?>">
 </head>
 <body class="auth-page">
+    <div class="img-background">
+        <img src="assets/aksen_1.png" alt="" srcset="">
+    </div>
     <div class="container">
         <div class="left-section">
             <h1>Selamat datang kembali di SIJAWA👋</h1>
@@ -76,6 +79,7 @@ if(isset($_POST['submit'])){
                         <hr class="right-line">
                     </div>
 
+                    <button class="google-log"><span class="material-icon-theme--google"></span> Masuk dengan google</button>
                     <button type="submit" class="submit-btn" name="submit">Masuk</button>
                 </form>
 

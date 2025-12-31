@@ -5,6 +5,18 @@ function scrollToFeatures() {
 
 // Fungsi Navigasi Mockup sesuai Flowchart
 // Flow: Landing Page -> Check Account -> Login OR Register
+function handleNavigation(action) {
+  if (action === "login") {
+    // Dalam implementasi nyata: window.location.href = 'login.html';
+    window.location.href = "login.php";
+  } else if (action === "register") {
+    window.location.href = "register.php";
+  }
+}
+
+// function handleLogin() {
+//   alert("Ini button login");
+// }
 
 // Fungsi Slider Fitur
 function scrollSlider(direction) {
