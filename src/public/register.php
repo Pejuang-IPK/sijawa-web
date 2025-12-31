@@ -34,9 +34,13 @@ if(isset($_POST['submit'])){
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style/register.css">
+    <link rel="stylesheet" href="style/register.css?v=<?php echo time();?>">
 </head>
 <body class="auth-page register-page">
+    <div class="img-background">
+        <img src="assets/ellipse_1.png" alt="" srcset="">
+        <img src="assets/ellipse_2.png" alt="" srcset="">
+    </div>
     <div class="container">
         <div class="left-section">
             <h1>Mulai atur kuliahmu dengan SIJAWA 🚀</h1>
@@ -75,7 +79,7 @@ if(isset($_POST['submit'])){
                         <span>atau dengan</span>
                         <hr>
                     </div>
-
+                    <button class="google-log"><span class="material-icon-theme--google"></span> Masuk dengan google</button>
                     <button type="submit" class="submit-btn" name="submit">Daftar</button>
                 </form>
 
