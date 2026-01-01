@@ -8,16 +8,15 @@ function scrollToFeatures() {
 function handleNavigation(action) {
   if (action === "login") {
     // Dalam implementasi nyata: window.location.href = 'login.html';
-    alert(
-      "Mengarah ke Halaman Login (Login Page)... \n\nSesuai Flow: User yang sudah punya akun masuk lewat sini."
-    );
+    window.location.href = "login.php";
   } else if (action === "register") {
-    // Dalam implementasi nyata: window.location.href = 'onboarding.html';
-    alert(
-      "Mengarah ke Halaman Onboarding/Register... \n\nSesuai Flow: User baru diarahkan ke Onboarding Page -> Register Page."
-    );
+    window.location.href = "register.php";
   }
 }
+
+// function handleLogin() {
+//   alert("Ini button login");
+// }
 
 // Fungsi Slider Fitur
 function scrollSlider(direction) {

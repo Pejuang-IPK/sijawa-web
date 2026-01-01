@@ -3,9 +3,9 @@ session_start();
 
 require_once __DIR__ . '/../app/AuthController.php';
 
-// Jika sudah login, redirect ke dashboard
-if (isset($_SESSION['user_id'])) {
-    header('Location: dashboard.php');
+// Jika sudah login, redirect ke keuangan
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+    header('Location: keuangan.php');
     exit();
 }
 
@@ -16,8 +16,13 @@ unset($_SESSION['error']);
 unset($_SESSION['success']);
 
 if(isset($_POST['submit'])){
-    if(login($_POST)){
-        $_SESSION['user_id'] = login($_POST)['id_mahasiswa'];
+    $userData = login($_POST);
+    if($userData){
+        $_SESSION['user_id'] = $userData['id_mahasiswa'];
+        $_SESSION['id_mahasiswa'] = $userData['id_mahasiswa'];
+        $_SESSION['nama'] = $userData['nama'];
+        $_SESSION['email'] = $userData['email'];
+        $_SESSION['logged_in'] = true;
         $_SESSION['success'] = "Login berhasil!";
         header('Location: dashboard.php');
         exit();
@@ -38,9 +43,12 @@ if(isset($_POST['submit'])){
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style/login.css">
+    <link rel="stylesheet" href="style/login.css?v=<?php echo time(); ?>">
 </head>
 <body class="auth-page">
+    <div class="img-background">
+        <img src="assets/aksen_1.png" alt="" srcset="">
+    </div>
     <div class="container">
         <div class="left-section">
             <h1>Selamat datang kembali di SIJAWA👋</h1>
@@ -71,6 +79,7 @@ if(isset($_POST['submit'])){
                         <hr class="right-line">
                     </div>
 
+                    <button class="google-log"><span class="material-icon-theme--google"></span> Masuk dengan google</button>
                     <button type="submit" class="submit-btn" name="submit">Masuk</button>
                 </form>
 

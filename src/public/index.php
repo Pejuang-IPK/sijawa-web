@@ -24,8 +24,8 @@
             <li><a href="#pricing">Harga</a></li>
         </ul>
         <div class="auth-buttons">
-            <button class="btn btn-login" onclick="handleNavigation('login')">Masuk</button>
-            <button class="btn btn-register" onclick="handleNavigation('register')">Daftar</button>
+            <button class="btn btn-login"><a href="login.php">Masuk</a></button>
+            <button class="btn btn-register"><a href="register.php">Daftar</a></button>
         </div>
     </nav>
 
@@ -213,6 +213,6 @@
         </div>
     </footer>
 
-    <script src="/script/script.js"></script>
+    <script src="/script/script.js?v=2"></script>
 </body>
 </html>
