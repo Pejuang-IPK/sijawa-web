@@ -1,0 +1,544 @@
+:root {
+  --bg: #f6f9ff;
+  --panel: #ffffff;
+  --muted: #8aa0b6;
+  --text: #0f172a;
+  --blue: #0079ff;
+  --red: #ff0060;
+  --yellow: #f5c847;
+  --green: #00dfa2;
+  --border: #e6eaf2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.page {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  grid-template-rows: 100vh;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  background: #fff;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 12px;
+  height: 100vh;
+  position: sticky;
+  overflow-y: auto; /* Bisa discroll jika konten panjang */
+}
+
+.brand {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #0f172a;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.side-nav {
+  display: grid;
+  gap: 18px;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.side-nav a,
+.bottom a {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #4b5970;
+  text-decoration: none;
+}
+
+.side-nav a.active,
+.side-nav a:hover,
+.bottom a.active,
+.bottom a:hover {
+  background: #dbeaff;
+  color: var(--blue);
+}
+
+.logout {
+  margin-top: auto;
+}
+
+.icon-btn {
+  background: #fff;
+  border: 1px solid var(--border);
+  color: #2e3a4e;
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.icon-btn-logout {
+  background: #ff0060;
+  border: 1px solid var(--border);
+  color: #fff;
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.side-nav a.active,
+.side-nav a:hover {
+  background: #dbeaff;
+  color: var(--blue);
+}
+
+.side-nav a.active,
+.side-nav a:hover {
+  background: #dbeaff;
+  color: var(--blue);
+}
+
+/* Content */
+.content {
+  padding: 16px 32px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Styling Scrollbar khusus Webkit (Chrome, Edge, Safari) */
+.content::-webkit-scrollbar {
+  width: 10px; /* Lebar scrollbar tipis */
+}
+
+.content::-webkit-scrollbar-track {
+  background: transparent; /* Background track transparan */
+}
+
+.content::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1; /* Warna scrollbar abu-abu soft */
+  border-radius: 20px; /* Sudut bulat */
+  border: 3px solid transparent; /* Trik agar terlihat ada jarak */
+  background-clip: content-box;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8; /* Warna saat dihover */
+}
+
+.content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.content-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.content-header p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* --- PROFILE SECTION --- */
+
+/* --- PROFILE SECTION (FULL WIDTH) --- */
+
+/* Container Utama Profile */
+.profile-card {
+  background: var(--panel);
+  border-radius: 20px;
+  padding: 40px;
+
+  /* PERUBAHAN DISINI: */
+  width: 100%; /* Mengisi 100% lebar area konten */
+  max-width: none; /* Menghapus batasan lebar 800px */
+  margin: 0; /* Menghapus posisi tengah */
+
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+
+  /* Opsional: Agar tinggi juga mengisi layar jika konten sedikit */
+  min-height: calc(100vh - 150px);
+}
+
+/* Form Grid System */
+.form-grid {
+  display: grid;
+  /* Menggunakan minmax agar input tidak terlalu gepeng atau terlalu lebar */
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px; /* Jarak antar kolom lebih lega */
+  margin-bottom: 30px;
+}
+
+/* Sisa CSS di bawah ini TETAP SAMA seperti sebelumnya */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #f8fafc;
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.profile-info h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: var(--text);
+}
+
+.profile-info p {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 30px 0;
+}
+
+.form-full {
+  grid-column: 1 / -1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(0, 121, 255, 0.1);
+}
+
+.btn-primary {
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  padding: 12px 30px; /* Padding tombol diperbesar sedikit */
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: fit-content;
+  margin-top: 10px;
+}
+
+.btn-primary:hover {
+  background: #0062cc;
+}
+
+/* Responsive Mobile Update */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr; /* Kembali 1 kolom di HP */
+  }
+
+  .profile-card {
+    padding: 20px; /* Padding lebih kecil di HP */
+  }
+
+  /* 1. SETUP BODY & PAGE */
+  body {
+    overflow-y: auto; /* Scroll body aktif */
+  }
+
+  .page {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  /* 1. CONTAINER UTAMA (SIDEBAR) */
+  .sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px; /* Tinggi Fix */
+    background: #ffffff;
+
+    /* FLEXBOX UTAMA */
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* KUNCI: Paksa vertikal tengah */
+    justify-content: space-between;
+
+    padding: 0;
+    border-top: 1px solid #eee;
+    z-index: 1000;
+  }
+
+  /* 2. SEMBUNYIKAN LOGO (PENTING) */
+  /* Jika ini tidak di-hide total, dia akan mendorong ikon lain jadi miring */
+  .side-nav .brand {
+    display: none !important;
+  }
+
+  /* 3. GROUP KIRI (MENU UTAMA) */
+  .side-nav {
+    display: flex;
+    align-items: center; /* KUNCI: Paksa vertikal tengah */
+    justify-content: space-around;
+    flex-grow: 1; /* Isi ruang kosong */
+    height: 100%; /* Penuhi tinggi sidebar */
+    margin: 0;
+    padding: 0;
+    gap: 0;
+  }
+
+  /* 4. GROUP KANAN (PROFILE & LOGOUT) */
+  .bottom {
+    display: flex !important; /* Paksa muncul */
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px; /* Jarak antara Profile dan Logout */
+
+    height: 100%;
+    padding: 0 15px; /* Spasi kanan kiri */
+    border-left: 1px solid #f1f5f9; /* Garis pemisah vertikal */
+    margin: 0;
+  }
+
+  /* 5. RESET SEMUA LINK (<a>) AGAR LURUS */
+  .side-nav a,
+  .bottom a {
+    display: flex;
+    align-items: center; /* Vertikal Tengah */
+    justify-content: center; /* Horizontal Tengah */
+
+    height: 100%;
+    flex: 1;
+
+    text-decoration: none;
+    background: transparent !important;
+    color: #94a3b8;
+    margin: 0;
+    padding: 0; /* Pastikan padding 0 */
+  }
+
+  /* Ukuran Ikon */
+  .side-nav a i,
+  .bottom a i {
+    /* Membuat kotak pembungkus ikon yang konsisten */
+    width: 24px;
+    height: 24px;
+
+    /* Memaksa konten ikon (SVG/Font) ke tengah kotak tersebut */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px; /* Sedikit disesuaikan agar pas di kotak 24px */
+    line-height: 1; /* Reset tinggi baris */
+    margin: 0; /* Hapus margin bawaan jika ada */
+  }
+
+  /* Indikator Aktif */
+  .side-nav a.active,
+  .bottom a.active {
+    color: var(--blue);
+    position: relative;
+  }
+
+  .side-nav a i.fa-wallet {
+    position: relative;
+    top: 1.5px; /* Sesuaikan angka ini (2px atau 3px) sampai pas */
+  }
+
+  /* Jika ada icon lain yang kurang pas, lakukan hal sama */
+  /* Contoh: icon tugas terlihat kekecilan? */
+  .side-nav a i.fa-list-check {
+    font-size: 20px; /* Sesuaikan ukuran khusus */
+  }
+
+  /* Titik Biru */
+  .side-nav a.active::after,
+  .bottom a.active::after {
+    content: "";
+    position: absolute;
+    bottom: 15px; /* Sesuaikan jarak dari bawah */
+    left: 50%;
+    transform: translateX(-50%); /* Pastikan titik di tengah */
+    width: 4px;
+    height: 4px;
+    background: var(--blue);
+    border-radius: 50%;
+  }
+
+  /* 6. PERBAIKAN TOMBOL LOGOUT */
+  .logout {
+    height: 100%; /* Full tinggi */
+    display: flex;
+    align-items: center; /* Tengah vertikal */
+    margin: 0;
+  }
+
+  .logout form {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .icon-btn-logout {
+    background: transparent !important;
+    border: none !important;
+    color: #ef4444 !important;
+    width: 40px;
+    height: 100%; /* Full tinggi agar sejajar link lain */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* 7. ADJUSTMENT KONTEN UTAMA */
+  .content {
+    margin-bottom: 90px; /* Jarak bawah agar tidak tertutup navbar */
+    padding: 20px;
+    overflow: visible;
+    height: auto;
+  }
+
+  .content-header h1 {
+    font-size: 22px; /* Perkecil judul */
+  }
+
+  /* 4. MENTAL HEALTH CARD (STACK) */
+  .mental-health-card {
+    padding: 25px;
+    height: auto; /* Biarkan tinggi otomatis */
+  }
+
+  .card-content-wrapper {
+    flex-direction: column; /* Tumpuk vertikal */
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .mh-stats {
+    text-align: left; /* Rata kiri saat ditumpuk */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mh-stats .percent {
+    font-size: 28px;
+  }
+
+  /* 5. ME TIME SECTION */
+  .metime-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .badge-count {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .metime-grid {
+    grid-template-columns: 1fr; /* 1 Kolom penuh ke bawah */
+    gap: 20px;
+  }
+
+  .metime-card {
+    min-height: auto; /* Jangan dipaksa tinggi */
+    padding: 25px;
+  }
+
+  .icon-illustration {
+    width: 60px;
+    height: 60px; /* Perkecil icon ilustrasi */
+  }
+
+  .icon-illustration i {
+    font-size: 24px;
+  }
+
+  .card-text h3 {
+    font-size: 20px;
+  }
+}

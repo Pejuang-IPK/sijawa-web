@@ -1082,11 +1082,6 @@ body {
   }
 }
 
-/* -----------------------------------------------------------
-   3. MOBILE / SMARTPHONE (Max-Width: 768px)
-   Target: iPhone, Android Phones
-   Action: Navigasi pindah ke bawah, Kartu Matkul jadi List
------------------------------------------------------------ */
 @media screen and (max-width: 768px) {
   /* Ubah Layout Halaman Jadi 1 Kolom Vertikal */
   body {
