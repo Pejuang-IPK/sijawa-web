@@ -47,8 +47,7 @@ extract($dashboard);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Keuangan - SIJAWA</title>
-    <link rel="stylesheet" href="style/tugas.css">
-    <link rel="stylesheet" href="style/keuangan.css">
+    <link rel="stylesheet" href="style/keuangan.css?v=<?php echo time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -61,8 +60,8 @@ extract($dashboard);
             <!-- Header -->
             <div class="page-header">
                 <div>
-                    <h1 class="page-title">Dashboard Keuangan</h1>
-                    <p class="page-subtitle">Pantau arus kas dan kelola anggaran bulanmu - <?php echo htmlspecialchars($nama_mahasiswa); ?></p>
+                    <div class="page-title">Dashboard Keuangan</div>
+                    <div class="page-subtitle">Pantau arus kas dan kelola anggaran bulanmu - <?php echo htmlspecialchars($nama_mahasiswa); ?></div>
                 </div>
                 <button class="btn-add-transaction" onclick="bukaModal()">
                     <i class="fa-solid fa-plus"></i>
