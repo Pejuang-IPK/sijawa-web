@@ -14,7 +14,7 @@ function query($query)
     return $rows;
 }
 
-function login($loginData)
+function login($loginData) 
 {
     global $conn;
 
