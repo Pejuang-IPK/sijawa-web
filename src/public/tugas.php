@@ -1,6 +1,7 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../app/controller/TaskController.php';
+
+require_once __DIR__ . '../../config/database.php';
+require_once __DIR__ . '../../app/controller/TaskController.php';
 
 // DEMO: tanpa session. Gunakan ID mahasiswa contoh untuk insert.
 $DEMO_USER_ID = 456574;
@@ -65,29 +66,22 @@ foreach ($tasks as $t) {
 	<title>Dashboard Tugas - SIJAWA</title>
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<link rel="stylesheet" href="/style/tugas.css">
+	<link rel="stylesheet" href="style/tugas.css?v=<?php echo time(); ?>">
 </head>
 <body>
 	<div class="page">
-		<aside class="sidebar">
-			<div class="brand">S.</div>
-			<nav class="side-nav">
-				<a href="index.php" title="Beranda"><i class="fa-solid fa-house"></i></a>
-				<a class="active" href="tugas.php" title="Tugas"><i class="fa-solid fa-list-check"></i></a>
-				<a href="#" title="Kalender"><i class="fa-solid fa-calendar-days"></i></a>
-				<a href="#" title="Setting"><i class="fa-solid fa-gear"></i></a>
-			</nav>
-			<div class="logout">
-				<form action="logout.php" method="post">
-					<button type="submit" class="icon-btn" title="Keluar"><i class="fa-solid fa-right-from-bracket"></i></button>
-				</form>
-			</div>
-		</aside>
+		<?php
+            // 1. Definisikan nama halaman ini
+            $page = 'dashboard'; 
+
+            // 2. Baru panggil sidebar
+            include 'includes/sidebar.php'; 
+        ?>
 
 		<main class="content">
 			<header class="content-header">
 				<div>
-					<h1>Dashboard Tugas</h1>
+					<div class="title">Dashboard Tugas</div>
 					<p>Pantau dan kelola deadline tugasmu!</p>
 				</div>
 			</header>

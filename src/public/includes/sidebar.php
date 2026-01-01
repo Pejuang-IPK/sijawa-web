@@ -1,16 +1,25 @@
+<?php 
+$current_page = basename($_SERVER['PHP_SELF']);
+
+?>
 <!-- Sidebar -->
 <aside class="sidebar">
-    <div class="brand">S.</div>
     <nav class="side-nav">
-        <a href="index.php" title="Beranda"><i class="fa-solid fa-house"></i></a>
-        <a href="#" title="Tugas"><i class="fa-solid fa-list-check"></i></a>
-        <a href="#" title="Kalender"><i class="fa-solid fa-calendar-days"></i></a>
-        <a class="active" href="keuangan.php" title="Keuangan"><i class="fa-solid fa-wallet"></i></a>
-        <a href="#" title="Setting"><i class="fa-solid fa-gear"></i></a>
+        <div class="brand">S.</div>
+        <a class="<?= ($current_page == 'dashboard.php') ? 'active' : '' ?>" href="dashboard.php" title="Beranda"><i class="fa-solid fa-house"></i></a>
+        <a class="<?= ($current_page == 'tugas.php') ? 'active' : '' ?>" href="tugas.php" title="Tugas"><i class="fa-solid fa-list-check"></i></a>
+        <a class="<?= ($current_page == 'kalender.php') ? 'active' : '' ?>" href="#" title="Kalender"><i class="fa-solid fa-calendar-days"></i></a>
+        <a class="<?= ($current_page == 'keuangan.php') ? 'active' : '' ?>" href="keuangan.php" title="Keuangan"><i class="fa-solid fa-wallet"></i></a>
+        <a class="<?= ($current_page == 'metime.php') ? 'active' : '' ?>" href="metime.php" title="Me Time">
+            <i class="fa-solid fa-mug-hot"></i>
+        </a>
     </nav>
-    <div class="logout">
-        <form action="logout.php" method="post">
-            <button type="submit" class="icon-btn" title="Keluar"><i class="fa-solid fa-right-from-bracket"></i></button>
-        </form>
+    <div class="bottom">
+        <a class="<?= ($current_page == 'setting.php') ? 'active' : '' ?>" href="#" title="Setting"><i class="fa-solid fa-gear"></i></a>
+        <div class="logout">
+            <form action="logout.php" method="post">
+                <button type="submit" class="icon-btn-logout" title="Keluar"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </form>
+        </div>
     </div>
 </aside>

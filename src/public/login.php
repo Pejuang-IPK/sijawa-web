@@ -24,7 +24,7 @@ if(isset($_POST['submit'])){
         $_SESSION['email'] = $userData['email'];
         $_SESSION['logged_in'] = true;
         $_SESSION['success'] = "Login berhasil!";
-        header('Location: keuangan.php');
+        header('Location: dashboard.php');
         exit();
     } else {
         $_SESSION['error'] = "Email atau password salah.";
