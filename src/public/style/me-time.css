@@ -132,7 +132,7 @@ body {
 .content {
   padding: 16px 32px;
   height: 100%;
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 
 /* Styling Scrollbar khusus Webkit (Chrome, Edge, Safari) */

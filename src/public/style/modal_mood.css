@@ -1,0 +1,177 @@
+/* Latar Belakang Gelap (Overlay) */
+.modal-overlay {
+  position: fixed; /* Tetap di layar walau di-scroll */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* Warna latar hitam transparan */
+  background: rgba(0, 0, 0, 0.6);
+
+  /* Efek Blur di belakang modal (Modern Look) */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+
+  /* Z-INDEX SANGAT TINGGI agar di atas Sidebar & Navbar */
+  z-index: 99999;
+
+  /* Flexbox untuk menengahkan Modal */
+  display: none; /* Default sembunyi */
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease; /* Transisi halus saat muncul */
+}
+
+/* Saat modal aktif (ditambahkan lewat JS) */
+.modal-overlay.show {
+  display: flex;
+  opacity: 1;
+}
+
+/* Kotak Konten Modal */
+.modal-content {
+  background: #ffffff;
+  width: 90%;
+  max-width: 450px; /* Lebar maksimal agar enak dilihat */
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  position: relative;
+
+  /* Animasi Slide Up */
+  transform: translateY(20px);
+  transition: transform 0.3s ease-out;
+}
+
+/* Saat modal aktif, kotak naik ke posisi normal */
+.modal-overlay.show .modal-content {
+  transform: translateY(0);
+}
+
+/* Header Modal */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 15px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+/* Tombol Close (X) */
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 5px;
+}
+
+.close-btn:hover {
+  color: #ef4444; /* Merah saat hover */
+}
+
+.btn-save {
+  /* Gunakan kode HEX langsung (Bukan var) */
+  background-color: #0079ff !important; /* Biru Indigo */
+
+  color: #ffffff !important; /* Teks Putih */
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+
+  /* Pastikan tidak ada border atau outline */
+  outline: none;
+  box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+  transition: background-color 0.2s;
+}
+
+.btn-save:hover {
+  background-color: #59a6ff !important; /* Biru lebih gelap saat hover */
+  transform: translateY(-1px);
+}
+
+.btn-cancel {
+  /* Gunakan kode HEX langsung (Bukan var) */
+  background-color: #666666 !important; /* Biru Indigo */
+
+  color: #ffffff !important; /* Teks Putih */
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+
+  /* Pastikan tidak ada border atau outline */
+  outline: none;
+  transition: background-color 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: #8f8f8f !important; /* Biru lebih gelap saat hover */
+  transform: translateY(-1px);
+}
+
+/* Informasi dalam Modal */
+.modal-info-box {
+  background: #f8fafc;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+  margin-bottom: 20px;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.info-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Form Elements */
+.form-group label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box; /* Agar padding tidak merusak lebar */
+}
+
+.form-input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
