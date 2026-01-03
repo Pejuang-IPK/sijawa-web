@@ -18,9 +18,24 @@ body {
   max-height: 100vh;
 }
 
+/* Pastikan Container memenuhi layar */
 .img-background {
-  position: absolute;
+  position: absolute; /* Atau gunakan fixed agar tetap saat discroll */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: -1;
+  overflow: hidden; /* Mencegah scrollbar jika gambar terlalu besar */
+}
+
+/* Pastikan Gambar memenuhi container tanpa merusak proporsi */
+.img-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* KUNCI UTAMA: Agar gambar mengisi area tanpa gepeng */
+  object-position: center; /* Mengatur fokus gambar di tengah */
+  display: block; /* Menghapus celah default di bawah gambar inline */
 }
 
 .container {
@@ -135,4 +150,68 @@ form .submit-btn {
 .bottom-text a {
   color: #03e8b2;
   text-decoration: none;
+}
+
+/* responsive */
+@media screen and (max-width: 900px) {
+  /* 1. Ubah Layout Container jadi Atas-Bawah */
+  .container {
+    flex-direction: column; /* Tumpuk vertikal */
+    height: auto; /* Tinggi mengikuti isi konten */
+    min-height: 100vh; /* Minimal setinggi layar */
+    padding: 40px 20px; /* Beri jarak aman dari tepi layar */
+    gap: 3rem; /* Kurangi jarak antar elemen (dari 10rem) */
+  }
+
+  /* 2. Sesuaikan Bagian Teks (Left Section) */
+  .left-section {
+    display: none;
+  }
+
+  /* 3. Sesuaikan Kartu Form (Right Section) */
+  .right-section {
+    width: 100%; /* Lebar penuh mengikuti layar HP */
+    max-width: 400px; /* Batasi agar tidak terlalu lebar di Tablet */
+  }
+
+  .form-container {
+    padding: 30px 20px; /* Kurangi padding dalam kartu agar muat */
+    gap: 20px;
+  }
+
+  /* 4. PERBAIKAN UTAMA: Input Form */
+  /* Hapus width 24rem yang bikin layar HP jebol/scroll samping */
+  .form-group input {
+    width: 100%; /* Ubah jadi 100% dari wadahnya */
+  }
+
+  /* 5. Tombol Google & Submit */
+  .google-log,
+  .submit-btn {
+    font-size: 14px; /* Sesuaikan ukuran font tombol */
+  }
+
+  /* 6. Penyesuaian Garis 'Atau' */
+  form .gap-line {
+    margin-top: 24px;
+  }
+}
+
+/* =========================================
+   FIX BACKGROUND MOBILE
+   Pastikan background image juga responsive
+   ========================================= */
+.img-background {
+  position: fixed; /* Gunakan fixed agar background diam saat discroll */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.img-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Agar gambar tidak gepeng di layar HP */
+  object-position: center;
 }

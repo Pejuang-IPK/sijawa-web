@@ -121,7 +121,7 @@ if($score > 70) {
                 }
 
                 // Query History
-                $qMood = "SELECT * FROM Mood WHERE id_mahasiswa = $id_mahasiswa ORDER BY tanggalLogMood DESC LIMIT 3";
+                $qMood = "SELECT * FROM Mood WHERE id_mahasiswa = $id_mahasiswa ORDER BY tanggalLogMood DESC LIMIT 6";
                 $resMood = mysqli_query($conn, $qMood);
 
                 // Cek Error Query SQL
@@ -130,29 +130,26 @@ if($score > 70) {
                 }
                 ?>
                 
-                <div style="display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap;">
+                <div class="history-slider">
                     <?php if($resMood && mysqli_num_rows($resMood) > 0): ?>
                         <?php while($m = mysqli_fetch_assoc($resMood)): ?>
-                            <div style="background: white; padding: 15px; border-radius: 12px; border: 1px solid #eee; flex: 1; min-width: 200px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                            <div class="mood-card slider-item">
                                 <div style="display:flex; justify-content:space-between; margin-bottom: 5px;">
-                                    <small style="color: #888;"><?= date('d M Y', strtotime($m['tanggalLogMood'])) ?></small>
-                                    <small style="color: #888;"><?= date('H:i', strtotime($m['tanggalLogMood'])) ?></small>
+                                    <small style="color: #888;"><?= date('d M', strtotime($m['tanggalLogMood'])) ?></small>
+                                    <small style="color: #888;"><?= date('H:i', strtotime($m['waktuMeTime'])) ?></small>
                                 </div>
-                                <h4 style="margin: 5px 0; font-size: 16px; color: #333;"><?= htmlspecialchars($m['namaKegiatan']) ?></h4>
-                                <div style="font-size: 13px; color: #666; margin-top: 5px;">
+                                <h4 class="mood-title"><?= htmlspecialchars($m['namaKegiatan']) ?></h4>
+                                <div class="mood-stress">
                                     Stress Awal: <span style="font-weight:bold; color: var(--primary-color);"><?= $m['levelStress'] ?>%</span>
-                                </div>
-                                <div style="font-size: 12px; color: #888; margin-top: 2px;">
-                                    <i class="fa-regular fa-clock"></i> Durasi: <?= $m['waktuMeTime'] ?>
                                 </div>
                             </div>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <div style="width: 100%; text-align: center; padding: 20px; background: #f9f9f9; border-radius: 10px;">
-                            <p style="color: #888; font-style: italic; margin: 0;">Belum ada riwayat mood yang tercatat.</p>
-                            <small>Klik tombol "Ambil Sesi Ini" di atas untuk menambah data.</small>
+                        <div class="empty-state">
+                            <p>Belum ada riwayat mood.</p>
                         </div>
                     <?php endif; ?>
+
                 </div>
             </div>
 

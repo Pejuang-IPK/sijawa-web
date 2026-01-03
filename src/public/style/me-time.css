@@ -497,3 +497,36 @@ body {
     font-size: 20px;
   }
 }
+
+/* Container Slider Horizontal */
+.history-slider {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto; /* Scroll ke samping */
+  padding-bottom: 15px; /* Ruang untuk scrollbar */
+  scroll-snap-type: x mandatory; /* Efek magnet saat scroll */
+  -webkit-overflow-scrolling: touch; /* Smooth scroll di iOS */
+}
+
+/* Item Kartu */
+.slider-item {
+  min-width: 260px; /* Lebar tetap agar rapi */
+  flex: 0 0 auto; /* Jangan mengecil */
+  scroll-snap-align: start; /* Posisi magnet di kiri */
+
+  /* Styling Kartu (Copy dari yang lama + perbaikan) */
+  background: white;
+  padding: 15px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Sembunyikan Scrollbar tapi tetap bisa scroll (Opsional) */
+.history-slider::-webkit-scrollbar {
+  height: 6px; /* Scrollbar tipis di bawah */
+}
+.history-slider::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}

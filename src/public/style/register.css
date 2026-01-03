@@ -134,3 +134,58 @@ form {
   text-decoration: none;
 }
 
+/* =========================================
+   RESPONSIVE REGISTER (Mobile & Tablet)
+   Tambahkan di baris paling bawah CSS
+   ========================================= */
+
+@media screen and (max-width: 900px) {
+  /* 1. Aktifkan Scroll di Mobile */
+  body {
+    overflow-y: auto; /* Izinkan scroll vertikal */
+    height: auto;
+    max-height: none; /* Hapus batasan tinggi */
+  }
+
+  /* 2. Ubah Layout Container jadi Tumpuk */
+  .container {
+    flex-direction: column; /* Teks di atas, Form di bawah */
+    height: auto; /* Tinggi menyesuaikan isi */
+    min-height: 100vh; /* Minimal setinggi layar */
+    padding: 40px 20px; /* Beri jarak aman dari pinggir */
+    gap: 2rem; /* Kurangi jarak (tadinya 10rem) */
+  }
+
+  /* 3. Sesuaikan Bagian Teks (Kiri) */
+  .left-section {
+    display: none;
+  }
+
+  /* 4. Sesuaikan Kotak Form (Kanan) */
+  .right-section {
+    width: 100%; /* Lebar penuh */
+    max-width: 450px; /* Batas maksimal agar rapi di tablet */
+  }
+
+  .form-container {
+    padding: 30px 20px; /* Kurangi padding dalam */
+    gap: 20px;
+  }
+
+  /* 5. PERBAIKAN KRUSIAL: Input Form */
+  /* Ubah width 24rem menjadi 100% agar tidak melebar keluar layar HP */
+  .right-section .form-group input {
+    width: 100%;
+    box-sizing: border-box; /* Pastikan padding tidak menambah lebar */
+  }
+
+  /* 6. Tombol & Elemen Lain */
+  .gap-line {
+    margin-top: 24px; /* Kurangi margin */
+  }
+
+  .submit-btn,
+  .google-log {
+    font-size: 14px; /* Sesuaikan ukuran font tombol */
+  }
+}
