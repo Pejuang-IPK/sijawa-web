@@ -99,9 +99,13 @@ if (!$user) {
                 <div class="profile-header">
                 <div class="profile-avatar-wrapper">
                     <?php 
-                    $photoPath = !empty($user['foto']) ? 'uploads/profiles/' . htmlspecialchars($user['foto']) : 'assets/user.jpg';
+                    $minioBaseUrl = "http://localhost:9000/profile-photos/"; 
+
+                    $fotoUrl = !empty($user['foto']) 
+                        ? $minioBaseUrl . htmlspecialchars($user['foto']) 
+                        : 'assets/user.jpg';
                     ?>
-                    <img src="<?php echo $photoPath; ?>" alt="Profile" class="profile-avatar" id="profileAvatarPreview">
+                    <img src="<?= $fotoUrl ?>" alt="Profile" class="profile-avatar" id="profileAvatarPreview">
                     <button type="button" class="avatar-upload-btn" onclick="document.getElementById('photoInput').click()" title="Ubah foto profil">
                         <i class="fas fa-camera"></i>
                     </button>

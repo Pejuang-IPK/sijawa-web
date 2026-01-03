@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../helper/Minio.php';
 
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 
@@ -104,39 +105,35 @@ function uploadProfilePhoto($userId, $file) {
     // Buat nama file unik
     $fileExtension = pathinfo($file['name'], PATHINFO_EXTENSION);
     $newFileName = $userId . '_' . time() . '.' . $fileExtension;
-    $uploadDir = __DIR__ . '/../../public/uploads/profiles/';
-    $uploadPath = $uploadDir . $newFileName;
+    $bucketName = 'profile-photos';
     
     // Pastikan direktori ada
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
-    }
+    // --- PROSES UPLOAD PAKE NATIVE cURL ---
+    $uploadResult = uploadToMinioNative(
+        $bucketName, 
+        $newFileName, 
+        $file['tmp_name'], 
+        $fileMimeType // Variable dari mime_content_type di validasi sebelumnya
+    );
     
-    // Move file
-    if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
-        return ['success' => false, 'message' => 'Gagal menyimpan file'];
+    
+    if (!$uploadResult['success']) {
+        return ['success' => false, 'message' => 'Gagal upload ke Storage: ' . $uploadResult['message']];
     }
     
     // Hapus foto lama jika ada
     $userId = htmlspecialchars($userId);
     $query = "SELECT foto FROM Mahasiswa WHERE id_mahasiswa = '$userId'";
     $result = mysqli_query($conn, $query);
-    $userData = mysqli_fetch_assoc($result);
+    // $userData = mysqli_fetch_assoc($result);
     
-    if ($userData && !empty($userData['foto'])) {
-        $oldFilePath = $uploadDir . $userData['foto'];
-        if (file_exists($oldFilePath)) {
-            unlink($oldFilePath);
-        }
-    }
-    
-    // Update database dengan nama file foto
-    $updateQuery = "UPDATE Mahasiswa SET foto = '$newFileName' WHERE id_mahasiswa = '$userId'";
-    
+    $userIdClean = htmlspecialchars($userId);
+    $updateQuery = "UPDATE Mahasiswa SET foto = '$newFileName' WHERE id_mahasiswa = '$userIdClean'";
+
     if (mysqli_query($conn, $updateQuery)) {
         return ['success' => true, 'message' => 'Foto profil berhasil diupload'];
     } else {
-        return ['success' => false, 'message' => 'Gagal memperbarui database'];
+        return ['success' => false, 'message' => 'Gagal update database'];
     }
 }
 ?>
