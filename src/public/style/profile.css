@@ -195,6 +195,46 @@ body {
   min-height: calc(100vh - 150px);
 }
 
+/* Alert Messages */
+.alert {
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-success {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.alert-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.alert i {
+  font-size: 18px;
+}
+
 /* Form Grid System */
 .form-grid {
   display: grid;
@@ -212,6 +252,11 @@ body {
   margin-bottom: 32px;
 }
 
+.profile-avatar-wrapper {
+  position: relative;
+  width: fit-content;
+}
+
 .profile-avatar {
   width: 90px;
   height: 90px;
@@ -219,6 +264,34 @@ body {
   object-fit: cover;
   border: 4px solid #f8fafc;
   box-shadow: 0 0 0 1px var(--border);
+  display: block;
+}
+
+.avatar-upload-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  border: 3px solid #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.avatar-upload-btn:hover {
+  background: #0062cc;
+  transform: scale(1.1);
+}
+
+.avatar-upload-btn i {
+  pointer-events: none;
 }
 
 .profile-info h2 {
@@ -311,6 +384,26 @@ body {
 
   .profile-card {
     padding: 20px; /* Padding lebih kecil di HP */
+  }
+
+  .alert {
+    font-size: 13px;
+    padding: 14px 16px;
+  }
+
+  .profile-avatar-wrapper {
+    width: fit-content;
+  }
+
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .avatar-upload-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
   }
 
   /* 1. SETUP BODY & PAGE */
