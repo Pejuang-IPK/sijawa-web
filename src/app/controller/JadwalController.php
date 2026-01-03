@@ -21,7 +21,7 @@ function tambah($data) {
     global $conn;
     
     // 1. Ambil ID Mahasiswa (Hardcode 1 atau dari Session)
-    $id_mahasiswa = 386937; 
+    $id_mahasiswa = $_SESSION['user_id']; 
 
     // 2. Ambil data dari Form HTML
     $hari        = htmlspecialchars($data["hari"]);

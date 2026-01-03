@@ -4,7 +4,7 @@ require_once __DIR__ . '../../app/controller/JadwalController.php';
 require_once __DIR__ . '../../app/helper/Singkatan.php';
 require_once __DIR__ . '../../app/action/jadwal_action.php';
 
-$id_mahasiswa = 386937;
+$id_mahasiswa = $_SESSION['user_id'];
 
 // Ambil semua jadwal mahasiswa
 $queryJadwal = "
@@ -103,21 +103,7 @@ $prevYear = date('Y', mktime(0, 0, 0, $month - 1, 1, $year));
 $nextMonth = date('m', mktime(0, 0, 0, $month + 1, 1, $year));
 $nextYear = date('Y', mktime(0, 0, 0, $month + 1, 1, $year));
 
-// --- DATA DUMMY EVENT (Simulasi Database) ---
-// // Format: 'YYYY-MM-DD' => [Array Event]
-// $events = [
-//     "$year-$month-01" => [['title' => 'Tahun Baruan', 'color' => 'dot-purple']],
-//     "$year-$month-02" => [['title' => 'Dev DailyCollege', 'color' => 'dot-blue']],
-//     "$year-$month-04" => [['title' => 'Meeting Projek 2M', 'color' => 'dot-green']],
-//     "$year-$month-13" => [
-//         ['title' => 'Kondangan Mantan', 'color' => 'dot-red'],
-//         ['title' => 'Dev DailyCollege', 'color' => 'dot-blue']
-//     ],
-//     "$year-$month-31" => [['title' => 'Nongkrong With Cewe', 'color' => 'dot-red']],
-// ];
-// 1. AMBIL SEMUA DATA JADWAL
 // Kita tidak perlu filter hari ini, karena kita butuh data seminggu penuh untuk diulang
-$id_mahasiswa = 386937; 
 $all_jadwal = query("SELECT * FROM Jadwal WHERE id_mahasiswa = $id_mahasiswa ORDER BY jam_mulai ASC");
 
 // 2. KELOMPOKKAN JADWAL BERDASARKAN HARI

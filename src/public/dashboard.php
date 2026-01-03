@@ -1,3 +1,8 @@
+<?php 
+session_start();
+
+require_once __DIR__ . '../../app/action/beranda_action.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -162,70 +167,93 @@
             </section>
         </main>
         <aside class="right-sidebar">
+    
             <div class="profile-section">
                 <div class="profile-img">
-                    <img src="assets/shen_xiaoting.jpg" alt="Profile"> 
+                    <img src="assets/user.jpg" alt="Profile"> 
                 </div>
-                <h3>Shen Xiaoting</h3>
-                <span class="badge-plan">Free Plan</span>
+                <h3><?= $_SESSION["nama"] ?? "Mahasiswa" ?></h3>
+                <span class="badge-plan">Mahasiswa Aktif</span>
             </div>
 
             <hr class="divider">
 
             <div class="calendar-section">
-                <h3>Tugasmu</h3>
+                <h3>Kalender Pekan Ini</h3>
                 <div class="date-row">
-                    <div class="date-card">
-                        <span class="day">Sen</span>
-                        <span class="date">29</span>
-                    </div>
-                    <div class="date-card active">
-                        <span class="day">Sel</span>
-                        <span class="date">30</span>
-                    </div>
-                    <div class="date-card">
-                        <span class="day">Rab</span>
-                        <span class="date">31</span>
-                    </div>
-                    <div class="date-card">
-                        <span class="day">Kam</span>
-                        <span class="date">1</span>
-                    </div>
-                    <div class="date-card">
-                        <span class="day">Jum</span>
-                        <span class="date">2</span>
-                    </div>
+                    <?php 
+                    // Loop 5 hari ke depan
+                    for ($i = 0; $i < 5; $i++) {
+                        $timestamp = strtotime("+$i days");
+                        $tgl_loop = date('Y-m-d', $timestamp);
+                        $hari_inggris = date('l', $timestamp);
+                        $hari_singkat = $hari_indo[$hari_inggris];
+                        $tanggal_angka = date('d', $timestamp);
+                        
+                        // Cek apakah ini hari ini (untuk class active)
+                        $activeClass = ($tgl_loop == $tgl_sekarang) ? 'active' : '';
+                    ?>
+                        <div class="date-card <?= $activeClass ?>">
+                            <span class="day"><?= $hari_singkat ?></span>
+                            <span class="date"><?= $tanggal_angka ?></span>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
 
-            <div class="task-card">
-                <div class="card-header">
-                    <span>Hari ini</span>
-                </div>
-                <h2>Worksheet Nagios SJK</h2>
-                <p class="subject">Matakuliah Sistem Jaringan Komputer</p>
-                <hr class="card-divider">
-                <div class="card-footer">
-                    <button class="btn-action">Segera Kerjakan</button>
-                    <div class="time">
-                        <i class="fa-regular fa-clock"></i> 22.59
+            <?php if ($nearestTask) : ?>
+                <?php
+                    // Hitung format waktu deadline
+                    $deadline = strtotime($nearestTask['tenggatTugas']);
+                    $isToday = (date('Y-m-d', $deadline) == date('Y-m-d'));
+                    
+                    $labelHari = $isToday ? "Hari ini" : date('d M', $deadline); // "Hari ini" atau "30 Jan"
+                    $jamDeadline = date('H.i', $deadline);
+                ?>
+                <div class="task-card">
+                    <div class="card-header">
+                        <span style="<?= $isToday ? 'color:#ef4444; font-weight:bold;' : '' ?>">
+                            <?= $labelHari ?>
+                        </span>
+                    </div>
+                    
+                    <h2><?= htmlspecialchars(substr($nearestTask['namaTugas'], 0, 20)) . (strlen($nearestTask['namaTugas']) > 20 ? '...' : '') ?></h2>
+                    
+                    <p class="subject"><?= htmlspecialchars($nearestTask['matkulTugas']) ?></p>
+                    
+                    <hr class="card-divider">
+                    
+                    <div class="card-footer">
+                        <button class="btn-action" onclick="window.location.href='tugas.php'">Segera Kerjakan</button>
+                        
+                        <div class="time">
+                            <i class="fa-regular fa-clock"></i> <?= $jamDeadline ?>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <?php else : ?>
+                <div class="task-card" style="border: 2px dashed #ddd; background: #f9f9f9; text-align: center;">
+                    <div style="padding: 20px;">
+                        <i class="fa-solid fa-mug-hot" style="font-size: 30px; color: #ccc; margin-bottom: 10px;"></i>
+                        <h2 style="font-size: 16px; color: #888;">Tugas Aman!</h2>
+                        <p class="subject" style="margin-bottom: 0;">Tidak ada deadline dalam waktu dekat.</p>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <div class="motivation-card">
                 <div class="title-motivation">Semangat Sukses 🔥</div>
                 <p class="desc">Siap produktif hari ini? Atau mau scrolling dulu 5 menit?</p>
                 
                 <blockquote class="quote">
-                    “Kerja keras tidak boleh berhenti”
+                    “<?= $random_quote['text'] ?>”
                 </blockquote>
-                <div class="author">Joko Widodo</div>
+                <div class="author"><?= $random_quote['author'] ?></div>
 
                 <div class="logo-corner">S.</div>
-                
                 <div class="bg-pattern"></div>
             </div>
+
         </aside>
     </div>
 

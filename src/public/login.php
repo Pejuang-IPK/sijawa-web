@@ -5,7 +5,7 @@ require_once __DIR__ . '/../app/AuthController.php';
 
 // Jika sudah login, redirect ke keuangan
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-    header('Location: keuangan.php');
+    header('Location: dashboard.php');
     exit();
 }
 
