@@ -195,6 +195,46 @@ body {
   min-height: calc(100vh - 150px);
 }
 
+/* Alert Messages */
+.alert {
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-success {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.alert-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.alert i {
+  font-size: 18px;
+}
+
 /* Form Grid System */
 .form-grid {
   display: grid;
@@ -311,6 +351,11 @@ body {
 
   .profile-card {
     padding: 20px; /* Padding lebih kecil di HP */
+  }
+
+  .alert {
+    font-size: 13px;
+    padding: 14px 16px;
   }
 
   /* 1. SETUP BODY & PAGE */

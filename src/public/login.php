@@ -20,6 +20,7 @@ if(isset($_POST['submit'])){
     if($userData){
         $_SESSION['user_id'] = $userData['id_mahasiswa'];
         $_SESSION['id_mahasiswa'] = $userData['id_mahasiswa'];
+        $_SESSION['user_nama'] = $userData['nama'];
         $_SESSION['nama'] = $userData['nama'];
         $_SESSION['email'] = $userData['email'];
         $_SESSION['logged_in'] = true;
