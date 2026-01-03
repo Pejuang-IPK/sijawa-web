@@ -12,7 +12,7 @@ require_once __DIR__ . '/../../config/database.php';
 if (isset($_POST['submit-activity'])) {
     
     // 1. Ambil ID Mahasiswa (Sebaiknya dari Session, sementara hardcode dulu)
-    $id_mahasiswa = 386937; 
+    $id_mahasiswa = $_SESSION['user_id']; 
 
     // 2. Tangkap Data dari Form
     // htmlspecialchars() digunakan untuk mencegah input berbahaya

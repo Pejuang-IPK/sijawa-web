@@ -4,18 +4,16 @@ require_once __DIR__ . '/../controller/JadwalController.php'; // Sesuaikan path
 
 $action = $_GET['action'] ?? '';
 
-// --- LOGIKA EDIT ---
+// edit
 if (isset($_POST['submit_edit'])) {
     if (ubah($_POST) > 0) {
         echo "<script>alert('Data Berhasil Diubah!'); document.location.href = '';</script>";
     } else {
-        // Jika tidak ada perubahan data (user klik simpan tapi data sama), affected_rows = 0
         echo "<script>alert('Data Berhasil Disimpan (Tidak ada perubahan).'); document.location.href = '';</script>";
     }
 }
 
-// --- LOGIKA DELETE ---
-// Logic Hapus (Via GET)
+// delete
 if(isset($_GET["hapus"])) {
     $id = $_GET["hapus"];
     if(hapus($id) > 0) {

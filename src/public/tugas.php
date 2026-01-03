@@ -1,10 +1,10 @@
 <?php
-
+session_start();
 require_once __DIR__ . '../../config/database.php';
 require_once __DIR__ . '../../app/controller/TaskController.php';
 
 // DEMO: tanpa session. Gunakan ID mahasiswa contoh untuk insert.
-$DEMO_USER_ID = 456574;
+$DEMO_USER_ID = $_SESSION['user_id'];
 
 
 // Handle: tambah tugas manual

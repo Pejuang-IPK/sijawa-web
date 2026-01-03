@@ -1,11 +1,13 @@
 <?php
+session_start();
+
 // Pastikan path ke file database dan controller benar
 require_once __DIR__ . '../../config/database.php';
 require_once __DIR__ . '../../app/controller/MeTimeController.php';
 require_once __DIR__ . '../../app/action/metime_action.php';
 
 // 1. Ambil Data
-$id_mahasiswa = 386937; // Sesuaikan dengan session login nanti
+$id_mahasiswa = $_SESSION['user_id']; // Sesuaikan dengan session login nanti
 
 // Panggil fungsi hitungStressLevel yang baru
 $data_stress = hitungStressLevel($id_mahasiswa);
