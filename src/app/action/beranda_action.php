@@ -1,32 +1,83 @@
 <?php
-// --- 1. PERSIAPAN DATA (PHP LOGIC) ---
-// Pastikan koneksi database ($conn) sudah tersedia dari file induk (dashboard/index)
+// FILE: src/app/action/beranda_action.php
 
-$id_mahasiswa = $_SESSION['user']['id'] ?? 386937; // Sesuaikan dengan session ID login Anda
+// 1. Mulai Session (Cek apakah session sudah aktif)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// 2. Load Konfigurasi & Controller Lain
+// Gunakan __DIR__ agar path relatif terhadap file ini, bukan file pemanggil
 require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../controller/MeTimeController.php'; 
 
-// A. QUERY TUGAS TERDEKAT (Prioritas Tertinggi)
-// Cari tugas yang belum selesai (status=0) dan deadline >= hari ini
-// Urutkan berdasarkan deadline paling cepat (ASC), ambil 1 saja
-$queryTask = "SELECT * FROM Tugas 
-              WHERE id_mahasiswa = $id_mahasiswa 
-              AND id_status = 0 
-              AND tenggatTugas >= CURDATE() 
-              ORDER BY tenggatTugas ASC 
-              LIMIT 1";
+// 3. Setup Data User
+// Ambil ID dari session login, jika tidak ada pakai default (untuk testing)
+$id_mahasiswa = $_SESSION['user_id']; 
+$nama_user    = $_SESSION['nama'] ?? "Mahasiswa";
 
-$resultTask = mysqli_query($conn, $queryTask);
-$nearestTask = mysqli_fetch_assoc($resultTask);
+// 4. Setup Waktu & Hari
+date_default_timezone_set('Asia/Jakarta');
+$jam_sekarang = date('H:i');
+$hari_inggris = date('l');
 
-// B. LOGIC KALENDER MINI (5 Hari Kedepan)
-$hari_indo = ['Sunday' => 'Min', 'Monday' => 'Sen', 'Tuesday' => 'Sel', 'Wednesday' => 'Rab', 'Thursday' => 'Kam', 'Friday' => 'Jum', 'Saturday' => 'Sab'];
-$tgl_sekarang = date('Y-m-d');
-
-// C. LOGIC QUOTES RANDOM
-$quotes = [
-    ['text' => 'Kerja keras tidak boleh berhenti', 'author' => 'Joko Widodo'],
-    ['text' => 'Pendidikan adalah senjata paling mematikan', 'author' => 'Nelson Mandela'],
-    ['text' => 'Mulai aja dulu, sempurnakan nanti', 'author' => 'Unknown'],
-    ['text' => 'Tugas selesai = Tidur nyenyak', 'author' => 'Mahasiswa Semester Akhir']
+// Mapping Hari (Database pakai Bhs Indonesia)
+$map_hari = [
+    'Sunday' => 'Minggu', 'Monday' => 'Senin', 'Tuesday' => 'Selasa', 
+    'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat', 'Saturday' => 'Sabtu'
 ];
-$random_quote = $quotes[array_rand($quotes)];
+$hari_indo = $map_hari[$hari_inggris];
+
+// ==========================================
+// 5. QUERY DATA DARI DATABASE
+// ==========================================
+
+// --- A. JADWAL KULIAH HARI INI ---
+$queryJadwal = "SELECT * FROM Jadwal 
+                WHERE id_mahasiswa = $id_mahasiswa 
+                AND hari = '$hari_indo' 
+                ORDER BY jam_mulai ASC";
+
+$resultJadwal = mysqli_query($conn, $queryJadwal);
+
+// Gunakan fetch_all agar hasil pasti Array (Mencegah error offset type string)
+$jadwal_hari_ini = mysqli_fetch_all($resultJadwal, MYSQLI_ASSOC);
+$jumlah_matkul = count($jadwal_hari_ini);
+
+// --- B. CARI MATKUL SELANJUTNYA (NEXT COURSE) ---
+$next_matkul = null;
+if (!empty($jadwal_hari_ini)) {
+    foreach ($jadwal_hari_ini as $matkul) {
+        // Ambil matkul pertama yang jam mulainya > jam sekarang
+        if ($matkul['jam_mulai'] > $jam_sekarang) {
+            $next_matkul = $matkul;
+            break; 
+        }
+    }
+}
+
+// --- C. TUGAS DEADLINE HARI INI ---
+$queryTugas = "SELECT COUNT(*) as total FROM Tugas 
+               WHERE id_mahasiswa = $id_mahasiswa 
+               AND id_status = 0 
+               AND date(tenggatTugas) = CURDATE()";
+$resTugas = mysqli_query($conn, $queryTugas);
+$rowTugas = mysqli_fetch_assoc($resTugas);
+$tugas_hari_ini = $rowTugas['total'];
+
+// --- D. STRESS LEVEL (Dari Controller) ---
+// Pastikan file MeTimeController.php sudah ada dan fungsinya benar
+$data_stress = hitungStressLevel($id_mahasiswa);
+$stress_score = $data_stress['score'];
+
+// Warna Bar Stress Dinamis
+$stress_class = 'progress-fill-green'; // Default (Hijau)
+if ($stress_score > 70) $stress_class = 'progress-fill-red';
+elseif ($stress_score > 40) $stress_class = 'progress-fill-yellow';
+
+// Logic Rekomendasi Text Singkat
+$rek_text = "Nonton Film / Game";
+if($stress_score > 70) $rek_text = "Tidur / Meditasi";
+if($stress_score < 30) $rek_text = "Olahraga / Hangout";
+
+?>

@@ -313,6 +313,64 @@ body {
   margin-bottom: 2px;
 }
 
+/* --- PROGRESS BAR STYLES --- */
+
+/* 1. Wadah Abu-abu (Background Bar) */
+.progress-container {
+  width: 100%;
+  height: 12px; /* PENTING: Harus ada tinggi */
+  background-color: #f1f5f9; /* Warna abu-abu muda */
+  border-radius: 10px;
+  overflow: hidden; /* Agar bar di dalam tidak keluar radius */
+  margin: 10px 0; /* Jarak atas bawah */
+}
+
+/* 2. Warna-warni Isi Bar */
+/* Class ini yang dipanggil oleh variabel $stress_class */
+
+.progress-fill-green {
+  background-color: #10b981; /* Hijau */
+  height: 100%; /* Penuhi tinggi wadah */
+  border-radius: 10px;
+  transition: width 0.5s ease-in-out; /* Animasi gerak halus */
+}
+
+.progress-fill-yellow {
+  background-color: #f59e0b; /* Kuning/Oranye */
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease-in-out;
+}
+
+.progress-fill-red {
+  background-color: #ef4444; /* Merah */
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease-in-out;
+}
+
+/* Style Tambahan untuk Card */
+.progressbar-card .title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 5px;
+}
+
+.progressbar-card .label-top-right {
+  float: right;
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  margin-top: -20px; /* Tarik ke atas sejajar title */
+}
+
+.progressbar-card .label-bottom-left {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 5px;
+}
+
 /* 4. Wadah Progress Bar (Garis Abu-abu) */
 .progress-container {
   width: 100%;
