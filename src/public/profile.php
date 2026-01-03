@@ -51,6 +51,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $message = $result['message'];
             $messageType = $result['success'] ? 'success' : 'error';
         }
+    } elseif ($_POST['action'] === 'upload_photo') {
+        if (isset($_FILES['profile_photo'])) {
+            $result = uploadProfilePhoto($userId, $_FILES['profile_photo']);
+            $message = $result['message'];
+            $messageType = $result['success'] ? 'success' : 'error';
+            
+            // Reload user data jika upload berhasil
+            if ($result['success']) {
+                $user = getUserProfile($userId);
+            }
+        }
     }
 }
 
@@ -86,7 +97,15 @@ if (!$user) {
             <div class="profile-card">
                 
                 <div class="profile-header">
-                <img src="assets/shen_xiaoting.jpg" alt="Profile" class="profile-avatar">
+                <div class="profile-avatar-wrapper">
+                    <?php 
+                    $photoPath = !empty($user['foto']) ? 'uploads/profiles/' . htmlspecialchars($user['foto']) : 'assets/shen_xiaoting.jpg';
+                    ?>
+                    <img src="<?php echo $photoPath; ?>" alt="Profile" class="profile-avatar" id="profileAvatarPreview">
+                    <button type="button" class="avatar-upload-btn" onclick="document.getElementById('photoInput').click()" title="Ubah foto profil">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
                 <div class="profile-info">
                     <h2><?php echo htmlspecialchars($user['nama']); ?></h2>
                     <p>Mahasiswa Informatika • Free Plan</p>
@@ -101,6 +120,12 @@ if (!$user) {
                     <?php echo htmlspecialchars($message); ?>
                 </div>
                 <?php endif; ?>
+
+                <!-- Form Upload Foto Hidden -->
+                <form method="POST" action="" enctype="multipart/form-data" id="photoUploadForm" style="display: none;">
+                    <input type="hidden" name="action" value="upload_photo">
+                    <input type="file" id="photoInput" name="profile_photo" accept="image/jpeg,image/png,image/gif,image/webp">
+                </form>
 
                 <h3 class="section-title">Detail Personal</h3>
                 
@@ -152,3 +177,19 @@ if (!$user) {
     </div>
 </body>
 </html>
+<script>
+// Handle photo upload
+document.getElementById('photoInput').addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+        // Preview foto
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('profileAvatarPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(this.files[0]);
+        
+        // Auto submit form
+        document.getElementById('photoUploadForm').submit();
+    }
+});
+</script>
