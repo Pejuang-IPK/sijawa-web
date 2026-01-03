@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $message = 'Nama dan email tidak boleh kosong';
             $messageType = 'error';
         } else {
-            $result = $profileController->updateProfile($userId, $nama, $email);
+            $result = updateProfile($userId, $nama, $email);
             $message = $result['message'];
             $messageType = $result['success'] ? 'success' : 'error';
             
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $message = 'Password minimal 6 karakter';
             $messageType = 'error';
         } else {
-            $result = $profileController->updatePassword($userId, $oldPassword, $newPassword);
+            $result = updatePassword($userId, $oldPassword, $newPassword);
             $message = $result['message'];
             $messageType = $result['success'] ? 'success' : 'error';
         }
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 }
 
 // Ambil data user
-$user = $profileController->getUserProfile($userId);
+$user = getUserProfile($userId);
 
 if (!$user) {
     header('Location: login.php');
