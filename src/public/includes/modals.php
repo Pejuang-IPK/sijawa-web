@@ -6,7 +6,7 @@
             <span class="close" onclick="tutupModal()">&times;</span>
         </div>
         
-        <form method="POST" action="" onsubmit="prepareFormSubmit(event)">
+        <form method="POST" action="" onsubmit="return persiapkanKirimForm(event)">
             <input type="hidden" name="action" value="tambah">
             
             <div class="form-group">

@@ -101,9 +101,9 @@ function updateOpsiKategoriEdit() {
         return;
     }
     
-    let categories = jenisTransaksi === 'Pemasukan' ? window.kategoriPemasukan : window.kategoriPengeluaran;
+    let categories = jenisTransaksi === 'Pemasukan' ? (window.kategoriPemasukan || []) : (window.kategoriPengeluaran || []);
     
-    if(categories.length === 0) {
+    if(!categories || categories.length === 0) {
         kategoriSelect.innerHTML = '<option value="">Belum ada kategori</option>';
     } else {
         categories.forEach(kategori => {
@@ -116,6 +116,11 @@ function updateOpsiKategoriEdit() {
             kategoriSelect.appendChild(option);
         });
     }
+}
+
+// Alias fungsi untuk dipanggil dari HTML
+function updateEditKategoriOptions() {
+    updateOpsiKategoriEdit();
 }
 
 function updateTransaksi() {
