@@ -91,7 +91,7 @@ function importExcel($files) {
     }
 
     $tmpName = $files['file_excel']['tmp_name'];
-    $id_mahasiswa = 386937;
+    $id_mahasiswa = $_SESSION["user_id"];
 
     if (!$xlsx = SimpleXLSX::parse($tmpName)) {
         die(SimpleXLSX::parseError());

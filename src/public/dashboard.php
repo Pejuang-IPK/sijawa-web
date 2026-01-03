@@ -15,247 +15,162 @@ require_once __DIR__ . '../../app/action/beranda_action.php';
 </head>
 <body>
     <div class="page">
-        <?php
-            // 1. Definisikan nama halaman ini
-            $page = 'dashboard'; 
-
-            // 2. Baru panggil sidebar
-            include 'includes/sidebar.php'; 
-        ?>
-        <main class="content">
-            <header class="content-header">
-                    <div>
-                        <h1>Dashboard Beranda</h1>
-                        <p>Selamat datang kembali, semangat kuliahnya 🚀</p>
-                    </div>
-            </header>
-            <section class="card">
-                <div class="left">
-                    <div class="matkul-card">
-                        <div class="count">3</div>
-                        <div class="label">Mata Kuliah Hari ini</div>
-                    </div>
-                    <div class="deadline-card">
-                        <div class="dashed-bg"></div>
-                        <div class="main-card">
-                            <div class="count">5</div>
-                            <div class="label">Tugas Deadline Hari ini</div>
-                        </div>
-                    </div>
-                    <div class="progressbar-card">
-                        <div class="title">Stress Level</div>
-                        <div class="label-top-right">Tinggi</div>
-                        <div class="progress-container">
-                            <div class="progress-fill-red"></div>
-                        </div>
-                        <div class="label-bottom-left">Rendah</div>
-                    </div>
-                </div>
-                <div class="mid">
-                    <div class="progressbar-card">
-                        <div class="title">Money Management</div>
-                        <div class="label-top-right">Tinggi</div>
-                        <div class="progress-container">
-                            <div class="progress-fill-blue"></div>
-                        </div>
-                        <div class="label-bottom-left">Rendah</div>
-                    </div>
-                    <div class="next-card">
-                        <div class="title">Mata Kuliah selanjutnya</div>
-                        <div class="label">MPTI - Gedung B2 | Mulai dalam 15 menit.</div>
-                    </div>
-                    <div class="metime-card">
-                        <div class="dashed-bg"></div>
-                        <div class="main-card">
-                            <div class="title">Me-Time</div>
-                            <div class="label">Waktu santai berikutnya: 14.00 - 15.30</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="timer-card">
-                    <div class="clock-illustration">
-                        <i class="fa-solid fa-clock clock-icon"></i>
-                        <div class="glass-effect"></div>
-                    </div>
-                    <div class="progress-badge">
-                        <i class="fa-solid fa-square-check"></i> 
-                        <span>2/6</span>
-                    </div>
-                    <div class="timer-display" id="timer" contenteditable="true" 
-                        spellcheck="false"
-                        onfocus="pauseTimerManual()" 
-                        onblur="validateInput()"
-                        onkeydown="handleEnter(event)"
-                    >
-                        00 : 58
-                    </div>
-                    <div class="controls">
-                        <button class="btn-alarm" id="btn-alarm" onclick="toggleAlarm()">
-                            <i class="fa-regular fa-bell"></i>
-                        </button>
-
-                        <button class="btn-main" id="btn-play" onclick="toggleTimer()">
-                            <i class="fa-solid fa-play" id="icon-play-pause"></i>
-                        </button>
-
-                        <button class="btn-music" id="btn-music" onclick="toggleMusic()">
-                            <i class="fa-solid fa-music"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <audio id="audio-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio> 
-                <audio id="audio-alarm" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
-            </section>
-            <section class="schedule-section">
-                <div class="section-title">Kuliahmu Hari ini</div>
-                
-                <div class="schedule-grid">
-                    
-                    <div class="course-card">
-                        <div class="card-top">
-                            <span class="course-name">MPTI</span>
-                            <div class="course-icon gray">
-                                <i class="fa-solid fa-sliders"></i>
-                            </div>
-                        </div>
-                        <div class="lecturer">
-                            <i class="fa-solid fa-user-tie"></i>
-                            <span>Dr. Kurniawan Irianto</span>
-                        </div>
-                        <div class="card-bottom">
-                            <span class="sks-badge blue">3 SKS</span>
-                            <span class="time"><i class="fa-regular fa-clock"></i> 09.30 WIB</span>
-                        </div>
-                    </div>
-
-                    <div class="course-card active">
-                        <div class="card-top">
-                            <span class="course-name">PABW</span>
-                            <div class="course-icon blue-globe">
-                                <i class="fa-solid fa-globe"></i>
-                            </div>
-                        </div>
-                        <div class="lecturer">
-                            <i class="fa-solid fa-user-tie"></i>
-                            <span>Dr. Nur Wijayaning</span>
-                        </div>
-                        <div class="card-bottom">
-                            <span class="sks-badge blue">6 SKS</span>
-                            <span class="time"><i class="fa-regular fa-clock"></i> 12.30 WIB</span>
-                        </div>
-                    </div>
-
-                    <div class="course-card">
-                        <div class="card-top">
-                            <span class="course-name">PPKN</span>
-                            <div class="course-icon gray">
-                                <i class="fa-solid fa-graduation-cap"></i>
-                            </div>
-                        </div>
-                        <div class="lecturer">
-                            <i class="fa-solid fa-user-tie"></i>
-                            <span>Dr. Ahmad Asroni</span>
-                        </div>
-                        <div class="card-bottom">
-                            <span class="sks-badge blue">2 SKS</span>
-                            <span class="time"><i class="fa-regular fa-clock"></i> 15.30 WIB</span>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-        </main>
-        <aside class="right-sidebar">
+    <?php 
+        $page = 'dashboard'; // Untuk active state sidebar
+        include 'includes/sidebar.php'; 
+    ?>
     
-            <div class="profile-section">
-                <div class="profile-img">
-                    <img src="assets/user.jpg" alt="Profile"> 
-                </div>
-                <h3><?= $_SESSION["nama"] ?? "Mahasiswa" ?></h3>
-                <span class="badge-plan">Mahasiswa Aktif</span>
+    <main class="content">
+        <header class="content-header">
+            <div>
+                <h1>Dashboard Beranda</h1>
+                <p>Selamat datang kembali, <b><?= htmlspecialchars($nama_user) ?></b>! Semangat kuliahnya 🚀</p>
             </div>
-
-            <hr class="divider">
-
-            <div class="calendar-section">
-                <h3>Kalender Pekan Ini</h3>
-                <div class="date-row">
-                    <?php 
-                    // Loop 5 hari ke depan
-                    for ($i = 0; $i < 5; $i++) {
-                        $timestamp = strtotime("+$i days");
-                        $tgl_loop = date('Y-m-d', $timestamp);
-                        $hari_inggris = date('l', $timestamp);
-                        $hari_singkat = $hari_indo[$hari_inggris];
-                        $tanggal_angka = date('d', $timestamp);
-                        
-                        // Cek apakah ini hari ini (untuk class active)
-                        $activeClass = ($tgl_loop == $tgl_sekarang) ? 'active' : '';
-                    ?>
-                        <div class="date-card <?= $activeClass ?>">
-                            <span class="day"><?= $hari_singkat ?></span>
-                            <span class="date"><?= $tanggal_angka ?></span>
-                        </div>
-                    <?php } ?>
+        </header>
+        
+        <section class="card">
+            <div class="left">
+                <div class="matkul-card">
+                    <div class="count"><?= $jumlah_matkul ?></div>
+                    <div class="label">Mata Kuliah Hari ini</div>
                 </div>
-            </div>
-
-            <?php if ($nearestTask) : ?>
-                <?php
-                    // Hitung format waktu deadline
-                    $deadline = strtotime($nearestTask['tenggatTugas']);
-                    $isToday = (date('Y-m-d', $deadline) == date('Y-m-d'));
-                    
-                    $labelHari = $isToday ? "Hari ini" : date('d M', $deadline); // "Hari ini" atau "30 Jan"
-                    $jamDeadline = date('H.i', $deadline);
-                ?>
-                <div class="task-card">
-                    <div class="card-header">
-                        <span style="<?= $isToday ? 'color:#ef4444; font-weight:bold;' : '' ?>">
-                            <?= $labelHari ?>
-                        </span>
-                    </div>
-                    
-                    <h2><?= htmlspecialchars(substr($nearestTask['namaTugas'], 0, 20)) . (strlen($nearestTask['namaTugas']) > 20 ? '...' : '') ?></h2>
-                    
-                    <p class="subject"><?= htmlspecialchars($nearestTask['matkulTugas']) ?></p>
-                    
-                    <hr class="card-divider">
-                    
-                    <div class="card-footer">
-                        <button class="btn-action" onclick="window.location.href='tugas.php'">Segera Kerjakan</button>
-                        
-                        <div class="time">
-                            <i class="fa-regular fa-clock"></i> <?= $jamDeadline ?>
-                        </div>
-                    </div>
-                </div>
-            <?php else : ?>
-                <div class="task-card" style="border: 2px dashed #ddd; background: #f9f9f9; text-align: center;">
-                    <div style="padding: 20px;">
-                        <i class="fa-solid fa-mug-hot" style="font-size: 30px; color: #ccc; margin-bottom: 10px;"></i>
-                        <h2 style="font-size: 16px; color: #888;">Tugas Aman!</h2>
-                        <p class="subject" style="margin-bottom: 0;">Tidak ada deadline dalam waktu dekat.</p>
-                    </div>
-                </div>
-            <?php endif; ?>
-
-            <div class="motivation-card">
-                <div class="title-motivation">Semangat Sukses 🔥</div>
-                <p class="desc">Siap produktif hari ini? Atau mau scrolling dulu 5 menit?</p>
                 
-                <blockquote class="quote">
-                    “<?= $random_quote['text'] ?>”
-                </blockquote>
-                <div class="author"><?= $random_quote['author'] ?></div>
-
-                <div class="logo-corner">S.</div>
-                <div class="bg-pattern"></div>
+                <div class="deadline-card">
+                    <div class="dashed-bg"></div>
+                    <div class="main-card">
+                        <div class="count"><?= $tugas_hari_ini ?></div>
+                        <div class="label">Tugas Deadline Hari ini</div>
+                    </div>
+                </div>
+                
+                <div class="progressbar-card">
+                    <div class="title">Stress Level</div>
+                    <div class="label-top-right"><?= $stress_score ?>%</div>
+                    <div class="progress-container">
+                        <div class="<?= $stress_class ?>" style="width: <?= $stress_score ?>%;"></div>
+                    </div>
+                    <div class="label-bottom-left">
+                        <?= ($stress_score > 70) ? 'Butuh Istirahat' : 'Aman Terkendali' ?>
+                    </div>
+                </div>
             </div>
+            
+            <div class="mid">
+                <div class="progressbar-card">
+                    <div class="title">Money Management</div>
+                    <div class="label-top-right">Safe</div>
+                    <div class="progress-container">
+                        <div class="progress-fill-blue" style="width: 65%;"></div>
+                    </div>
+                    <div class="label-bottom-left">Sisa Budget Aman</div>
+                </div>
+                
+                <div class="next-card">
+                    <div class="title">Mata Kuliah selanjutnya</div>
+                    <?php if ($next_matkul): ?>
+                        <div class="label" style="font-size: 14px; margin-top: 5px; line-height: 1.5;">
+                            <b><?= htmlspecialchars($next_matkul['namaMatkul']) ?></b><br>
+                            Ruang <?= htmlspecialchars($next_matkul['kelasMatkul']) ?> | 
+                            <span style="color: #4f46e5; font-weight:bold;">
+                                <?= substr($next_matkul['jam_mulai'], 0, 5) ?> WIB
+                            </span>
+                        </div>
+                    <?php else: ?>
+                        <div class="label" style="color: #10b981; margin-top: 10px; font-weight: 500;">
+                            <i class="fa-solid fa-check-circle"></i> Kelas hari ini selesai!
+                        </div>
+                    <?php endif; ?>
+                </div>
+                
+                <div class="metime-card">
+                    <div class="dashed-bg"></div>
+                    <div class="main-card">
+                        <div class="title">Rekomendasi Me-Time</div>
+                        <div class="label" style="font-size: 13px;">
+                            Saran: <b><?= $rek_text ?></b><br>
+                            <a href="me-time.php" style="color: #4f46e5; text-decoration: none; font-size: 11px; font-weight:600;">Lihat Detail &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timer-card">
+                <div class="clock-illustration">
+                    <i class="fa-solid fa-clock clock-icon"></i>
+                    <div class="glass-effect"></div>
+                </div>
+                <div class="progress-badge">
+                    <i class="fa-solid fa-square-check"></i> 
+                    <span>Focus Mode</span>
+                </div>
+                <div class="timer-display" id="timer" contenteditable="true" spellcheck="false">
+                    25 : 00
+                </div>
+                <div class="controls">
+                    <button class="btn-alarm" id="btn-alarm" onclick="toggleAlarm()"><i class="fa-regular fa-bell"></i></button>
+                    <button class="btn-main" id="btn-play" onclick="toggleTimer()"><i class="fa-solid fa-play" id="icon-play-pause"></i></button>
+                    <button class="btn-music" id="btn-music" onclick="toggleMusic()"><i class="fa-solid fa-music"></i></button>
+                </div>
+            </div>
+            
+            <audio id="audio-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio> 
+            <audio id="audio-alarm" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+        </section>
 
-        </aside>
-    </div>
+        <section class="schedule-section">
+            <div class="section-title">Kuliahmu Hari ini (<?= $hari_indo ?>)</div>
+            
+            <div class="schedule-grid">
+                <?php if (count($jadwal_hari_ini) > 0): ?>
+                    <?php foreach ($jadwal_hari_ini as $row): ?>
+                        <?php
+                            // 1. Cek Active Class
+                            $start = strtotime($row['jam_mulai']);
+                            $end   = strtotime($row['jam_selesai']);
+                            $now   = time();
+                            $isActive = ($now >= $start && $now <= $end) ? 'active' : '';
+
+                            // 2. Icon Randomizer
+                            $icon = 'fa-book';
+                            $lowerName = strtolower($row['namaMatkul']);
+                            if(strpos($lowerName, 'web') !== false) $icon = 'fa-globe';
+                            if(strpos($lowerName, 'jaringan') !== false) $icon = 'fa-network-wired';
+                            if(strpos($lowerName, 'data') !== false) $icon = 'fa-database';
+                        ?>
+
+                        <div class="course-card <?= $isActive ?>">
+                            <div class="card-top">
+                                <span class="course-name"><?= htmlspecialchars($row['namaMatkul']) ?></span>
+                                <div class="course-icon gray">
+                                    <i class="fa-solid <?= $icon ?>"></i>
+                                </div>
+                            </div>
+                            <div class="lecturer">
+                                <i class="fa-solid fa-user-tie"></i>
+                                <span><?= htmlspecialchars($row['dosenMatkul']) ?></span>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="sks-badge blue"><?= $row['sks'] ?> SKS</span>
+                                <span class="time">
+                                    <i class="fa-regular fa-clock"></i> 
+                                    <?= substr($row['jam_mulai'], 0, 5) ?> - <?= substr($row['jam_selesai'], 0, 5) ?> WIB
+                                </span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                
+                <?php else: ?>
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; background: #fff; border-radius: 16px; border: 1px dashed #cbd5e1;">
+                        <i class="fa-solid fa-mug-hot" style="font-size: 32px; color: #cbd5e1; margin-bottom: 15px;"></i>
+                        <p style="color: #64748b; font-weight: 500; margin: 0;">Tidak ada jadwal kuliah hari ini. Selamat istirahat!</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </section>
+    </main>
+    
+    <?php include 'includes/right_sidebar_beranda.php'; ?>
+</div>
 
     <script src="script/dashboard.js?v=<?php echo time(); ?>"></script>
 </body>
