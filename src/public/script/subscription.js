@@ -54,8 +54,10 @@ function tampilkanLangganan(subscriptions, total) {
     let html = '';
     subscriptions.forEach(sub => {
         let iconColor = '#64748b';
+        // Validasi sub.icon untuk mencegah error
+        const iconName = sub.icon || 'fa-circle';
         for (const [key, color] of Object.entries(iconColors)) {
-            if (sub.icon.includes(key)) {
+            if (iconName.includes(key)) {
                 iconColor = color;
                 break;
             }
@@ -64,11 +66,11 @@ function tampilkanLangganan(subscriptions, total) {
         html += `
             <div class="subscription-item" style="display: flex; align-items: center; gap: 16px; padding: 16px; background: #f8fafc; border-radius: 12px; margin-bottom: 12px;">
                 <div class="sub-icon" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: white; font-size: 24px; color: ${iconColor};">
-                    <i class="fa-brands ${sub.icon}"></i>
+                    <i class="fa-brands ${iconName}"></i>
                 </div>
                 <div style="flex: 1;">
-                    <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 600; color: #1e293b;">${sub.nama_langganan}</h4>
-                    <p style="margin: 0; font-size: 13px; color: #3b82f6;">Rp ${parseInt(sub.harga_bulanan).toLocaleString('id-ID')}/bulan</p>
+                    <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 600; color: #1e293b;">${sub.nama_langganan || 'Tidak ada nama'}</h4>
+                    <p style="margin: 0; font-size: 13px; color: #3b82f6;">Rp ${parseInt(sub.harga_bulanan || 0).toLocaleString('id-ID')}/bulan</p>
                 </div>
                 <button onclick="hapusLangganan('${sub.id_langganan}')" class="btn-delete-sub" style="background: #fee2e2; color: #ef4444; border: none; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
                     <i class="fa-solid fa-trash"></i>
@@ -167,14 +169,15 @@ function bukaModalLangganan() {
     document.getElementById('btnSimpan').onclick = function() {
         const nama = document.getElementById('inputNama').value.trim();
         const icon = document.getElementById('inputIcon').value;
-        const harga = document.getElementById('inputHarga').value;
+        const hargaRaw = document.getElementById('inputHarga_raw').value || document.getElementById('inputHarga').value.replace(/[^0-9]/g, '');
         
-        if (!nama || !icon || !harga) {
+        if (!nama || !icon || !hargaRaw) {
             window.alert('Mohon lengkapi semua field!');
             return;
         }
         
-        if (harga < 0) {
+        const harga = parseInt(hargaRaw);
+        if (isNaN(harga) || harga <= 0) {
             window.alert('Harga harus lebih dari 0!');
             return;
         }
@@ -195,7 +198,13 @@ function bukaModalLangganan() {
         })
         .then(response => response.text())
         .then(text => {
-            const data = JSON.parse(text);
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                console.error('Error parsing JSON:', text);
+                throw new Error('Response tidak valid: ' + text);
+            }
             if (data.sukses) {
                 modal.remove();
                 muatLangganan();
@@ -220,6 +229,11 @@ function bukaModalLangganan() {
 }
 
 function hapusLangganan(id) {
+    if (!id) {
+        console.error('ID langganan tidak valid');
+        return;
+    }
+    
     if (!window.confirm('Yakin ingin menghapus langganan ini?')) return;
     
     const formData = new FormData();

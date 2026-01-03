@@ -21,7 +21,7 @@ const UtilFilter = {
             return;
         }
         
-        const period = periodElement.value;
+        const period = periodElement.value || 'bulan';
         
         if (period === 'semua') {
             valueSelect.style.display = 'none';

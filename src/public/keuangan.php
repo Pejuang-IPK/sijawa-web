@@ -106,6 +106,7 @@ extract($dashboard);
     
     <script src="script/modal-helper.js"></script>
     <script src="script/filter.js"></script>
+    <script src="script/keuangan.js"></script>
     <script src="script/subscription.js"></script>
     <script src="script/transaction.js"></script>
 </body>

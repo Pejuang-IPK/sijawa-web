@@ -528,8 +528,25 @@ function handleFormSubmission($id_mahasiswa) {
             ];
             
             $result = tambahTransaksi($data);
-            $pesan = $result['pesan'];
-            $tipe_pesan = $result['sukses'] ? 'success' : 'error';
+            
+            // Redirect untuk mencegah double submission (PRG Pattern)
+            if ($result['sukses']) {
+                $_SESSION['flash_message'] = $result['pesan'];
+                $_SESSION['flash_type'] = 'success';
+                // Preserve filter parameters
+                $redirect_url = 'keuangan.php';
+                if (isset($_GET['period'])) {
+                    $redirect_url .= '?period=' . urlencode($_GET['period']);
+                    if (isset($_GET['value'])) {
+                        $redirect_url .= '&value=' . urlencode($_GET['value']);
+                    }
+                }
+                header('Location: ' . $redirect_url);
+                exit();
+            } else {
+                $pesan = $result['pesan'];
+                $tipe_pesan = 'error';
+            }
         } elseif ($_POST['action'] === 'tambah_kategori') {
             // Tambah kategori dengan membuat transaksi dummy
             $data = [
@@ -542,9 +559,34 @@ function handleFormSubmission($id_mahasiswa) {
             ];
             
             $result = tambahTransaksi($data);
-            $pesan = $result['sukses'] ? 'Kategori berhasil ditambahkan!' : $result['pesan'];
-            $tipe_pesan = $result['sukses'] ? 'success' : 'error';
+            
+            // Redirect untuk mencegah double submission (PRG Pattern)
+            if ($result['sukses']) {
+                $_SESSION['flash_message'] = 'Kategori berhasil ditambahkan!';
+                $_SESSION['flash_type'] = 'success';
+                // Preserve filter parameters
+                $redirect_url = 'keuangan.php';
+                if (isset($_GET['period'])) {
+                    $redirect_url .= '?period=' . urlencode($_GET['period']);
+                    if (isset($_GET['value'])) {
+                        $redirect_url .= '&value=' . urlencode($_GET['value']);
+                    }
+                }
+                header('Location: ' . $redirect_url);
+                exit();
+            } else {
+                $pesan = $result['pesan'];
+                $tipe_pesan = 'error';
+            }
         }
+    }
+    
+    // Check for flash messages from redirected POST
+    if (isset($_SESSION['flash_message'])) {
+        $pesan = $_SESSION['flash_message'];
+        $tipe_pesan = $_SESSION['flash_type'];
+        unset($_SESSION['flash_message']);
+        unset($_SESSION['flash_type']);
     }
     
     return ['pesan' => $pesan, 'tipe_pesan' => $tipe_pesan];
