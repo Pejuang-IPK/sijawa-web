@@ -1,0 +1,85 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.onboarding {
+    position: relative;
+    min-height: 100vh;
+    padding: 80px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.onboarding h1 {
+    font-size: 42px;
+    font-weight: 700;
+    max-width: 420px;
+    line-height: 1.2;
+    color: #000;
+}
+
+.onboarding p {
+    margin-top: 24px;
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 420px;
+    color: #1f2937;
+}
+
+.img-left {
+    position: absolute;
+    bottom: -20px;
+    left: -20px;
+    width: 260px;
+}
+
+.img-right {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 300px;
+}
+
+.img-center {
+    margin-top: 40px;
+    width: 260px;
+}
+
+.onboarding--calendar {
+    background: linear-gradient(135deg, #c9f7ef, #d6e4ff);
+}
+
+.onboarding--finance {
+    background: linear-gradient(135deg, #f0fff4, #e0f2fe);
+}
+
+.onboarding--relax {
+    background: linear-gradient(135deg, #e9d5ff, #cffafe);
+}
+
+.dots {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background: #cbd5e1;
+    border-radius: 50%;
+}
