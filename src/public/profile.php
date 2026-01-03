@@ -99,7 +99,7 @@ if (!$user) {
                 <div class="profile-header">
                 <div class="profile-avatar-wrapper">
                     <?php 
-                    $photoPath = !empty($user['foto']) ? 'uploads/profiles/' . htmlspecialchars($user['foto']) : 'assets/shen_xiaoting.jpg';
+                    $photoPath = !empty($user['foto']) ? 'uploads/profiles/' . htmlspecialchars($user['foto']) : 'assets/user.jpg';
                     ?>
                     <img src="<?php echo $photoPath; ?>" alt="Profile" class="profile-avatar" id="profileAvatarPreview">
                     <button type="button" class="avatar-upload-btn" onclick="document.getElementById('photoInput').click()" title="Ubah foto profil">
@@ -108,7 +108,7 @@ if (!$user) {
                 </div>
                 <div class="profile-info">
                     <h2><?php echo htmlspecialchars($user['nama']); ?></h2>
-                    <p>Mahasiswa Informatika • Free Plan</p>
+                    <p>• Free Plan</p>
                 </div>
                 </div>
 
