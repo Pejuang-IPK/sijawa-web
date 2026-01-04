@@ -35,13 +35,13 @@ require_once __DIR__ . '../../app/action/beranda_action.php';
                     <div class="label">Mata Kuliah Hari ini</div>
                 </div>
                 
-                <div class="deadline-card">
+                <a href="tugas.php" class="deadline-card" style="text-decoration: none; color: inherit; cursor: pointer;">
                     <div class="dashed-bg"></div>
                     <div class="main-card">
                         <div class="count"><?= $tugas_hari_ini ?></div>
                         <div class="label">Tugas Deadline Hari ini</div>
                     </div>
-                </div>
+                </a>
                 
                 <div class="progressbar-card">
                     <div class="title">Stress Level</div>
