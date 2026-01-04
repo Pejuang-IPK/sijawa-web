@@ -59,8 +59,7 @@ if (!empty($jadwal_hari_ini)) {
 // --- C. TUGAS DEADLINE HARI INI ---
 $queryTugas = "SELECT COUNT(*) as total FROM Tugas 
                WHERE id_mahasiswa = $id_mahasiswa 
-               AND id_status = 0 
-               AND date(tenggatTugas) = CURDATE()";
+               AND DATE(tenggatTugas) = CURDATE()";
 $resTugas = mysqli_query($conn, $queryTugas);
 $rowTugas = mysqli_fetch_assoc($resTugas);
 $tugas_hari_ini = $rowTugas['total'];

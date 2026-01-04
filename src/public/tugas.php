@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 	$title = clean($_POST['title'] ?? '');
 	$course = clean($_POST['course'] ?? '');
 	$dueRaw = $_POST['due_date'] ?? '';
+	$dueTime = $_POST['due_time'] ?? '23:59';
 
 	$dueDate = '';
 	if ($dueRaw) {
@@ -23,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 	}
 
 	if ($title && $dueDate) {
-		addTask($conn, $DEMO_USER_ID, $title, $course, $dueDate);
+		addTask($conn, $DEMO_USER_ID, $title, $course, $dueDate, $dueTime);
 	}
 
 	header('Location: tugas.php');
@@ -104,16 +105,14 @@ foreach ($tasks as $t) {
 							<input type="text" name="course" placeholder="Nama Matkul">
 						</div>
 						<div class="field">
-							<label>Tenggat Waktu</label>
-							<input type="date" name="due_date" required>
+						<label>Tenggat Tanggal</label>
+						<input type="date" name="due_date" required>
+					</div>
+					<div class="field">
+						<label>Tenggat Waktu</label>
+						<input type="time" name="due_time" value="23:59" required>
 						</div>
-						<div class="field small">
-							<label>&nbsp;</label>
-							<div class="checkbox">
-								<input type="checkbox" id="notify" name="notify">
-								<label for="notify">Ingatkan</label>
-							</div>
-						</div>
+
 						<div class="actions">
 							<button type="submit" class="primary">Simpan</button>
 						</div>
@@ -122,23 +121,23 @@ foreach ($tasks as $t) {
 			</section>
 
 			<section class="stats">
-				<div class="stat urgent">
+				<div class="stat urgent<?= $countUrgent > 0 ? ' active' : '' ?>">
 					<div class="label">URGENT (H-1)</div>
 					<div class="value"><?= $countUrgent ?></div>
 				</div>
-				<div class="stat approaching">
+				<div class="stat approaching<?= $countApproach > 0 ? ' active' : '' ?>">
 					<div class="label">MENDEKATI (H-3)</div>
 					<div class="value"><?= $countApproach ?></div>
 				</div>
-				<div class="stat safe">
+				<div class="stat safe<?= $countSafe > 0 ? ' active' : '' ?>">
 					<div class="label">AMAN</div>
 					<div class="value"><?= $countSafe ?></div>
 				</div>
-				<div class="stat overdue">
+				<div class="stat overdue<?= $countOverdue > 0 ? ' active' : '' ?>">
 					<div class="label">TERLEWAT</div>
 					<div class="value"><?= $countOverdue ?></div>
 				</div>
-				<div class="stat total">
+				<div class="stat total<?= count($tasks) > 0 ? ' active' : '' ?>">
 					<div class="label">TOTAL TUGAS</div>
 					<div class="value"><?= count($tasks) ?></div>
 				</div>
@@ -150,32 +149,29 @@ foreach ($tasks as $t) {
 					<div class="task-left">
 						<div class="icon <?= $key ?>">
 							<?php if ($key === 'urgent'): ?>
-								<i class="fa-solid fa-radiation"></i>
-							<?php elseif ($key === 'approaching'): ?>
-								<i class="fa-solid fa-hourglass-half"></i>
-							<?php elseif ($key === 'overdue'): ?>
-								<i class="fa-solid fa-skull-crossbones"></i>
-							<?php else: ?>
-								<i class="fa-solid fa-shield-heart"></i>
+							<i class="fa-solid fa-bell"></i>
+						<?php elseif ($key === 'approaching'): ?>
+							<i class="fa-solid fa-exclamation"></i>
+						<?php elseif ($key === 'overdue'): ?>
+							<i class="fa-solid fa-xmark"></i>
+						<?php else: ?>
+							<i class="fa-solid fa-thumbs-up"></i>
 							<?php endif; ?>
 						</div>
 						<div class="task-info">
 							<h3><?= clean($t['title']) ?></h3>
 							<div class="meta">
 								<?php if (!empty($t['course'])): ?>
-									<span class="pill course"><?= clean($t['course']) ?></span>
-								<?php endif; ?>
-								<span class="pill date"><i class="fa-solid fa-calendar-day"></i> <?= date('d-m-Y', strtotime($t['due_date'])) ?></span>
+								<span class="pill course <?= $key === 'overdue' ? 'overdue' : '' ?>"><?= clean($t['course']) ?></span>
+							<?php endif; ?>
+						<span class="pill date <?= $key === 'overdue' ? 'overdue' : '' ?>"><i class="fa-solid fa-calendar-day"></i> <?= date('d-m-Y', strtotime($t['due_date'])) ?></span>
+						<span class="pill time <?= $key === 'overdue' ? 'overdue' : '' ?>"><i class="fa-solid fa-clock"></i> <?= date('H:i', strtotime($t['due_date'])) ?></span>
 							</div>
 						</div>
 					</div>
 					<div class="task-right">
 						<span class="badge <?= $key ?>"><?= $label ?></span>
-						<form method="post" action="tugas.php" onsubmit="return confirm('Hapus tugas ini?');">
-							<input type="hidden" name="action" value="delete" />
-							<input type="hidden" name="task_id" value="<?= (int)$t['id'] ?>" />
-							<button class="icon-btn" type="submit" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-						</form>
+						<button class="icon-btn" type="button" onclick="showDeleteModal(<?= (int)$t['id'] ?>, '<?= addslashes(clean($t['title'])) ?>')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
 					</div>
 				</article>
 			<?php endforeach; ?>
@@ -187,8 +183,61 @@ foreach ($tasks as $t) {
 		</main>
 	</div>
 
+	<!-- Modal Hapus Tugas -->
+	<div id="deleteModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-icon">
+				<i class="fa-solid fa-triangle-exclamation"></i>
+			</div>
+			<h2 class="modal-title">Hapus Jadwal?</h2>
+			<p class="modal-text">Apakah Anda yakin ingin menghapus jadwal ini?<br>Tindakan ini tidak dapat dibatalkan.</p>
+			<div class="modal-actions">
+				<button class="btn-cancel" onclick="closeDeleteModal()">Batal</button>
+				<button class="btn-delete" onclick="confirmDelete()">Ya, Hapus</button>
+			</div>
+		</div>
+	</div>
+
+	<form id="deleteForm" method="post" action="tugas.php" style="display: none;">
+		<input type="hidden" name="action" value="delete" />
+		<input type="hidden" name="task_id" id="deleteTaskId" />
+	</form>
+
 	<script>
-		// Placeholder untuk interaksi kecil bila diperlukan
+		let currentDeleteId = null;
+
+		function showDeleteModal(taskId, taskTitle) {
+			currentDeleteId = taskId;
+			document.getElementById('deleteModal').style.display = 'flex';
+			document.body.style.overflow = 'hidden';
+		}
+
+		function closeDeleteModal() {
+			document.getElementById('deleteModal').style.display = 'none';
+			document.body.style.overflow = 'auto';
+			currentDeleteId = null;
+		}
+
+		function confirmDelete() {
+			if (currentDeleteId) {
+				document.getElementById('deleteTaskId').value = currentDeleteId;
+				document.getElementById('deleteForm').submit();
+			}
+		}
+
+		// Close modal when clicking outside
+		document.getElementById('deleteModal').addEventListener('click', function(e) {
+			if (e.target === this) {
+				closeDeleteModal();
+			}
+		});
+
+		// Close modal with Escape key
+		document.addEventListener('keydown', function(e) {
+			if (e.key === 'Escape') {
+				closeDeleteModal();
+			}
+		});
 	</script>
 </body>
 </html>

@@ -12,12 +12,17 @@ function esc($conn, $val) {
 
 // Hitung status berdasarkan tenggat
 function computeStatus($dueDateStr, $today) {
-	$due = DateTime::createFromFormat('Y-m-d', $dueDateStr);
-	if (!$due) $due = new DateTime($dueDateStr);
+	$due = new DateTime($dueDateStr);
+	$now = new DateTime();
 
-	$diffDays = (int)ceil(($due->getTimestamp() - $today->getTimestamp()) / 86400);
+	// Jika sudah melewati waktu tenggat (termasuk jam)
+	if ($due < $now) return ['Terlewat', 'overdue'];
 
-	if ($diffDays < 0) return ['Terlewatkan', 'overdue'];
+	// Hitung selisih hari dari hari ini (tanpa jam)
+	$dueDate = DateTime::createFromFormat('Y-m-d', $due->format('Y-m-d'));
+	$todayDate = DateTime::createFromFormat('Y-m-d', $today->format('Y-m-d'));
+	$diffDays = (int)ceil(($dueDate->getTimestamp() - $todayDate->getTimestamp()) / 86400);
+
 	if ($diffDays <= 1) return ['Harus Dikerjakan', 'urgent'];
 	if ($diffDays <= 3) return ['Tolong Dikerjakan', 'approaching'];
 	return ['Masih Bisa Ditunda', 'safe'];
@@ -54,9 +59,9 @@ function getStatusId($conn, $statusLabel) {
 }
 
 // Tambah tugas baru
-function addTask($conn, $userId, $title, $course, $dueDate) {
-	$dueDateTime = $dueDate . ' 23:59:59';
-	[$statusText] = computeStatus($dueDate, new DateTime('today'));
+function addTask($conn, $userId, $title, $course, $dueDate, $dueTime = '23:59') {
+	$dueDateTime = $dueDate . ' ' . $dueTime . ':00';
+	[$statusText] = computeStatus($dueDateTime, new DateTime('today'));
 
 	$nextId = getNextTaskId($conn);
 	$statusId = getStatusId($conn, $statusText);

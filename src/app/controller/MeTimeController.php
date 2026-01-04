@@ -24,33 +24,22 @@ function hitungStressLevel($id_mahasiswa) {
     }
 
     // ============================================================
-    // 2. AMBIL DATA TUGAS (URGENSI) - [TIDAK DIUBAH]
+    // 2. AMBIL DATA TUGAS (URGENSI) - HANYA URGENT
     // ============================================================
+    // Query hanya untuk tugas yang deadline-nya hari ini atau besok (truly urgent)
     $queryTugas = "SELECT tenggatTugas FROM Tugas 
                    WHERE id_mahasiswa = $id_mahasiswa 
-                   AND id_status = 0 
-                   AND tenggatTugas BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)";
+                   AND tenggatTugas >= CURDATE() 
+                   AND tenggatTugas <= DATE_ADD(CURDATE(), INTERVAL 1 DAY)";
     
     $resultTugas = mysqli_query($conn, $queryTugas);
-    $tugas_mendesak = 0; 
-    $tugas_santai   = 0;
+    $tugas_mendesak = 0;
     
-    $today = new DateTime();
-
     if ($resultTugas) {
-        while ($row = mysqli_fetch_assoc($resultTugas)) {
-            $deadline = new DateTime($row['tenggatTugas']);
-            $interval = $today->diff($deadline);
-            $hari_sisa = (int)$interval->format('%r%a');
-
-            if ($hari_sisa <= 3) {
-                $tugas_mendesak++;
-            } else {
-                $tugas_santai++;
-            }
-        }
+        $tugas_mendesak = mysqli_num_rows($resultTugas);
     }
-    $total_tugas = $tugas_mendesak + $tugas_santai;
+    
+    $total_tugas = $tugas_mendesak;
 
     // ============================================================
     // 3. HITUNG SKOR STRESS KOTOR (GROSS STRESS)
@@ -60,8 +49,9 @@ function hitungStressLevel($id_mahasiswa) {
     $skor_beban_rutin = ($total_sks * 1.2) + ($total_jam_kuliah * 0.8);
     if ($skor_beban_rutin > 60) $skor_beban_rutin = 60; 
 
-    // B. Tekanan Waktu
-    $skor_tekanan_tugas = ($tugas_mendesak * 15) + ($tugas_santai * 5);
+    // B. Tekanan Waktu - HANYA TUGAS URGENT
+    // Setiap tugas urgent (deadline hari ini/besok) = 25 poin
+    $skor_tekanan_tugas = $tugas_mendesak * 25;
 
     // Total Stress Awal (Sebelum dikurangi Me-Time)
     $stress_kotor = $skor_beban_rutin + $skor_tekanan_tugas;
