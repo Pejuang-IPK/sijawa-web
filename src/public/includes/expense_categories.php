@@ -30,7 +30,7 @@
         <?php else: ?>
             <?php foreach($statistik_kategori as $stat): ?>
                 <?php if($stat['jenisTransaksi'] == 'Pengeluaran'): ?>
-                    <div class="expense-card" onclick="tampilkanDetailKategori('<?php echo htmlspecialchars($stat['kategoriTransaksi']); ?>', 'Pengeluaran')" style="cursor: pointer;">
+                    <div class="expense-card">
                         <div class="expense-header">
                             <div class="expense-icon-wrapper" style="background: #fee2e2;">
                                 <i class="fa-solid fa-arrow-up-long" style="color: #ef4444; transform: rotate(45deg);"></i>
