@@ -1,27 +1,22 @@
 <?php
 session_start();
 
-// Cek apakah user sudah login
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: login.php");
     exit();
 }
 
-// Get user data from session
 $id_mahasiswa = $_SESSION['id_mahasiswa'];
 $nama_mahasiswa = $_SESSION['nama'];
 $email_mahasiswa = $_SESSION['email'];
 
-// Include database connection and controller
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../app/KeuanganController.php';
 
-// Handle AJAX API requests untuk transaksi
 if (isset($_POST['ajax']) && $_POST['ajax'] === '1') {
     handleTransaksiAPI();
 }
 
-// Handle AJAX API requests untuk langganan
 if (isset($_GET['api']) && $_GET['api'] === 'langganan') {
     handleLanggananAPI();
 }
@@ -30,15 +25,12 @@ if (isset($_POST['api']) && $_POST['api'] === 'langganan') {
     handleLanggananAPI();
 }
 
-// Handle charge subscription
 if (isset($_POST['api']) && $_POST['api'] === 'charge') {
     handleChargeSubscription();
 }
 
-// Get all dashboard data from controller
 $dashboard = getDashboardData($id_mahasiswa);
 
-// Ekstrak variabel untuk kemudahan akses di template
 extract($dashboard);
 ?>
 <!DOCTYPE html>

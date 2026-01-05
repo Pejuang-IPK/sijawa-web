@@ -1,4 +1,3 @@
-<!-- Income Categories -->
 <div class="category-section">
     <div class="section-header">
         <div class="section-title-group">

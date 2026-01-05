@@ -1,4 +1,4 @@
-<!-- Modal Import Status -->
+
 <div id="importStatusModal" class="modal-overlay" style="display: none;">
     <div class="modal-content" style="max-width: 450px;">
         <div class="modal-header" id="importStatusHeader">

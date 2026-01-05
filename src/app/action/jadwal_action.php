@@ -4,7 +4,6 @@ require_once __DIR__ . '/../controller/JadwalController.php'; // Sesuaikan path
 
 $action = $_GET['action'] ?? '';
 
-// edit
 if (isset($_POST['submit_edit'])) {
     if (ubah($_POST) > 0) {
         echo "<script>alert('Data Berhasil Diubah!'); document.location.href = '';</script>";
@@ -13,7 +12,6 @@ if (isset($_POST['submit_edit'])) {
     }
 }
 
-// delete
 if(isset($_GET["hapus"])) {
     $id = $_GET["hapus"];
     if(hapus($id) > 0) {

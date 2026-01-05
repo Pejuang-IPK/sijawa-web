@@ -1,19 +1,16 @@
 <?php
 session_start();
 
-// Pastikan path ke file database dan controller benar
 require_once __DIR__ . '../../config/database.php';
 require_once __DIR__ . '../../app/controller/MeTimeController.php';
 require_once __DIR__ . '../../app/action/metime_action.php';
 
-// 1. Ambil Data
 $id_mahasiswa = $_SESSION['user_id']; // Sesuaikan dengan session login nanti
 
 // Initialize flash message
 $pesan = '';
 $tipe_pesan = '';
 
-// Check for flash messages from redirected POST
 if (isset($_SESSION['flash_message'])) {
     $pesan = $_SESSION['flash_message'];
     $tipe_pesan = $_SESSION['flash_type'];
@@ -21,21 +18,18 @@ if (isset($_SESSION['flash_message'])) {
     unset($_SESSION['flash_type']);
 }
 
-// Panggil fungsi hitungStressLevel yang baru
 $data_stress = hitungStressLevel($id_mahasiswa);
 
-// Ambil variabel hasil perhitungan baru (Sesuai Controller)
 $score       = $data_stress['score'];
 $total_sks   = $data_stress['total_sks'];
-$total_jam   = $data_stress['total_jam']; // Durasi dalam Jam
+$total_jam   = $data_stress['total_jam'];
 $total_tugas = $data_stress['total_tugas'];
 
 $rekomendasi = getRekomendasi($score);
 
-// Logic Warna Progress Bar
-$barColor = '#4caf50'; // Hijau (Aman)
+$barColor = '#4caf50';
 if($score > 70) {
-    $barColor = '#ef4444'; // Merah (Bahaya)
+    $barColor = '#ef4444';
 } elseif ($score > 40) {
     $barColor = '#ffffffff'; 
 }
@@ -135,16 +129,13 @@ if($score > 70) {
                 <h3>History Mood Terakhir</h3>
                 
                 <?php
-                // DEBUGGING: Cek koneksi database
                 if (!$conn) {
                     echo "<p style='color:red'>Database tidak terhubung!</p>";
                 }
 
-                // Query History
                 $qMood = "SELECT * FROM Mood WHERE id_mahasiswa = $id_mahasiswa ORDER BY tanggalLogMood DESC LIMIT 6";
                 $resMood = mysqli_query($conn, $qMood);
 
-                // Cek Error Query SQL
                 if (!$resMood) {
                     echo "<p style='color:red'>Error SQL: " . mysqli_error($conn) . "</p>";
                 }

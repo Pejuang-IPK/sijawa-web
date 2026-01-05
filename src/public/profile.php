@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Cek apakah user sudah login
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -13,7 +12,6 @@ $userId = $_SESSION['user_id'];
 $message = '';
 $messageType = '';
 
-// Handle update profil
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] === 'update_profile') {
         $nama = $_POST['nama'] ?? '';
@@ -27,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $message = $result['message'];
             $messageType = $result['success'] ? 'success' : 'error';
             
-            // Perbarui nama di session jika berhasil
             if ($result['success']) {
                 $_SESSION['user_nama'] = $nama;
             }
@@ -57,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $message = $result['message'];
             $messageType = $result['success'] ? 'success' : 'error';
             
-            // Reload user data jika upload berhasil
             if ($result['success']) {
                 $user = getUserProfile($userId);
             }
@@ -65,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 }
 
-// Ambil data user
 $user = getUserProfile($userId);
 
 if (!$user) {
@@ -182,17 +177,14 @@ if (!$user) {
 </body>
 </html>
 <script>
-// Handle photo upload
 document.getElementById('photoInput').addEventListener('change', function() {
     if (this.files && this.files[0]) {
-        // Preview foto
         var reader = new FileReader();
         reader.onload = function(e) {
             document.getElementById('profileAvatarPreview').src = e.target.result;
         }
         reader.readAsDataURL(this.files[0]);
         
-        // Auto submit form
         document.getElementById('photoUploadForm').submit();
     }
 });

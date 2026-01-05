@@ -1,4 +1,3 @@
-<!-- Stats Cards -->
 <div class="stats-cards">
     <div class="stat-card stat-primary">
         <div class="stat-icon-wrapper">

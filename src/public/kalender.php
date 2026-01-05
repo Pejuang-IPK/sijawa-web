@@ -6,7 +6,6 @@ require_once __DIR__ . '../../app/action/jadwal_action.php';
 
 $id_mahasiswa = $_SESSION['user_id'];
 
-// Ambil semua jadwal mahasiswa
 $queryJadwal = "
     SELECT *
     FROM Jadwal
@@ -17,7 +16,6 @@ $queryJadwal = "
 
 $semua_jadwal = query($queryJadwal);
 
-// Grouping jadwal per hari
 $jadwal_per_hari = [];
 
 foreach ($semua_jadwal as $row) {
@@ -25,17 +23,14 @@ foreach ($semua_jadwal as $row) {
     $jadwal_per_hari[$hari][] = $row;
 }
 
-// Urutan hari (WAJIB, karena dipakai grid)
 $urutan_hari = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
 
-// Pastikan semua hari ada key-nya
 foreach ($urutan_hari as $hari) {
     if (!isset($jadwal_per_hari[$hari])) {
         $jadwal_per_hari[$hari] = [];
     }
 }
 
-// Logic Tambah
 $add_status = null;
 if(isset($_POST["submit_tambah"])) {
     if(tambah($_POST) > 0) {
@@ -45,7 +40,6 @@ if(isset($_POST["submit_tambah"])) {
     }
 }
 
-// Logic Ubah
 if(isset($_POST["submit_ubah"])) {
     if(ubah($_POST) > 0) {
         echo "<script>alert('Berhasil diubah!'); document.location.href = '';</script>";
@@ -54,19 +48,15 @@ if(isset($_POST["submit_ubah"])) {
     }
 }
 
-// Logic Import
 $import_status = null;
 if(isset($_POST["submit_import"])) {
     $import_status = importExcel($_FILES);
 }
 
-// 1. Setup Variabel Halaman (Untuk Sidebar Active State)
 $current_page = 'kalender.php'; 
 
-// 2. Logika Tanggal & Waktu
 date_default_timezone_set('Asia/Jakarta');
 
-// Ambil bulan/tahun dari URL, jika tidak ada pakai waktu sekarang
 if (isset($_GET['month']) && isset($_GET['year'])) {
     $month = $_GET['month'];
     $year = $_GET['year'];
@@ -75,10 +65,8 @@ if (isset($_GET['month']) && isset($_GET['year'])) {
     $year = date('Y');
 }
 
-// Hitung timestamp hari pertama bulan ini
 $timestamp = mktime(0, 0, 0, $month, 1, $year);
 
-// Informasi Dasar
 $monthName = date('F', $timestamp); // Januari, Februari...
 $daysInMonth = date('t', $timestamp); // Total hari (28/30/31)
 $dayOfWeek = date('w', $timestamp); // 0 (Minggu) - 6 (Sabtu)
@@ -95,25 +83,19 @@ $bulanIndo = [
     'October' => 'Oktober', 'November' => 'November', 'December' => 'Desember'
 ];
 
-// Navigasi Prev/Next
 $prevMonth = date('m', mktime(0, 0, 0, $month - 1, 1, $year));
 $prevYear = date('Y', mktime(0, 0, 0, $month - 1, 1, $year));
 $nextMonth = date('m', mktime(0, 0, 0, $month + 1, 1, $year));
 $nextYear = date('Y', mktime(0, 0, 0, $month + 1, 1, $year));
 
-// Kita tidak perlu filter hari ini, karena kita butuh data seminggu penuh untuk diulang
 $all_jadwal = query("SELECT * FROM Jadwal WHERE id_mahasiswa = $id_mahasiswa ORDER BY jam_mulai ASC");
 
-// 2. KELOMPOKKAN JADWAL BERDASARKAN HARI
-// Hasil: $jadwal_mingguan['Senin'] = [Matkul A, Matkul B]
 $jadwal_mingguan = [];
 foreach ($all_jadwal as $row) {
-    // Pastikan huruf depan besar (Senin, Selasa)
     $hari = ucfirst(strtolower($row['hari'])); 
     $jadwal_mingguan[$hari][] = $row;
 }
 
-// Array Helper untuk Warna Warni (Agar cantik)
 $colors = ['event-blue', 'event-green', 'event-orange', 'event-red'];
 $color_index = 0;
 
@@ -169,7 +151,6 @@ $color_index = 0;
     <script src="script/kalender.js?v=<?php echo time(); ?>"></script>
 
     <script>
-        // Handle Add Jadwal Status Modal
         <?php if ($add_status): ?>
             let addStatus = '<?= $add_status ?>';
             let addModal = document.getElementById('addStatusModal');
@@ -190,7 +171,6 @@ $color_index = 0;
             addModal.style.display = 'flex';
         <?php endif; ?>
 
-        // Handle Import Status Modal
         <?php if ($import_status): ?>
             let importStatus = '<?= $import_status ?>';
             let importModal = document.getElementById('importStatusModal');
@@ -219,7 +199,6 @@ $color_index = 0;
             importModal.style.display = 'flex';
         <?php endif; ?>
 
-        // Close modal function
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }

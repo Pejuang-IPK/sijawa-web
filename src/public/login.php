@@ -3,19 +3,16 @@ session_start();
 
 require_once __DIR__ . '/../app/AuthController.php';
 
-// Jika sudah login, redirect ke keuangan
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     header('Location: dashboard.php');
     exit();
 }
 
-// Cek jika ada pesan error atau success
 $error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
 $success = isset($_SESSION['success']) ? $_SESSION['success'] : '';
 unset($_SESSION['error']);
 unset($_SESSION['success']);
 
-// Jika email tidak ditemukan, ubah pesan error
 if ($error === "Email atau password salah.") {
     $error = "Akun tidak ditemukan, silahkan register jika belum memiliki akun";
 }
@@ -112,7 +109,6 @@ if(isset($_POST['submit'])){
             document.getElementById('errorModal').style.display = 'none';
         }
 
-        // Auto-close modal saat page load jika ada error
         window.addEventListener('load', function() {
             const modal = document.getElementById('errorModal');
             if (modal) {

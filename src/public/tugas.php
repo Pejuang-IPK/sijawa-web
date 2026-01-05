@@ -3,10 +3,8 @@ session_start();
 require_once __DIR__ . '../../config/database.php';
 require_once __DIR__ . '../../app/controller/TaskController.php';
 
-// DEMO: tanpa session. Gunakan ID mahasiswa contoh untuk insert.
 $DEMO_USER_ID = $_SESSION['user_id'];
 
-// Initialize flash message variables
 $pesan = null;
 $tipe_pesan = null;
 if (isset($_SESSION['flash_message'])) {
@@ -16,8 +14,6 @@ if (isset($_SESSION['flash_message'])) {
 	unset($_SESSION['flash_type']);
 }
 
-
-// Handle: tambah tugas manual
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add') {
 	$title = clean($_POST['title'] ?? '');
 	$course = clean($_POST['course'] ?? '');
@@ -46,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 	exit();
 }
 
-// Handle: hapus tugas
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
 	$taskId = intval($_POST['task_id'] ?? 0);
 	if ($taskId > 0) {
@@ -61,10 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 	exit();
 }
 
-// Ambil semua tugas
 $tasks = getAllTasks($conn, $DEMO_USER_ID);
 
-// Hitung status counter
 $today = new DateTime('today');
 $countUrgent = 0;
 $countApproach = 0;
@@ -93,10 +86,7 @@ foreach ($tasks as $t) {
 <body>
 	<div class="page">
 		<?php
-            // 1. Definisikan nama halaman ini
             $page = 'dashboard'; 
-
-            // 2. Baru panggil sidebar
             include 'includes/sidebar.php'; 
         ?>
 
@@ -211,7 +201,6 @@ foreach ($tasks as $t) {
 		</main>
 	</div>
 
-	<!-- Modal Hapus Tugas -->
 	<div id="deleteModal" class="modal">
 		<div class="modal-content">
 			<div class="modal-icon">

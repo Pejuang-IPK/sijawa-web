@@ -27,9 +27,6 @@ $data_hari_ini = query($query_today);
 
 ?>
 
-<!-- ===================================================== -->
-<!-- UI SIDEBAR -->
-<!-- ===================================================== -->
 <aside class="right-sidebar">
     <div class="right-schedule">
 

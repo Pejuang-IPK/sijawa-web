@@ -2,7 +2,6 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 
 ?>
-<!-- Sidebar -->
 <aside class="sidebar">
     <nav class="side-nav">
         <div class="brand">S.</div>

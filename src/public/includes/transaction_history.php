@@ -1,4 +1,3 @@
-<!-- Transaction History -->
 <div class="transaction-section">
     <div class="section-header">
         <h3>Riwayat Transaksi</h3>

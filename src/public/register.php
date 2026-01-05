@@ -3,19 +3,16 @@ session_start();
 
 require_once __DIR__ . '/../app/AuthController.php';
 
-// Jika sudah login, redirect ke dashboard
 if (isset($_SESSION['user_id'])) {
     header('Location: dashboard.php');
     exit();
 }
 
-// Cek jika ada pesan error
 $error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
 $success = isset($_SESSION['success']) ? $_SESSION['success'] : '';
 unset($_SESSION['error']);
 unset($_SESSION['success']);
 
-// Ubah pesan error untuk akun sudah ada
 if ($error === "Email sudah terdaftar.") {
     $error = "Akun sudah ada";
 }
@@ -42,7 +39,6 @@ if(isset($_POST['submit'])){
     <link rel="stylesheet" href="style/register.css?v=<?php echo time();?>">
 </head>
 <body class="auth-page register-page">
-    <!-- Modal Pop-up Success -->
     <?php if ($success): ?>
     <div id="successModal" class="modal-overlay">
         <div class="modal-box">
@@ -60,7 +56,6 @@ if(isset($_POST['submit'])){
     </div>
     <?php endif; ?>
 
-    <!-- Modal Pop-up Error -->
     <?php if ($error): ?>
     <div id="errorModal" class="modal-overlay">
         <div class="modal-box">
@@ -130,7 +125,6 @@ if(isset($_POST['submit'])){
             document.getElementById('successModal').style.display = 'none';
         }
 
-        // Auto-close modal saat page load jika ada error
         window.addEventListener('load', function() {
             const errorModal = document.getElementById('errorModal');
             const successModal = document.getElementById('successModal');

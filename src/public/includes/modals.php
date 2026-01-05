@@ -1,4 +1,3 @@
-<!-- Modal Tambah Transaksi -->
 <div id="modalTransaksi" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
     <div class="modal-content" style="max-width: 520px; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; z-index: 1001;">
         <div class="modal-header" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; color: white !important; border-radius: 16px 16px 0 0 !important; padding: 24px !important; display: flex !important; justify-content: space-between !important; align-items: flex-start !important; border-bottom: none !important;">
@@ -63,7 +62,6 @@
     </div>
 </div>
 
-<!-- Modal Tambah Kategori -->
 <div id="modalKategori" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
     <div class="modal-content" style="max-width: 520px; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; z-index: 1001;">
         <div class="modal-header" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; color: white !important; border-radius: 16px 16px 0 0 !important; padding: 24px !important; display: flex !important; justify-content: space-between !important; align-items: flex-start !important; border-bottom: none !important;">
@@ -98,7 +96,6 @@
     </div>
 </div>
 
-<!-- Modal Detail Kategori -->
 <div id="modalKategoriDetail" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
     <div class="modal-content" style="max-width: 600px; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; z-index: 1001;">
         <div class="modal-header" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; color: white !important; border-radius: 16px 16px 0 0 !important; padding: 24px !important; display: flex !important; justify-content: space-between !important; align-items: flex-start !important; border-bottom: none !important;">

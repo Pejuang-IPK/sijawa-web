@@ -1,6 +1,4 @@
-<!-- Analytics Sidebar -->
 <div class="analytics-sidebar">
-    <!-- Chart Card -->
     <div class="chart-card">
         <h3>Analisa Bulan Ini</h3>
         <p class="chart-date"><?php echo date('F Y'); ?></p>
@@ -48,7 +46,6 @@
         </div>
     </div>
 
-    <!-- Subscription Card -->
     <div class="subscription-card">
         <div class="subscription-header">
             <h3>Total Langganan Bulanan Aplikasi</h3>

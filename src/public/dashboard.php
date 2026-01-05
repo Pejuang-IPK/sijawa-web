@@ -124,13 +124,11 @@ require_once __DIR__ . '../../app/helper/Singkatan.php';
                 <?php if (count($jadwal_hari_ini) > 0): ?>
                     <?php foreach ($jadwal_hari_ini as $row): ?>
                         <?php
-                            // 1. Cek Active Class
                             $start = strtotime($row['jam_mulai']);
                             $end   = strtotime($row['jam_selesai']);
                             $now   = time();
                             $isActive = ($now >= $start && $now <= $end) ? 'active' : '';
 
-                            // 2. Icon Randomizer
                             $icon = 'fa-book';
                             $lowerName = strtolower($row['namaMatkul']);
                             if(strpos($lowerName, 'web') !== false) $icon = 'fa-globe';
