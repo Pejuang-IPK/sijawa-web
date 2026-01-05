@@ -144,9 +144,6 @@ function bukaModalLangganan() {
                 <input type="text" name="harga_bulanan" id="inputHarga" required placeholder="50.000" oninput="formatRupiah(this)"
                        style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; box-sizing: border-box;">
                 <input type="hidden" name="harga_bulanan_raw" id="inputHarga_raw">
-                <p style="font-size: 12px; color: #94a3b8; margin: 8px 0 0 0;">
-                    <i class="fa-solid fa-info-circle"></i> Akan otomatis dipotong setiap tanggal 1
-                </p>
             </div>
             <div style="display: flex; gap: 12px; padding-top: 20px; margin-top: 20px; border-top: 1px solid #f1f5f9;">
                 <button type="button" id="btnBatal" style="flex: 1; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; background: #f1f5f9; color: #64748b; border: none; font-family: 'Poppins', sans-serif;">

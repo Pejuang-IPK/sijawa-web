@@ -1118,7 +1118,7 @@ body {
   /* 3. SEMBUNYIKAN LOGO */
   .sidebar .brand,
   .side-nav .brand {
-    display: none !important;
+    display: none;
   }
 
   /* 4. GROUP KIRI (MENU UTAMA) */
@@ -1135,7 +1135,7 @@ body {
 
   /* 5. GROUP KANAN (PROFILE & LOGOUT) */
   .sidebar .bottom {
-    display: flex !important;
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -1155,7 +1155,7 @@ body {
     height: 100%;
     flex: 1;
     text-decoration: none;
-    background: transparent !important;
+    background: transparent;
     color: #94a3b8;
     margin: 0;
     padding: 0;
@@ -1211,9 +1211,9 @@ body {
 
   .sidebar .icon-btn,
   .sidebar .icon-btn-logout {
-    background: transparent !important;
-    border: none !important;
-    color: #94a3b8 !important;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
     width: 40px;
     height: 100%;
     display: flex;
@@ -1224,7 +1224,7 @@ body {
   }
 
   .sidebar .icon-btn-logout {
-    color: #ef4444 !important;
+    color: #ef4444;
   }
 
   /* 10. ADJUSTMENT KONTEN UTAMA */
@@ -1269,8 +1269,8 @@ body {
   /* Transaction Item Responsive */
   .transaction-item {
     flex-direction: column;
-    align-items: flex-start !important;
-    gap: 12px !important;
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .transaction-item > div:last-child {
@@ -1281,7 +1281,7 @@ body {
   /* Analytics Sidebar */
   .subscription-header {
     flex-direction: column;
-    align-items: flex-start !important;
+    align-items: flex-start;
     gap: 12px;
   }
 
@@ -1292,18 +1292,18 @@ body {
 
   /* Modal Responsive */
   .modal-content {
-    width: 95% !important;
-    max-width: 95% !important;
+    width: 95%;
+    max-width: 95%;
     margin: 10px;
   }
 
   .modal-header {
-    padding: 16px !important;
+    padding: 16px;
   }
 
   .modal form,
   .modal-body {
-    padding: 16px !important;
+    padding: 16px;
   }
 
   .form-group {
@@ -1439,9 +1439,9 @@ body {
   }
 
   .transaction-icon {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 14px !important;
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
   }
 
   .transaction-item {
@@ -1482,8 +1482,8 @@ body {
 
   /* Modal Mobile */
   .modal-content {
-    width: calc(100vw - 24px) !important;
-    max-width: calc(100vw - 24px) !important;
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
     margin: 12px;
   }
 
@@ -1500,13 +1500,13 @@ body {
   /* Subscription Item Mobile */
   .subscription-item {
     flex-direction: column;
-    align-items: flex-start !important;
-    gap: 12px !important;
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .subscription-item .sub-icon {
-    width: 40px !important;
-    height: 40px !important;
+    width: 40px;
+    height: 40px;
   }
 
   .subscription-item > div {
@@ -1514,9 +1514,9 @@ body {
   }
 
   .btn-delete-sub {
-    width: 100% !important;
-    height: auto !important;
-    padding: 8px !important;
+    width: 100%;
+    height: auto;
+    padding: 8px;
   }
 
   /* Analytics Chart Mobile */
