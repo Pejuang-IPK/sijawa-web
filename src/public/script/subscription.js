@@ -56,9 +56,9 @@ function tampilkanLangganan(subscriptions, total) {
         let iconColor = '#64748b';
 
         const iconName = sub.icon || 'fa-circle';
-        for (const [key, color] of Object.entries(iconColors)) {
-            if (iconName.includes(key)) {
-                iconColor = color;
+        for (const [langganan, warna] of Object.entries(iconColors)) {
+            if (iconName.includes(langganan)) {
+                iconColor = warna;
                 break;
             }
         }
@@ -180,7 +180,7 @@ function bukaModalLangganan() {
         
         const btnSimpan = this;
         btnSimpan.disabled = true;
-        btnSimpan.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+        btnSimpan.innerHTML = '';
         
         const formData = new FormData();
         formData.append('action', 'tambah');
