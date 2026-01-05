@@ -15,6 +15,11 @@ $success = isset($_SESSION['success']) ? $_SESSION['success'] : '';
 unset($_SESSION['error']);
 unset($_SESSION['success']);
 
+// Jika email tidak ditemukan, ubah pesan error
+if ($error === "Email atau password salah.") {
+    $error = "Akun tidak ditemukan, silahkan register jika belum memiliki akun";
+}
+
 if(isset($_POST['submit'])){
     $userData = login($_POST);
     if($userData){
@@ -47,6 +52,24 @@ if(isset($_POST['submit'])){
     <link rel="stylesheet" href="style/login.css?v=<?php echo time(); ?>">
 </head>
 <body class="auth-page">
+    <!-- Modal Pop-up -->
+    <?php if ($error): ?>
+    <div id="errorModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Perhatian</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p><?php echo htmlspecialchars($error); ?></p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <div class="img-background">
         <img src="assets/aksen_1.png" alt="" srcset="">
     </div>
@@ -74,13 +97,6 @@ if(isset($_POST['submit'])){
                         <input type="password" id="password" name="password" required>
                     </div>
 
-                    <div class="gap-line">
-                        <hr class="left-line">
-                        <span>atau masuk dengan</span>
-                        <hr class="right-line">
-                    </div>
-
-                    <button class="google-log"><span class="material-icon-theme--google"></span> Masuk dengan google</button>
                     <button type="submit" class="submit-btn" name="submit">Masuk</button>
                 </form>
 
@@ -90,5 +106,19 @@ if(isset($_POST['submit'])){
             </div>
         </div>
     </div>
+
+    <script>
+        function closeModal() {
+            document.getElementById('errorModal').style.display = 'none';
+        }
+
+        // Auto-close modal saat page load jika ada error
+        window.addEventListener('load', function() {
+            const modal = document.getElementById('errorModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        });
+    </script>
 </body>
 </html>

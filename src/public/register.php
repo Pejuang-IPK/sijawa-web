@@ -11,13 +11,18 @@ if (isset($_SESSION['user_id'])) {
 
 // Cek jika ada pesan error
 $error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
+$success = isset($_SESSION['success']) ? $_SESSION['success'] : '';
 unset($_SESSION['error']);
+unset($_SESSION['success']);
+
+// Ubah pesan error untuk akun sudah ada
+if ($error === "Email sudah terdaftar.") {
+    $error = "Akun sudah ada";
+}
 
 if(isset($_POST['submit'])){
     if(register($_POST)){
-        $_SESSION['success'] = "Registrasi berhasil! Silakan login.";
-        header('Location: login.php');
-        exit();
+        $success = "Registrasi berhasil! Silakan login.";
     } else {
         $_SESSION['error'] = "Email sudah terdaftar.";
         header('Location: register.php');
@@ -37,6 +42,42 @@ if(isset($_POST['submit'])){
     <link rel="stylesheet" href="style/register.css?v=<?php echo time();?>">
 </head>
 <body class="auth-page register-page">
+    <!-- Modal Pop-up Success -->
+    <?php if ($success): ?>
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Selamat!</h3>
+                <button class="close-btn" onclick="closeSuccessModal()">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p><?php echo htmlspecialchars($success); ?></p>
+            </div>
+            <div class="modal-footer">
+                <a href="login.php" class="modal-btn">Lanjut</a>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Modal Pop-up Error -->
+    <?php if ($error): ?>
+    <div id="errorModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Perhatian</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p><?php echo htmlspecialchars($error); ?></p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <div class="img-background">
         <img src="assets/ellipse_1.png" alt="" srcset="">
         <img src="assets/ellipse_2.png" alt="" srcset="">
@@ -54,10 +95,6 @@ if(isset($_POST['submit'])){
                     <p class="subtitle">Selamat datang</p>
                 </div>
 
-                <?php if ($error): ?>
-                    <div class="alert"><?php echo htmlspecialchars($error); ?></div>
-                <?php endif; ?>
-
                 <form action="" method="POST">
                     <div class="form-group">
                         <label for="nama">Nama</label>
@@ -74,12 +111,6 @@ if(isset($_POST['submit'])){
                         <input type="password" id="password" name="password" required minlength="6">
                     </div>
 
-                    <div class="gap-line">
-                        <hr>
-                        <span>atau dengan</span>
-                        <hr>
-                    </div>
-                    <button class="google-log"><span class="material-icon-theme--google"></span> Masuk dengan google</button>
                     <button type="submit" class="submit-btn" name="submit">Daftar</button>
                 </form>
 
@@ -89,5 +120,29 @@ if(isset($_POST['submit'])){
             </div>
         </div>
     </div>
+
+    <script>
+        function closeModal() {
+            document.getElementById('errorModal').style.display = 'none';
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').style.display = 'none';
+        }
+
+        // Auto-close modal saat page load jika ada error
+        window.addEventListener('load', function() {
+            const errorModal = document.getElementById('errorModal');
+            const successModal = document.getElementById('successModal');
+            
+            if (errorModal) {
+                errorModal.style.display = 'flex';
+            }
+            
+            if (successModal) {
+                successModal.style.display = 'flex';
+            }
+        });
+    </script>
 </body>
 </html>

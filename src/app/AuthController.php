@@ -21,7 +21,13 @@ function login($loginData)
     $email = htmlspecialchars($loginData['email']);
     $password = $loginData['password'];
 
-    $user = query("SELECT * FROM Mahasiswa WHERE email = '$email'")[0];
+    $users = query("SELECT * FROM Mahasiswa WHERE email = '$email'");
+    
+    if (empty($users)) {
+        return false;
+    }
+    
+    $user = $users[0];
 
     if ($user && password_verify($password, $user['password'])) {
         return $user;
