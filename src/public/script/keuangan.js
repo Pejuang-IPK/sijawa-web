@@ -220,63 +220,6 @@ function terapkanFilter() {
     window.location.href = '?period=' + period + '&value=' + value;
 }
 
-// Show kategori detail modal
-function tampilkanDetailKategori(kategori, jenis) {
-    const modal = document.getElementById('modalKategoriDetail');
-    const title = document.getElementById('kategoriDetailTitle');
-    const content = document.getElementById('kategoriDetailContent');
-    
-    title.textContent = 'Transaksi - ' + kategori;
-    content.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 20px;">Memuat data...</p>';
-    modal.style.display = 'flex';
-    
-    const period = window.currentPeriod || 'bulan';
-    const value = window.currentValue || '0';
-    
-    fetch('get_kategori_detail.php?kategori=' + encodeURIComponent(kategori) + '&period=' + period + '&value=' + value)
-        .then(response => response.json())
-        .then(data => {
-            if (data.length === 0) {
-                content.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 20px;">Belum ada transaksi</p>';
-                return;
-            }
-            
-            let html = '<div class="transaction-list" style="display: flex; flex-direction: column; gap: 12px;">';
-            data.forEach(trans => {
-                const isIncome = trans.jenisTransaksi === 'Pemasukan';
-                const iconClass = isIncome ? 'success' : 'danger';
-                const icon = isIncome ? 'fa-arrow-down-long' : 'fa-arrow-up-long';
-                const iconRotation = 'transform: rotate(45deg);';
-                const prefix = isIncome ? '+' : '-';
-                
-                html += `
-                    <div class="transaction-item" style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8fafc; border-radius: 8px;">
-                        <div class="transaction-icon ${iconClass}" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                            <i class="fa-solid ${icon}" style="${iconRotation}"></i>
-                        </div>
-                        <div style="flex: 1;">
-                            <h4 style="margin: 0 0 4px 0; font-size: 14px;">${trans.keteranganTransaksi}</h4>
-                            <p style="margin: 0; font-size: 12px; color: #64748b;">${new Date(trans.tanggalKeuangan).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'})}</p>
-                        </div>
-                        <div style="text-align: right; display: flex; align-items: center; gap: 8px;">
-                            <p class="transaction-amount ${iconClass}" style="margin: 0; font-weight: 600; margin-right: 12px;">${prefix}Rp ${Number(trans.transaksi).toLocaleString('id-ID')}</p>
-                            <button onclick="bukaModalEditTransaksi('${trans.id_keuangan}')" class="btn-edit-transaksi" style="background: #3b82f6; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button onclick="hapusTransaksi('${trans.id_keuangan}')" class="btn-delete-transaksi" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            content.innerHTML = html;
-        })
-        .catch(error => {
-            content.innerHTML = '<p style="text-align: center; color: #ef4444; padding: 20px;">Gagal memuat data</p>';
-        });
-}
 
 // Close modal when clicking outside
 window.onclick = function(event) {
