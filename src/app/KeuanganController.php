@@ -2,9 +2,7 @@
 require_once __DIR__ . '/../config/database.php';
 
 function tambahTransaksi($data) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return ['sukses' => false, 'pesan' => 'Koneksi database gagal'];
     }
@@ -41,9 +39,7 @@ function tambahTransaksi($data) {
 }
 
 function getTransaksiWithFilter($id_mahasiswa, $date_condition = '', $limit = null) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return [];
     }
@@ -69,9 +65,7 @@ function getTransaksiWithFilter($id_mahasiswa, $date_condition = '', $limit = nu
 }
 
 function hapusTransaksi($id_keuangan) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return ['sukses' => false, 'pesan' => 'Koneksi database gagal'];
     }
@@ -89,9 +83,7 @@ function hapusTransaksi($id_keuangan) {
 }
 
 function editTransaksi($id_keuangan, $data) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return ['sukses' => false, 'pesan' => 'Koneksi database gagal'];
     }
@@ -120,9 +112,7 @@ function editTransaksi($id_keuangan, $data) {
 }
 
 function getTransaksiById($id_keuangan) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return null;
     }
@@ -214,9 +204,7 @@ function handleTransaksiAPI() {
 }
 
 function getKategoriByMahasiswa($id_mahasiswa, $jenisTransaksi = null) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return [];
     }
@@ -245,9 +233,7 @@ function getKategoriByMahasiswa($id_mahasiswa, $jenisTransaksi = null) {
 }
 
 function getStatistikKategori($id_mahasiswa, $date_condition = '') {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return [];
     }
@@ -277,9 +263,7 @@ function getStatistikKategori($id_mahasiswa, $date_condition = '') {
 }
 
 function getMonthlyAnalysis($id_mahasiswa) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return ['pemasukan' => 0, 'pengeluaran' => 0, 'saldo' => 0];
     }
@@ -318,9 +302,7 @@ function getMonthlyAnalysis($id_mahasiswa) {
 }
 
 function tambahLangganan($data) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return ['sukses' => false, 'pesan' => 'Koneksi database gagal'];
     }
@@ -345,9 +327,7 @@ function tambahLangganan($data) {
 }
 
 function getLanggananByMahasiswa($id_mahasiswa) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return [];
     }
@@ -369,9 +349,7 @@ function getLanggananByMahasiswa($id_mahasiswa) {
 }
 
 function getTotalLangganan($id_mahasiswa) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return 0;
     }
@@ -391,9 +369,7 @@ function getTotalLangganan($id_mahasiswa) {
 }
 
 function hapusLangganan($id_langganan) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return ['sukses' => false, 'pesan' => 'Koneksi database gagal'];
     }
@@ -686,9 +662,7 @@ function getStatistikWithFilter($id_mahasiswa, $date_condition) {
 }
 
 function getFinancialSummary($id_mahasiswa) {
-    global $servername, $username, $password, $dbname;
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    
+    $conn = getDBConnection();
     if (!$conn) {
         return [
             'total_pemasukan' => 0,

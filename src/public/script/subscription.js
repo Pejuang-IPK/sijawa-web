@@ -95,7 +95,7 @@ function bukaModalLangganan() {
     modalContent.style.cssText = 'max-width: 520px; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; z-index: 1001;';
     
     modalContent.innerHTML = `
-        <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 16px 16px 0 0; padding: 24px; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border-radius: 16px 16px 0 0; padding: 24px; display: flex; justify-content: space-between; align-items: flex-start;">
             <div>
                 <h2 style="color: white; margin: 0 0 4px 0; font-size: 20px;">Tambah Langganan Baru</h2>
                 <p style="font-size: 13px; opacity: 0.9; margin: 0;">Kelola langganan aplikasi bulanan Anda</p>
@@ -107,7 +107,7 @@ function bukaModalLangganan() {
         <form id="subscriptionForm" style="padding: 28px;">
             <div style="margin-bottom: 24px;">
                 <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #1e293b;">
-                    <i class="fa-solid fa-tag" style="color: #667eea;"></i>
+                    <i class="fa-solid fa-tag" style="color: #3b82f6;"></i>
                     <span>Nama Langganan</span>
                 </label>
                 <input type="text" name="nama_langganan" id="inputNama" required placeholder="Contoh: Netflix, Spotify, YouTube Premium" 
@@ -115,7 +115,7 @@ function bukaModalLangganan() {
             </div>
             <div style="margin-bottom: 24px;">
                 <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #1e293b;">
-                    <i class="fa-solid fa-icons" style="color: #667eea;"></i>
+                    <i class="fa-solid fa-icons" style="color: #3b82f6;"></i>
                     <span>Pilih Icon</span>
                 </label>
                 <select name="icon" id="inputIcon" required style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; cursor: pointer; box-sizing: border-box;">
@@ -138,21 +138,18 @@ function bukaModalLangganan() {
             </div>
             <div style="margin-bottom: 28px;">
                 <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #1e293b;">
-                    <i class="fa-solid fa-money-bill-wave" style="color: #667eea;"></i>
+                    <i class="fa-solid fa-money-bill-wave" style="color: #3b82f6;"></i>
                     <span>Biaya per Bulan</span>
                 </label>
                 <input type="text" name="harga_bulanan" id="inputHarga" required placeholder="50.000" oninput="formatRupiah(this)"
                        style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; box-sizing: border-box;">
                 <input type="hidden" name="harga_bulanan_raw" id="inputHarga_raw">
-                <p style="font-size: 12px; color: #94a3b8; margin: 8px 0 0 0;">
-                    <i class="fa-solid fa-info-circle"></i> Akan otomatis dipotong setiap tanggal 1
-                </p>
             </div>
             <div style="display: flex; gap: 12px; padding-top: 20px; margin-top: 20px; border-top: 1px solid #f1f5f9;">
                 <button type="button" id="btnBatal" style="flex: 1; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; background: #f1f5f9; color: #64748b; border: none; font-family: 'Poppins', sans-serif;">
                     <i class="fa-solid fa-times"></i> Batal
                 </button>
-                <button type="button" id="btnSimpan" style="flex: 1; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); cursor: pointer; border: none; color: white; font-family: 'Poppins', sans-serif; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);">
+                <button type="button" id="btnSimpan" style="flex: 1; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); cursor: pointer; border: none; color: white; font-family: 'Poppins', sans-serif; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);">
                     <i class="fa-solid fa-check"></i> Simpan
                 </button>
             </div>
