@@ -1,4 +1,3 @@
-// Transaction Management Functions
 
 function bukaModalEditTransaksi(id_keuangan) {
     fetch('keuangan.php', {
@@ -25,54 +24,75 @@ function bukaModalEditTransaksi(id_keuangan) {
 function tampilkanModalEdit(transaksi) {
     const modalOverlay = PembantuModal.buatOverlay();
     const modalContent = document.createElement('div');
-    modalContent.style.cssText = 'background: white; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto;';
+    modalContent.style.cssText = 'background: white; border-radius: 16px; width: 90%; max-width: 520px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);';
 
-    const modalHeader = PembantuModal.buatHeader('Edit Transaksi', () => modalOverlay.remove());
+    const modalHeader = document.createElement('div');
+    modalHeader.style.cssText = 'background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border-radius: 16px 16px 0 0; padding: 24px; display: flex; justify-content: space-between; align-items: flex-start;';
+    modalHeader.innerHTML = `
+        <div>
+            <h2 style="color: white; margin: 0 0 4px 0; font-size: 20px;">Edit Transaksi</h2>
+            <p style="font-size: 13px; opacity: 0.9; margin: 0;">Perbarui data transaksi Anda</p>
+        </div>
+        <button type="button" onclick="this.closest('.modal-overlay').remove()" style="background: transparent; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; width: 32px; height: 32px;">&times;</button>
+    `;
+    
     const modalBody = document.createElement('div');
-    modalBody.style.padding = '24px';
+    modalBody.style.padding = '28px';
     
     modalBody.innerHTML = `
         <form id="formEditTransaksi">
             <input type="hidden" id="editIdKeuangan" value="${transaksi.id_keuangan}">
             
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #334155;">Jumlah</label>
+            <div style="margin-bottom: 24px;">
+                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #1e293b;">
+                    <i class="fa-solid fa-rupiah-sign" style="color: #3b82f6;"></i>
+                    <span>Jumlah</span>
+                </label>
                 <input type="number" id="editJumlah" value="${transaksi.transaksi}" required
-                    style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                    style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; box-sizing: border-box;">
             </div>
             
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #334155;">Keterangan</label>
+            <div style="margin-bottom: 24px;">
+                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #1e293b;">
+                    <i class="fa-solid fa-file-alt" style="color: #3b82f6;"></i>
+                    <span>Keterangan</span>
+                </label>
                 <input type="text" id="editKeterangan" value="${transaksi.keteranganTransaksi}" required
-                    style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                    style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; box-sizing: border-box;">
             </div>
             
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #334155;">Jenis Transaksi</label>
+            <div style="margin-bottom: 24px;">
+                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #1e293b;">
+                    <i class="fa-solid fa-exchange-alt" style="color: #3b82f6;"></i>
+                    <span>Jenis Transaksi</span>
+                </label>
                 <select id="editJenisTransaksi" required onchange="updateEditKategoriOptions()"
-                    style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                    style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; cursor: pointer; box-sizing: border-box;">
                     <option value="">Pilih jenis</option>
                     <option value="Pemasukan" ${transaksi.jenisTransaksi === 'Pemasukan' ? 'selected' : ''}>Pemasukan</option>
                     <option value="Pengeluaran" ${transaksi.jenisTransaksi === 'Pengeluaran' ? 'selected' : ''}>Pengeluaran</option>
                 </select>
             </div>
             
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #334155;">Kategori</label>
+            <div style="margin-bottom: 28px;">
+                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #1e293b;">
+                    <i class="fa-solid fa-tag" style="color: #3b82f6;"></i>
+                    <span>Kategori</span>
+                </label>
                 <select id="editKategoriTransaksi" required
-                    style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                    style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; cursor: pointer; box-sizing: border-box;">
                     <option value="">Pilih kategori</option>
                 </select>
             </div>
             
-            <div style="display: flex; gap: 12px; margin-top: 24px;">
+            <div style="display: flex; gap: 12px; padding-top: 20px; margin-top: 20px; border-top: 1px solid #f1f5f9;">
                 <button type="button" onclick="this.closest('.modal-overlay').remove()"
-                    style="flex: 1; padding: 12px; background: #e2e8f0; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; color: #334155;">
-                    Batal
+                    style="flex: 1; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; background: #f1f5f9; color: #64748b; border: none; font-family: 'Poppins', sans-serif;">
+                    <i class="fa-solid fa-times"></i> Batal
                 </button>
                 <button type="button" id="btnUpdateTransaksi"
-                    style="flex: 1; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 8px; cursor: pointer; font-weight: 500; color: white;">
-                    Simpan Perubahan
+                    style="flex: 1; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); cursor: pointer; border: none; color: white; font-family: 'Poppins', sans-serif; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);">
+                    <i class="fa-solid fa-check"></i> Simpan Perubahan
                 </button>
             </div>
         </form>
@@ -118,7 +138,6 @@ function updateOpsiKategoriEdit() {
     }
 }
 
-// Alias fungsi untuk dipanggil dari HTML
 function updateEditKategoriOptions() {
     updateOpsiKategoriEdit();
 }

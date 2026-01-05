@@ -1,25 +1,20 @@
 <?php
 session_start();
 
-// Cek apakah user sudah login
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: login.php");
     exit();
 }
 
-// Get user data from session
 $id_mahasiswa = $_SESSION['id_mahasiswa'];
 $nama_mahasiswa = $_SESSION['nama'];
 $email_mahasiswa = $_SESSION['email'];
 
-// Include database connection and controller
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../app/KeuanganController.php';
 
-// Get all history page data from controller
 $history = getHistoryPageData($id_mahasiswa);
 
-// Extract variables for easier access in template
 extract($history);
 ?>
 
@@ -38,7 +33,6 @@ extract($history);
     <div class="page">
         <?php include 'includes/sidebar.php'; ?>
 
-        <!-- Main Content -->
         <main class="main-content">
             <header class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div>
@@ -49,7 +43,6 @@ extract($history);
                 </button>
             </header>
 
-            <!-- Search Box -->
             <div class="search-box" style="background: white; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                 <div style="position: relative;">
                     <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
@@ -57,7 +50,6 @@ extract($history);
                 </div>
             </div>
 
-            <!-- Filter Section -->
             <div class="filter-section" style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                 <div style="display: flex; gap: 12px; align-items: center;">
                     <label style="font-weight: 500; color: #334155;">Filter Periode:</label>
@@ -77,7 +69,6 @@ extract($history);
                 </div>
             </div>
 
-            <!-- Transactions List -->
             <div class="transactions-container" style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                 <?php if (empty($riwayat_transaksi)): ?>
                     <div class="empty-state" style="text-align: center; padding: 60px 20px;">
@@ -87,7 +78,6 @@ extract($history);
                     </div>
                 <?php else: ?>
                     <?php
-                    // Group transactions by month
                     $grouped_transactions = [];
                     foreach ($riwayat_transaksi as $trans) {
                         $month_year = date('F Y', strtotime($trans['tanggalKeuangan']));
@@ -130,7 +120,6 @@ extract($history);
                         </div>
                     <?php endforeach; ?>
 
-                    <!-- Summary -->
                     <div style="margin-top: 32px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
                         <p style="text-align: center; color: #64748b; font-size: 14px;">
                             Total <?php echo count($riwayat_transaksi); ?> transaksi ditampilkan
@@ -142,13 +131,11 @@ extract($history);
     </div>
 
     <script>
-        // Data kategori dari PHP
         window.kategoriPemasukan = <?php echo json_encode($kategori_pemasukan); ?>;
         window.kategoriPengeluaran = <?php echo json_encode($kategori_pengeluaran); ?>;
         window.currentPeriod = '<?php echo $period; ?>';
         window.currentValue = '<?php echo $value; ?>';
         
-        // Fungsi update filter untuk riwayat transaksi
         function updateFilterRiwayat() {
             const period = document.getElementById('periodType').value;
             const valueSelect = document.getElementById('valueSelect');
@@ -163,11 +150,9 @@ extract($history);
                 valueSelect.style.display = 'inline-block';
             }
             
-            // Generate options
             const options = UtilFilter.buatOpsi(period);
             valueSelect.innerHTML = options;
             
-            // Set value jika period sama dengan current period
             if(period === window.currentPeriod) {
                 valueSelect.value = window.currentValue;
             }
@@ -179,7 +164,6 @@ extract($history);
             window.location.href = '?period=' + period + '&value=' + value;
         }
         
-        // Initialize on page load
         window.addEventListener('DOMContentLoaded', function() {
             updateFilterRiwayat();
         });
