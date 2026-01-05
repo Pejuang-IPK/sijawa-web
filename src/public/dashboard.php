@@ -2,6 +2,7 @@
 session_start();
 
 require_once __DIR__ . '../../app/action/beranda_action.php';
+require_once __DIR__ . '../../app/helper/Singkatan.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -82,16 +83,15 @@ require_once __DIR__ . '../../app/action/beranda_action.php';
                     <?php endif; ?>
                 </div>
                 
-                <div class="metime-card">
+                <a href="me-time.php" class="metime-card" style="text-decoration: none; color: inherit; cursor: pointer;">
                     <div class="dashed-bg"></div>
                     <div class="main-card">
                         <div class="title">Rekomendasi Me-Time</div>
                         <div class="label" style="font-size: 13px;">
                             Saran: <b><?= $rek_text ?></b><br>
-                            <a href="me-time.php" style="color: #4f46e5; text-decoration: none; font-size: 11px; font-weight:600;">Lihat Detail &rarr;</a>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             
             <div class="timer-card">
@@ -140,7 +140,7 @@ require_once __DIR__ . '../../app/action/beranda_action.php';
 
                         <div class="course-card <?= $isActive ?>">
                             <div class="card-top">
-                                <span class="course-name"><?= htmlspecialchars($row['namaMatkul']) ?></span>
+                                <span class="course-name"><?= singkatanMatkul($row['namaMatkul']) ?></span>
                                 <div class="course-icon gray">
                                     <i class="fa-solid <?= $icon ?>"></i>
                                 </div>

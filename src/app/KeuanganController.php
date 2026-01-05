@@ -10,8 +10,7 @@ function tambahTransaksi($data) {
     }
     
     $id_mahasiswa = mysqli_real_escape_string($conn, $data['id_mahasiswa']);
-    
-    // Cek apakah mahasiswa ada
+
     $checkQuery = "SELECT id_mahasiswa FROM Mahasiswa WHERE id_mahasiswa = '$id_mahasiswa'";
     $checkResult = mysqli_query($conn, $checkQuery);
     
@@ -144,8 +143,7 @@ function getTransaksiById($id_keuangan) {
 
 function handleTransaksiAPI() {
     header('Content-Type: application/json');
-    
-    // Cek session (session_start sudah dipanggil di keuangan.php)
+
     if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || !isset($_SESSION['id_mahasiswa'])) {
         http_response_code(401);
         echo json_encode(['sukses' => false, 'pesan' => 'Tidak diizinkan']);
@@ -319,8 +317,6 @@ function getMonthlyAnalysis($id_mahasiswa) {
     ];
 }
 
-// === LANGGANAN FUNCTIONS ===
-
 function tambahLangganan($data) {
     global $servername, $username, $password, $dbname;
     $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -417,8 +413,7 @@ function hapusLangganan($id_langganan) {
 
 function handleLanggananAPI() {
     header('Content-Type: application/json');
-    
-    // Cek session (session_start sudah dipanggil sebelumnya)
+
     if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || !isset($_SESSION['id_mahasiswa'])) {
         echo json_encode(['sukses' => false, 'pesan' => 'Belum login']);
         exit();
@@ -426,8 +421,7 @@ function handleLanggananAPI() {
     
     $id_mahasiswa = $_SESSION['id_mahasiswa'];
     $response = ['sukses' => false, 'pesan' => ''];
-    
-    // Handle POST requests
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $_POST['action'] ?? '';
         
@@ -458,8 +452,7 @@ function handleLanggananAPI() {
         echo json_encode($response);
         exit();
     }
-    
-    // Handle GET requests (fetch data)
+
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         try {
             $langganan = getLanggananByMahasiswa($id_mahasiswa);
@@ -475,16 +468,14 @@ function handleLanggananAPI() {
         }
         exit();
     }
-    
-    // Jika bukan POST atau GET
+
     echo json_encode(['sukses' => false, 'pesan' => 'Metode request tidak valid']);
     exit();
 }
 
 function handleChargeSubscription() {
     header('Content-Type: application/json');
-    
-    // Cek session
+
     if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || !isset($_SESSION['id_mahasiswa'])) {
         echo json_encode(['sukses' => false, 'pesan' => 'Tidak diizinkan']);
         exit();
@@ -510,8 +501,6 @@ function handleChargeSubscription() {
     exit();
 }
 
-// === PAGE DATA FUNCTIONS ===
-
 function handleFormSubmission($id_mahasiswa) {
     $pesan = '';
     $tipe_pesan = '';
@@ -528,12 +517,11 @@ function handleFormSubmission($id_mahasiswa) {
             ];
             
             $result = tambahTransaksi($data);
-            
-            // Redirect untuk mencegah double submission (PRG Pattern)
+
             if ($result['sukses']) {
                 $_SESSION['flash_message'] = $result['pesan'];
                 $_SESSION['flash_type'] = 'success';
-                // Preserve filter parameters
+
                 $redirect_url = 'keuangan.php';
                 if (isset($_GET['period'])) {
                     $redirect_url .= '?period=' . urlencode($_GET['period']);
@@ -548,7 +536,7 @@ function handleFormSubmission($id_mahasiswa) {
                 $tipe_pesan = 'error';
             }
         } elseif ($_POST['action'] === 'tambah_kategori') {
-            // Tambah kategori dengan membuat transaksi dummy
+
             $data = [
                 'id_mahasiswa' => $id_mahasiswa,
                 'saldo' => 0,
@@ -559,12 +547,11 @@ function handleFormSubmission($id_mahasiswa) {
             ];
             
             $result = tambahTransaksi($data);
-            
-            // Redirect untuk mencegah double submission (PRG Pattern)
+
             if ($result['sukses']) {
                 $_SESSION['flash_message'] = 'Kategori berhasil ditambahkan!';
                 $_SESSION['flash_type'] = 'success';
-                // Preserve filter parameters
+
                 $redirect_url = 'keuangan.php';
                 if (isset($_GET['period'])) {
                     $redirect_url .= '?period=' . urlencode($_GET['period']);
@@ -580,8 +567,7 @@ function handleFormSubmission($id_mahasiswa) {
             }
         }
     }
-    
-    // Check for flash messages from redirected POST
+
     if (isset($_SESSION['flash_message'])) {
         $pesan = $_SESSION['flash_message'];
         $tipe_pesan = $_SESSION['flash_type'];
@@ -615,12 +601,12 @@ function getDateFilter() {
         case 'minggu':
             $weeks_ago = (int)$value;
             if ($weeks_ago == 0) {
-                // Minggu ini: dari Senin minggu ini sampai Minggu minggu ini
+
                 $start_date = date('Y-m-d', strtotime('monday this week'));
                 $end_date = date('Y-m-d', strtotime('sunday this week'));
                 $filter_label = 'Minggu Ini';
             } else {
-                // Minggu lalu: mundur dari minggu sekarang
+
                 $start_date = date('Y-m-d', strtotime("-$weeks_ago weeks monday"));
                 $end_date = date('Y-m-d', strtotime("-$weeks_ago weeks sunday"));
                 if ($weeks_ago == 1) {
@@ -668,16 +654,14 @@ function getDateFilter() {
 }
 
 function getStatistikWithFilter($id_mahasiswa, $date_condition) {
-    // Get semua kategori unik yang pernah dibuat (tanpa filter waktu)
+
     $all_statistik = getStatistikKategori($id_mahasiswa, '');
 
-    // Get statistik berdasarkan filter untuk menghitung total
     $filtered_statistik = getStatistikKategori($id_mahasiswa, $date_condition);
 
-    // Gabungkan: tampilkan semua kategori, tapi dengan angka sesuai filter
     $statistik_kategori = [];
     foreach ($all_statistik as $kategori) {
-        // Cari data kategori ini di hasil filter
+
         $found = false;
         foreach ($filtered_statistik as $filtered) {
             if ($filtered['kategoriTransaksi'] == $kategori['kategoriTransaksi'] && 
@@ -687,7 +671,7 @@ function getStatistikWithFilter($id_mahasiswa, $date_condition) {
                 break;
             }
         }
-        // Jika tidak ada di filter, tampilkan dengan total 0
+
         if (!$found) {
             $statistik_kategori[] = [
                 'kategoriTransaksi' => $kategori['kategoriTransaksi'],
@@ -716,22 +700,19 @@ function getFinancialSummary($id_mahasiswa) {
             'last_pengeluaran' => 0
         ];
     }
-    
-    // Get financial data for current month
+
     $current_month = date('m');
     $current_year = date('Y');
     $query_current = "SELECT * FROM Keuangan WHERE id_mahasiswa = '$id_mahasiswa' AND MONTH(tanggalKeuangan) = '$current_month' AND YEAR(tanggalKeuangan) = '$current_year'";
     $result_current = mysqli_query($conn, $query_current);
     $keuangan_current = mysqli_fetch_all($result_current, MYSQLI_ASSOC);
 
-    // Get financial data for last month
     $last_month = date('m', strtotime('-1 month'));
     $last_year = date('Y', strtotime('-1 month'));
     $query_last = "SELECT * FROM Keuangan WHERE id_mahasiswa = '$id_mahasiswa' AND MONTH(tanggalKeuangan) = '$last_month' AND YEAR(tanggalKeuangan) = '$last_year'";
     $result_last = mysqli_query($conn, $query_last);
     $keuangan_last = mysqli_fetch_all($result_last, MYSQLI_ASSOC);
 
-    // Calculate totals for current month
     $total_pemasukan = 0;
     $total_pengeluaran = 0;
     foreach ($keuangan_current as $data) {
@@ -742,7 +723,6 @@ function getFinancialSummary($id_mahasiswa) {
         }
     }
 
-    // Calculate totals for last month
     $last_pemasukan = 0;
     $last_pengeluaran = 0;
     foreach ($keuangan_last as $data) {
@@ -753,7 +733,6 @@ function getFinancialSummary($id_mahasiswa) {
         }
     }
 
-    // Calculate percentage change
     $pemasukan_change = 0;
     if ($last_pemasukan > 0) {
         $pemasukan_change = (($total_pemasukan - $last_pemasukan) / $last_pemasukan) * 100;
@@ -780,26 +759,20 @@ function getFinancialSummary($id_mahasiswa) {
 }
 
 function getDashboardData($id_mahasiswa) {
-    // Handle form submission
+
     $form_result = handleFormSubmission($id_mahasiswa);
-    
-    // Get date filter
+
     $filter = getDateFilter();
-    
-    // Get kategori untuk dropdown - ambil semua kategori tanpa filter
+
     $kategori_pemasukan = getKategoriByMahasiswa($id_mahasiswa, 'Pemasukan');
     $kategori_pengeluaran = getKategoriByMahasiswa($id_mahasiswa, 'Pengeluaran');
-    
-    // Get statistik dengan filter
+
     $statistik_kategori = getStatistikWithFilter($id_mahasiswa, $filter['date_condition']);
-    
-    // Get transaction history
-    $riwayat_transaksi = getTransaksiWithFilter($id_mahasiswa, '', 8); // Get latest 8 transactions
-    
-    // Get monthly analysis
+
+    $riwayat_transaksi = getTransaksiWithFilter($id_mahasiswa, '', 8);
+
     $monthly_analysis = getMonthlyAnalysis($id_mahasiswa);
-    
-    // Get financial summary
+
     $financial_summary = getFinancialSummary($id_mahasiswa);
     
     return [
@@ -892,13 +865,11 @@ function getDateFilterForHistory() {
 }
 
 function getHistoryPageData($id_mahasiswa) {
-    // Get date filter
+
     $filter = getDateFilterForHistory();
-    
-    // Get all transactions with filter
+
     $riwayat_transaksi = getTransaksiWithFilter($id_mahasiswa, $filter['date_condition']);
-    
-    // Get kategori untuk edit modal
+
     $kategori_pemasukan = getKategoriByMahasiswa($id_mahasiswa, 'Pemasukan');
     $kategori_pengeluaran = getKategoriByMahasiswa($id_mahasiswa, 'Pengeluaran');
     

@@ -1,4 +1,4 @@
-// Subscription Management Functions
+
 
 function muatLangganan() {
     console.log('Loading subscriptions...');
@@ -54,7 +54,7 @@ function tampilkanLangganan(subscriptions, total) {
     let html = '';
     subscriptions.forEach(sub => {
         let iconColor = '#64748b';
-        // Validasi sub.icon untuk mencegah error
+
         const iconName = sub.icon || 'fa-circle';
         for (const [key, color] of Object.entries(iconColors)) {
             if (iconName.includes(key)) {
@@ -161,8 +161,7 @@ function bukaModalLangganan() {
     
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
-    
-    // Event handlers
+
     document.getElementById('btnCloseModal').onclick = () => modal.remove();
     document.getElementById('btnBatal').onclick = () => modal.remove();
     

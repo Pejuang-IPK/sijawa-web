@@ -45,13 +45,11 @@ function register($registerData)
     $password = password_hash($registerData['password'], PASSWORD_BCRYPT);
     $id_mahasiswa = random_int(100000, 999999);
 
-    // Cek apakah email sudah terdaftar
     $existingUser = query("SELECT * FROM Mahasiswa WHERE email = '$email'");
     if (count($existingUser) > 0) {
         return false;
     }
 
-    // Masukkan user baru ke database
     $query = "INSERT INTO Mahasiswa (id_mahasiswa, nama, email, password) VALUES ('$id_mahasiswa', '$nama', '$email', '$password')";
     mysqli_query($conn, $query);
 

@@ -31,7 +31,6 @@ body {
   min-height: 100vh;
 }
 
-/* Sidebar */
 .sidebar {
   background: #fff;
   border-right: 1px solid var(--border);
@@ -42,7 +41,7 @@ body {
   padding: 20px 12px;
   height: 100vh;
   position: sticky;
-  overflow-y: auto; /* Bisa discroll jika konten panjang */
+  overflow-y: auto; 
 }
 
 .brand {
@@ -128,31 +127,29 @@ body {
   color: var(--blue);
 }
 
-/* Content */
 .content {
   padding: 16px 32px;
   height: 100%;
   overflow-y: auto;
 }
 
-/* Styling Scrollbar khusus Webkit (Chrome, Edge, Safari) */
 .content::-webkit-scrollbar {
-  width: 10px; /* Lebar scrollbar tipis */
+  width: 10px; 
 }
 
 .content::-webkit-scrollbar-track {
-  background: transparent; /* Background track transparan */
+  background: transparent; 
 }
 
 .content::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1; /* Warna scrollbar abu-abu soft */
-  border-radius: 20px; /* Sudut bulat */
-  border: 3px solid transparent; /* Trik agar terlihat ada jarak */
+  background-color: #cbd5e1; 
+  border-radius: 20px; 
+  border: 3px solid transparent; 
   background-clip: content-box;
 }
 
 .content::-webkit-scrollbar-thumb:hover {
-  background-color: #94a3b8; /* Warna saat dihover */
+  background-color: #94a3b8; 
 }
 
 .content-header {
@@ -173,12 +170,10 @@ body {
   font-size: 14px;
 }
 
-/* Layout Utama Kalender */
 .calendar-container {
   font-family: "Poppins", sans-serif;
 }
 
-/* Header (Judul & Navigasi) */
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -212,14 +207,12 @@ body {
   border-radius: 5px;
 }
 
-/* GRID KALENDER (7 Kolom) */
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px; /* Kurangi gap dari 15px ke 8px */
+  gap: 8px; 
 }
 
-/* Nama Hari (Sen, Sel, ...) */
 .day-name {
   text-align: right;
   font-weight: 600;
@@ -228,48 +221,43 @@ body {
   padding-right: 10px;
 }
 
-/* Kotak Tanggal */
 .calendar-day {
-  min-height: 85px; /* Dikecilkan dari 120px agar muat konten bawah */
+  min-height: 85px; 
   padding: 8px;
   border-radius: 12px;
   position: relative;
   transition: all 0.2s;
   background-color: #fff;
-  border: 1px solid transparent; /* Persiapan border */
+  border: 1px solid transparent; 
 }
 
 .calendar-day:hover {
   background-color: #f9f9f9;
-  border-color: var(--blue); /* Efek hover lebih jelas */
+  border-color: var(--blue); 
 }
 
-/* Tanggal Angka */
 .date-number {
-  font-size: 14px; /* Dikecilkan dari 16px */
+  font-size: 14px; 
   font-weight: 600;
   display: block;
   text-align: right;
   margin-bottom: 4px;
 }
 
-/* Tanggal dari Bulan Lain (Abu-abu/Biru Muda) */
 .calendar-day.other-month {
-  background-color: #bfdbfe; /* Warna biru muda sesuai gambar */
+  background-color: #bfdbfe; 
   color: #888;
   opacity: 0.5;
 }
 
-/* Hari Ini (Highlight) */
 .calendar-day.today {
   border: 2px solid #007bff;
 }
 
-/* --- EVENT STYLING --- */
 .event-item {
   gap: 4px;
   margin-bottom: 2px;
-  font-size: 9px; /* Dikecilkan sedikit */
+  font-size: 9px; 
   padding: 2px 4px;
 }
 
@@ -278,7 +266,6 @@ body {
   height: 6px;
 }
 
-/* Warna-warna Dot Event */
 .dot-purple {
   background-color: #a855f7;
 }
@@ -295,9 +282,8 @@ body {
   background-color: #333;
 }
 
-/* Container Tanggal */
 .calendar-day {
-  min-height: 100px; /* Tinggi minimum agar muat event */
+  min-height: 100px; 
   padding: 8px;
   border: 1px solid #f0f0f0;
   position: relative;
@@ -305,7 +291,7 @@ body {
   background: #fff;
   display: flex;
   flex-direction: column;
-  gap: 4px; /* Jarak antar event */
+  gap: 4px; 
 }
 
 .calendar-day:hover {
@@ -314,17 +300,16 @@ body {
 }
 
 .calendar-day.today {
-  background: #f0f9ff; /* Biru sangat muda untuk hari ini */
+  background: #f0f9ff; 
   border: 1px solid #bae6fd;
 }
 
-/* Angka Tanggal */
 .date-number {
   font-weight: 600;
   font-size: 14px;
   margin-bottom: 5px;
   color: #333;
-  align-self: flex-start; /* Angka di kiri atas */
+  align-self: flex-start; 
 }
 
 .calendar-day.today .date-number {
@@ -339,16 +324,14 @@ body {
   font-size: 12px;
 }
 
-/* --- STYLE EVENT (MATKUL) --- */
 .event-item {
   font-size: 10px;
   padding: 3px 6px;
   border-radius: 4px;
   background-color: #eef2ff;
   color: #4f46e5;
-  border-left: 3px solid #4f46e5; /* Garis warna di kiri */
+  border-left: 3px solid #4f46e5; 
 
-  /* Agar teks tidak tumpah jika kepanjangan */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -364,14 +347,12 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Badge Waktu Kecil di Kanan */
 .event-time {
   font-size: 9px;
   opacity: 0.7;
   margin-left: 5px;
 }
 
-/* Warna Warni Event (Opsional, agar tidak monoton) */
 .event-blue {
   background: #eef2ff;
   color: #4338ca;
@@ -421,7 +402,6 @@ body {
   margin-top: 2px;
 }
 
-/* --- SECTION JADWAL KULIAH (Style Frame 5023) --- */
 .schedule-section {
   margin-top: 40px;
   background-color: #fff;
@@ -431,10 +411,9 @@ body {
 .section-title {
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 0; /* Reset margin lama */
+  margin-bottom: 0; 
 }
 
-/* --- STYLING TOMBOL TAMBAH (BIRU) --- */
 .btn-import.add-new {
   background-color: var(--blue);
   color: white;
@@ -446,7 +425,6 @@ body {
   color: white;
 }
 
-/* Group Tombol Import */
 .header-actions {
   display: flex;
   gap: 10px;
@@ -467,47 +445,41 @@ body {
   transition: all 0.2s;
 }
 
-/* Warna Khusus saat Hover */
 .btn-import.excel:hover {
-  color: #107c41; /* Warna hijau Excel */
+  color: #107c41; 
   border-color: #107c41;
   background: #f0fdf4;
 }
 
 .btn-import.pdf:hover {
-  color: #ef4444; /* Warna merah PDF */
+  color: #ef4444; 
   border-color: #ef4444;
   background: #fef2f2;
 }
 
-/* --- TOMBOL EDIT & DELETE (DI DALAM ITEM) --- */
 .course-item {
   display: flex;
   align-items: center;
   gap: 12px;
 
-  /* Agar tombol aksi bisa didorong ke kanan mentok */
   justify-content: flex-start;
   position: relative;
 }
 
-/* Wrapper agar nama matkul tidak tertimpa tombol */
 .course-info-wrapper {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-grow: 1; /* Isi ruang yang ada */
+  flex-grow: 1; 
 }
 
-/* Group Tombol Aksi */
 .item-actions {
   display: flex;
   gap: 6px;
-  opacity: 0; /* Default: Sembunyi agar terlihat bersih */
+  opacity: 0; 
   transition: opacity 0.2s ease;
 }
 
-/* Tampilkan tombol saat baris di-hover */
 .course-item:hover .item-actions {
   opacity: 1;
 }
@@ -527,7 +499,7 @@ body {
 
 .btn-mini.edit {
   background: #f1f5f9;
-  color: #3b82f6; /* Biru */
+  color: #3b82f6; 
 }
 .btn-mini.edit:hover {
   background: #3b82f6;
@@ -536,7 +508,7 @@ body {
 
 .btn-mini.delete {
   background: #f1f5f9;
-  color: #ef4444; /* Merah */
+  color: #ef4444; 
 }
 .btn-mini.delete:hover {
   background: #ef4444;
@@ -550,27 +522,23 @@ body {
   margin-bottom: 25px;
 }
 
-/* Grid untuk kartu hari (Senin, Selasa, Rabu...) */
 .schedule-grid {
-  display: flex; /* Ubah dari Grid ke Flex */
+  display: flex; 
   gap: 20px;
-  overflow-x: auto; /* Aktifkan scroll horizontal */
-  padding-bottom: 20px; /* Ruang untuk scrollbar / shadow */
-  padding-top: 20px; /* Ruang untuk badge kuning */
+  overflow-x: auto; 
+  padding-bottom: 20px; 
+  padding-top: 20px; 
 
-  /* Agar smooth saat discroll */
   scroll-behavior: smooth;
-  /* Agar kartu berhenti pas di tengah (snapping) */
+  
   scroll-snap-type: x mandatory;
 }
 
-/* KARTU HARI (Kotak Putih bergaris) */
 .day-card {
-  min-width: 280px; /* Lebar fix agar tidak gepeng */
-  flex-shrink: 0; /* Jangan biarkan kartu mengecil */
-  scroll-snap-align: start; /* Posisi snap */
+  min-width: 280px; 
+  flex-shrink: 0; 
+  scroll-snap-align: start; 
 
-  /* Style lama tetap sama */
   background: #fff;
   border: 1px solid #c8c8c8;
   border-radius: 20px;
@@ -579,14 +547,13 @@ body {
   min-height: 200px;
 }
 
-/* BADGE HARI (Kuning di Atas Tengah) */
 .day-header {
   position: absolute;
-  top: -18px; /* Naik ke atas garis border */
+  top: -18px; 
   left: 50%;
-  transform: translateX(-50%); /* Tengah horizontal */
+  transform: translateX(-50%); 
 
-  background-color: #ffeb3b; /* Kuning terang sesuai gambar */
+  background-color: #ffeb3b; 
   color: #000;
   font-weight: 700;
   font-size: 16px;
@@ -596,11 +563,10 @@ body {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-/* LIST MATKUL DALAM KARTU */
 .course-list {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Jarak antar baris matkul */
+  gap: 15px; 
 }
 
 .course-item {
@@ -609,28 +575,25 @@ body {
   gap: 15px;
 }
 
-/* Badge Ruangan (Pink) */
 .room-badge {
-  background-color: #ff0060; /* Pink Tua sesuai gambar */
+  background-color: #ff0060; 
   color: white;
   font-weight: 500;
   font-size: 14px;
   padding: 5px 0;
   border-radius: 8px;
-  width: 100px; /* Lebar fix agar rapi */
+  width: 100px; 
   text-align: center;
-  flex-shrink: 0; /* Jangan mengecil */
+  flex-shrink: 0; 
 }
 
-/* Nama Matkul */
 .subject-name {
   font-size: 18px;
-  font-weight: 400; /* Tebal */
+  font-weight: 400; 
   color: #000;
   margin: 0;
 }
 
-/* right sidebar */
 .right-sidebar {
   background-color: white;
   padding: 20px 20px;
@@ -642,7 +605,6 @@ body {
   top: 0;
 }
 
-/* Kustomisasi Scrollbar (Opsional - Agar lebih tipis) */
 .schedule-grid::-webkit-scrollbar {
   height: 8px;
 }
@@ -654,9 +616,6 @@ body {
   border-radius: 20px;
 }
 
-/* end content */
-
-/* A. Profile Section */
 .profile-section {
   text-align: center;
   margin-bottom: 8px;
@@ -688,7 +647,6 @@ body {
   background: #eee;
 }
 
-/* --- SECTION KULIAHMU (NEW) --- */
 .right-schedule {
   margin-top: 20px;
 }
@@ -709,18 +667,17 @@ body {
 
 .day-label {
   font-size: 14px;
-  color: #666; /* Warna abu-abu untuk hari */
+  color: #666; 
 }
 
 .mini-course-list {
   display: flex;
   flex-direction: column;
-  gap: 12px; /* Jarak antar kartu */
+  gap: 12px; 
 }
 
-/* STYLING KARTU KECIL */
 .mini-card {
-  border: 1px solid #d1d5db; /* Border abu-abu tipis */
+  border: 1px solid #d1d5db; 
   border-radius: 12px;
   padding: 12px 15px;
   display: flex;
@@ -731,11 +688,10 @@ body {
 }
 
 .mini-card:hover {
-  border-color: #0079ff; /* Efek hover biru */
+  border-color: #0079ff; 
   background-color: #f8fbff;
 }
 
-/* BAGIAN KIRI KARTU (Nama Matkul & SKS) */
 .card-left {
   display: flex;
   flex-direction: column;
@@ -760,15 +716,14 @@ body {
 }
 
 .mini-badge.blue {
-  background-color: #0079ff; /* Biru terang sesuai gambar */
+  background-color: #0079ff; 
 }
 
-/* BAGIAN KANAN KARTU (Dosen & Jam) */
 .card-right {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  align-items: flex-end; /* Rata kanan */
+  align-items: flex-end; 
 }
 
 .info-row {
@@ -776,44 +731,39 @@ body {
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #475569; /* Abu-abu agak gelap */
+  color: #475569; 
 }
 
 .info-row i {
-  color: #94a3b8; /* Icon warna abu-abu soft */
+  color: #94a3b8; 
   font-size: 13px;
 }
-/* right sidebar */
 
-/* responsive */
 @media screen and (min-width: 1441px) {
-  /* 1. SETUP GRID PARENT (Sesuai request Anda) */
+  
   .page {
     display: grid;
-    grid-template-columns: 80px 1fr 400px; /* Sidebar Kanan 400px */
+    grid-template-columns: 80px 1fr 400px; 
     grid-template-rows: 100vh;
     min-height: 100vh;
   }
 
-  /* 2. OPTIMASI SIDEBAR KANAN (Agar pas dengan lebar 400px) */
   .right-sidebar {
-    padding: 26px 32px; /* Tambah padding agar konten tidak terlalu mepet pinggir */
-    /* Font size global di sidebar sedikit diperbesar */
+    padding: 26px 32px; 
+    
     font-size: 16px;
   }
 
-  /* A. PERBESAR PROFIL */
-  /* Di layar besar, foto profil kecil terlihat aneh. Kita perbesar. */
   .profile-img img {
-    width: 100px; /* Naik dari 70px */
+    width: 100px; 
     height: 100px;
     margin-bottom: 12px;
-    border: 3px solid white; /* Tambahan estetika border */
+    border: 3px solid white; 
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   }
 
   .profile-section h3 {
-    font-size: 24px; /* Judul nama lebih besar */
+    font-size: 24px; 
     margin-bottom: 4px;
   }
 
@@ -821,16 +771,14 @@ body {
     font-size: 16px;
   }
 
-  /* B. OPTIMASI KALENDER */
-  /* Ruang 400px membuat jarak antar tanggal terlalu jauh jika kotak kecil */
   .date-row {
-    gap: 12px; /* Perlebar jarak antar kotak */
+    gap: 12px; 
     margin-top: 15px;
   }
 
   .date-card {
-    padding: 15px 5px; /* Perbesar area klik */
-    border-radius: 16px; /* Sudut lebih bulat */
+    padding: 15px 5px; 
+    border-radius: 16px; 
   }
 
   .date-card .day {
@@ -839,19 +787,16 @@ body {
   }
 
   .date-card .date {
-    font-size: 22px; /* Angka tanggal lebih besar */
+    font-size: 22px; 
   }
 
-  /* C. OPTIMASI KARTU TUGAS & MOTIVASI */
-  /* Manfaatkan lebar 400px untuk layout internal kartu yang lebih lega */
   .task-card,
   .motivation-card {
-    padding: 24px 24px; /* Internal padding lebih lega */
+    padding: 24px 24px; 
     border-radius: 24px;
-    margin-bottom: 30px; /* Jarak antar kartu lebih jauh */
+    margin-bottom: 30px; 
   }
 
-  /* Task Card Specific */
   .task-card h2 {
     font-size: 22px;
     margin: 12px 0 8px;
@@ -863,13 +808,12 @@ body {
   }
 
   .btn-action {
-    padding: 10px 20px; /* Tombol lebih besar */
+    padding: 10px 20px; 
     font-size: 14px;
   }
 
-  /* Motivation Card Specific */
   .motivation-card .quote {
-    font-size: 24px; /* Quote lebih besar dan impact full */
+    font-size: 24px; 
     line-height: 1.4;
   }
 
@@ -880,46 +824,36 @@ body {
 }
 
 @media screen and (max-width: 768px) {
-  /* Ubah Layout Halaman Jadi 1 Kolom Vertikal */
+  
   body {
     overflow-y: auto;
   }
 
-  /* 1. Layout Container Utama (.card) */
   .card {
     display: grid;
-    /* Membagi layar menjadi 2 kolom sama besar (50% - 50%) */
+    
     grid-template-columns: 1fr 1fr;
-    gap: 12px; /* Jarak antar elemen */
+    gap: 12px; 
 
-    /* DEFINISI AREA (Peta Layout)
-       Baris 1: Area "timer" mengambil 2 kolom (Full Width)
-       Baris 2: Area "kiri" dan Area "tengah" bersebelahan
-    */
     grid-template-areas:
       "timer timer"
       "kiri  tengah";
   }
 
-  /* 2. Penempatan Elemen ke Area */
-
-  /* Timer ditaruh di area "timer" (Paling Atas) */
   .timer-card {
     grid-area: timer;
     width: 100% !important;
-    padding: 20px; /* Padding sedikit dikurangi dari desktop */
+    padding: 20px; 
   }
 
-  /* Kolom Left ditaruh di area "kiri" */
   .card .left {
     grid-area: kiri;
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Jarak vertikal antar kartu kecil */
+    gap: 12px; 
     width: 100%;
   }
 
-  /* Kolom Mid ditaruh di area "tengah" */
   .card .mid {
     grid-area: tengah;
     display: flex;
@@ -928,14 +862,13 @@ body {
     width: 100%;
   }
 
-  /* 3. Penyesuaian Kartu Kecil (Agar muat di kolom sempit 50%) */
   .matkul-card,
   .deadline-card,
   .progressbar-card,
   .next-card,
   .metime-card {
-    padding: 12px 15px; /* Kurangi padding agar konten tidak terpotong */
-    min-height: 90px; /* Tinggi sedikit diperkecil */
+    padding: 12px 15px; 
+    min-height: 90px; 
     height: auto;
   }
 
@@ -943,11 +876,10 @@ body {
     display: none;
   }
 
-  /* Perkecil Font Judul Kartu agar tidak turun baris berantakan */
   .title,
   .next-card .title,
   .metime-card .title {
-    font-size: 14px; /* Judul lebih kecil (sebelumnya 18-20px) */
+    font-size: 14px; 
     margin-bottom: 5px;
     line-height: 1.2;
   }
@@ -955,15 +887,14 @@ body {
   .label,
   .next-card .label,
   .metime-card .label {
-    font-size: 10px; /* Deskripsi kecil */
+    font-size: 10px; 
     line-height: 1.2;
   }
 
   .count {
-    font-size: 24px; /* Angka hitungan disesuaikan */
+    font-size: 24px; 
   }
 
-  /* Sembunyikan label kanan atas/kiri bawah di progress bar jika terlalu sempit */
   .label-top-right,
   .label-bottom-left {
     display: none;
@@ -973,58 +904,53 @@ body {
     display: flex;
     flex-direction: column;
     height: auto;
-    padding-bottom: 80px; /* Ruang untuk Navigasi Bawah */
+    padding-bottom: 80px; 
   }
 
-  /* 1. Container & Header */
   .calendar-container {
-    padding: 15px; /* Kurangi padding container */
+    padding: 15px; 
     margin-bottom: 20px;
   }
 
   .calendar-header {
-    flex-direction: column; /* Judul di atas, navigasi di bawah */
+    flex-direction: column; 
     align-items: flex-start;
     gap: 10px;
     margin-bottom: 20px;
   }
 
   .calendar-header h1 {
-    font-size: 20px; /* Perkecil judul */
+    font-size: 20px; 
   }
 
   .month-nav {
     width: 100%;
-    justify-content: space-between; /* Navigasi full width */
+    justify-content: space-between; 
     font-size: 16px;
   }
 
-  /* 2. Grid & Hari */
   .calendar-grid {
-    gap: 4px; /* Gap antar kotak sangat tipis */
+    gap: 4px; 
   }
 
   .day-name {
     font-size: 11px;
-    text-align: center; /* Rata tengah, bukan kanan */
+    text-align: center; 
     padding-right: 0;
     margin-bottom: 5px;
   }
 
-  /* 3. Kotak Tanggal (Cell) */
   .calendar-day {
-    min-height: 50px; /* Tinggi dikurangi drastis (dari 85px ke 50px) */
+    min-height: 50px; 
     padding: 4px;
     border-radius: 8px;
 
-    /* Flexbox untuk menengahkan konten */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
   }
 
-  /* 4. Angka Tanggal */
   .date-number {
     font-size: 12px;
     text-align: center;
@@ -1032,13 +958,10 @@ body {
     width: 100%;
   }
 
-  /* 5. EVENT (PENTING: Ubah Tampilan Event) */
-  /* Sembunyikan Teks Judul Event di HP agar tidak berantakan */
   .event-item span:last-child {
     display: none;
   }
 
-  /* Container Event jadi baris titik-titik di bawah angka */
   .event-item {
     display: inline-block;
     padding: 0;
@@ -1046,7 +969,6 @@ body {
     width: auto;
   }
 
-  /* Perbesar sedikit titiknya agar terlihat jelas */
   .event-dot {
     width: 5px;
     height: 5px;
@@ -1054,7 +976,6 @@ body {
     margin-top: 2px;
   }
 
-  /* Opsional: Jika hari ini, border lebih tipis */
   .calendar-day.today {
     border-width: 1px;
   }
@@ -1068,19 +989,18 @@ body {
     height: 6px;
     border-radius: 50%;
     border: none;
-    margin: 1px auto; /* Tengah */
-    text-indent: -9999px; /* Sembunyikan teks */
+    margin: 1px auto; 
+    text-indent: -9999px; 
     background: #4f46e5;
   }
 
-  /* 2. NAVIGASI (Pindah ke Bawah / Bottom Bar) */
   .sidebar {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 70px; /* Tinggi nav bawah */
-    flex-direction: row; /* Icon berjejer ke samping */
+    height: 70px; 
+    flex-direction: row; 
     justify-content: space-around;
     padding: 0 20px;
     z-index: 1000;
@@ -1092,7 +1012,7 @@ body {
 
   .brand,
   .logout {
-    display: none; /* Sembunyikan Logo & Logout di mobile agar muat */
+    display: none; 
   }
 
   .side-nav {
@@ -1102,7 +1022,6 @@ body {
     gap: 0;
   }
 
-  /* 2. KONTEN UTAMA */
   .content {
     padding: 30px;
     height: auto;
@@ -1119,33 +1038,30 @@ body {
     font-size: 24px;
   }
 
-  /* 3. TRANSFORMASI JADWAL KULIAH (Menjadi List Horizontal) */
-  /* Agar hemat tempat di HP, kartu kotak diubah jadi baris */
   .schedule-grid {
-    grid-template-columns: 1fr; /* 1 Kolom ke bawah */
+    grid-template-columns: 1fr; 
     gap: 15px;
   }
 
   .course-card {
     display: grid;
-    /* Layout Grid Internal Kartu: Icon | Info | Waktu */
+    
     grid-template-columns: 50px 1fr auto;
     grid-template-areas:
       "icon name time"
       "icon lecturer sks";
 
     align-items: center;
-    min-height: auto; /* Hapus tinggi minimum */
+    min-height: auto; 
     padding: 15px;
     gap: 0 15px;
   }
 
-  /* Styling Ulang Elemen dalam Kartu Mobile */
   .course-icon {
     grid-area: icon;
     width: 50px;
     height: 50px;
-    font-size: 24px; /* Icon kecil */
+    font-size: 24px; 
     background: #f1f5f9;
     border-radius: 12px;
     margin-bottom: 0;
@@ -1177,10 +1093,9 @@ body {
     align-self: start;
   }
 
-  /* Memecah visual Card Bottom */
   .card-bottom {
     display: contents;
-  } /* Container hilang, anak-anaknya ikut grid */
+  } 
 
   .time {
     grid-area: time;
@@ -1197,7 +1112,6 @@ body {
     align-self: start;
   }
 
-  /* 4. Right Sidebar di Mobile */
   .right-sidebar {
     background-color: transparent;
     border-left: none;
@@ -1215,4 +1129,91 @@ body {
   .right-schedule {
     padding: 20px;
   }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-box {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 3px solid var(--blue);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.close-modal-btn:hover {
+  color: var(--text);
+}
+
+.modal-content {
+  padding: 20px;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-content p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: var(--blue);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modal-btn:hover {
+  background: #0062cc;
 }

@@ -1,4 +1,4 @@
-/* CSS Variables tambahan untuk keuangan */
+
 :root {
   --primary: #4f46e5;
   --primary-blue: #0079ff;
@@ -16,18 +16,6 @@
   --blue: #0079ff;
   --border: #e6eaf2;
 }
-
-/* :root {
-  --bg: #f6f9ff;
-  --panel: #ffffff;
-  --muted: #8aa0b6;
-  --text: #0f172a;
-  --blue: #0079ff;
-  --red: #ff0060;
-  --yellow: #f5c847;
-  --green: #00dfa2;
-  --border: #e6eaf2;
-} */
 
 * {
   box-sizing: border-box;
@@ -49,7 +37,6 @@ body {
   min-height: 100vh;
 }
 
-/* Sidebar */
 .sidebar {
   background: #fff;
   border-right: 1px solid var(--border);
@@ -60,7 +47,7 @@ body {
   padding: 20px 12px;
   height: 100vh;
   position: sticky;
-  overflow-y: auto; /* Bisa discroll jika konten panjang */
+  overflow-y: auto; 
 }
 
 .brand {
@@ -134,7 +121,6 @@ body {
   cursor: pointer;
 }
 
-/* Main Content Area */
 .main-content {
   padding: 16px 32px;
   background: var(--bg);
@@ -142,24 +128,23 @@ body {
   overflow-y: auto;
 }
 
-/* Styling Scrollbar khusus Webkit (Chrome, Edge, Safari) */
 .content::-webkit-scrollbar {
-  width: 10px; /* Lebar scrollbar tipis */
+  width: 10px; 
 }
 
 .content::-webkit-scrollbar-track {
-  background: transparent; /* Background track transparan */
+  background: transparent; 
 }
 
 .content::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1; /* Warna scrollbar abu-abu soft */
-  border-radius: 20px; /* Sudut bulat */
-  border: 3px solid transparent; /* Trik agar terlihat ada jarak */
+  background-color: #cbd5e1; 
+  border-radius: 20px; 
+  border: 3px solid transparent; 
   background-clip: content-box;
 }
 
 .content::-webkit-scrollbar-thumb:hover {
-  background-color: #94a3b8; /* Warna saat dihover */
+  background-color: #94a3b8; 
 }
 
 .content-header {
@@ -206,7 +191,6 @@ body {
   box-shadow: 0 6px 16px rgba(0, 121, 255, 0.4);
 }
 
-/* Stats */
 .stats-cards {
   display: grid;
   grid-template-columns: 1.2fr 1fr 1fr;
@@ -292,7 +276,6 @@ body {
   color: var(--text-dark);
 }
 
-/* Categories */
 .category-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -506,14 +489,12 @@ body {
   color: var(--danger);
 }
 
-/* Bottom Grid */
 .bottom-grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: 25px;
 }
 
-/* Transaction Section */
 .transaction-section {
   background: white;
   padding: 25px;
@@ -637,7 +618,6 @@ body {
   color: var(--text-dark);
 }
 
-/* Analytics */
 .analytics-sidebar {
   display: flex;
   flex-direction: column;
@@ -830,7 +810,6 @@ body {
   background: #fecaca;
 }
 
-/* Modal */
 .modal-overlay {
   display: flex;
   position: fixed;
@@ -1004,7 +983,6 @@ body {
   color: var(--danger);
 }
 
-/* Alert */
 .alert {
   padding: 16px 20px;
   border-radius: 12px;

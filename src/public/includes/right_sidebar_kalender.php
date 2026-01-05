@@ -1,16 +1,7 @@
 <?php
-// =======================================================
-// KONFIGURASI AWAL
-// =======================================================
+
 date_default_timezone_set('Asia/Jakarta');
 
-// Pastikan koneksi & functions.php sudah di-include
-// require 'koneksi.php';
-// require 'functions.php';
-
-// =======================================================
-// 1. DETEKSI HARI INI (INDONESIA)
-// =======================================================
 $map_hari = [
     'Sunday'    => 'Minggu',
     'Monday'    => 'Senin',
@@ -24,9 +15,6 @@ $map_hari = [
 $hari_inggris = date('l');
 $hari_ini     = trim($map_hari[$hari_inggris] ?? '');
 
-// =======================================================
-// 2. QUERY JADWAL HARI INI
-// =======================================================
 $query_today = "
     SELECT * 
     FROM Jadwal
@@ -35,15 +23,8 @@ $query_today = "
     ORDER BY jam_mulai ASC
 ";
 
-// =======================================================
-// 3. EKSEKUSI QUERY → ARRAY
-// =======================================================
-$data_hari_ini = query($query_today); // WAJIB ADA
+$data_hari_ini = query($query_today);
 
-// =======================================================
-// 4. DEBUG (matikan kalau sudah yakin)
-// =======================================================
-// echo '<pre>'; print_r($data_hari_ini); echo '</pre>'; die;
 ?>
 
 <!-- ===================================================== -->

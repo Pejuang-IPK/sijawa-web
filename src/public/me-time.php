@@ -9,6 +9,18 @@ require_once __DIR__ . '../../app/action/metime_action.php';
 // 1. Ambil Data
 $id_mahasiswa = $_SESSION['user_id']; // Sesuaikan dengan session login nanti
 
+// Initialize flash message
+$pesan = '';
+$tipe_pesan = '';
+
+// Check for flash messages from redirected POST
+if (isset($_SESSION['flash_message'])) {
+    $pesan = $_SESSION['flash_message'];
+    $tipe_pesan = $_SESSION['flash_type'];
+    unset($_SESSION['flash_message']);
+    unset($_SESSION['flash_type']);
+}
+
 // Panggil fungsi hitungStressLevel yang baru
 $data_stress = hitungStressLevel($id_mahasiswa);
 
@@ -51,6 +63,14 @@ if($score > 70) {
                     <p>Analisis Jadwal & Tugas untuk Keseimbangan Hidupmu</p>
                 </div>
             </header>
+            
+            <!-- Flash Message Alert -->
+            <?php if($pesan): ?>
+                <div class="alert alert-<?php echo $tipe_pesan; ?>">
+                    <i class="fa-solid <?php echo ($tipe_pesan === 'success') ? 'fa-check-circle' : 'fa-exclamation-circle'; ?>"></i>
+                    <span><?php echo htmlspecialchars($pesan); ?></span>
+                </div>
+            <?php endif; ?>
             
             <div class="mental-health-card">
                 <div class="card-content-wrapper">
