@@ -104,10 +104,10 @@ extract($dashboard);
         UtilFilter.inisialisasi('<?php echo $period; ?>', '<?php echo $value; ?>');
     </script>
     
-    <script src="script/modal-helper.js"></script>
-    <script src="script/filter.js"></script>
-    <script src="script/keuangan.js"></script>
-    <script src="script/subscription.js"></script>
-    <script src="script/transaction.js"></script>
+    <script src="script/modal-helper.js?v=<?php echo time(); ?>"></script>
+    <script src="script/filter.js?v=<?php echo time(); ?>"></script>
+    <script src="script/keuangan.js?v=<?php echo time(); ?>"></script>
+    <script src="script/subscription.js?v=<?php echo time(); ?>"></script>
+    <script src="script/transaction.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

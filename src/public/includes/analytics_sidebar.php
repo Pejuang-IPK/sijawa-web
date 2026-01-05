@@ -52,12 +52,13 @@
     <div class="subscription-card">
         <div class="subscription-header">
             <h3>Total Langganan Bulanan Aplikasi</h3>
-            <div style="display: flex; gap: 8px;">
-                <button class="btn-charge-now" onclick="bayarSekarang()" title="Bayar Sekarang" style="background: #10b981; color: white; border: none; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; font-size: 14px;">
-                    <i class="fa-solid fa-dollar-sign"></i>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button class="btn-charge-now" onclick="bayarSekarang()" title="Bayar Sekarang" style="background: #10b981; color: white; border: none; width: 38px; height: 38px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; font-size: 14px; flex-shrink: 0;">
+                    <i class="fa-solid fa-rupiah-sign"></i>
                 </button>
-                <button class="btn-add-subscription" onclick="bukaModalLangganan()">
+                <button class="btn-add-subscription" onclick="bukaModalLangganan()" style="display: flex; align-items: center; gap: 6px;">
                     <i class="fa-solid fa-plus"></i>
+                    <span>Tambah Langganan</span>
                 </button>
             </div>
         </div>

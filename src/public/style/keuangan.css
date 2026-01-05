@@ -753,22 +753,26 @@ body {
   margin: 0;
 }
 .btn-add-subscription {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
   border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   transition: all 0.3s;
-  font-size: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 .btn-add-subscription:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
 }
 .subscription-total {
   font-size: 28px;
@@ -896,23 +900,26 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 24px;
-  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border-radius: 16px 16px 0 0;
+  border-bottom: none;
 }
 .modal-header h2 {
   font-size: 20px;
   font-weight: 700;
-  color: var(--text-dark);
+  color: white;
   margin: 0;
 }
 .close {
   font-size: 32px;
-  color: var(--text-light);
+  color: white;
   cursor: pointer;
   line-height: 1;
   transition: color 0.3s;
 }
 .close:hover {
-  color: var(--danger);
+  color: rgba(255, 255, 255, 0.8);
 }
 .modal form {
   padding: 24px;
@@ -974,15 +981,15 @@ body {
 }
 .btn-submit,
 .btn-primary {
-  background: var(--primary-blue);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(0, 121, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 .btn-submit:hover,
 .btn-primary:hover {
-  background: #0066d6;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 121, 255, 0.4);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
 }
 .btn-close-modal {
   background: transparent;
