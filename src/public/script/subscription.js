@@ -195,12 +195,7 @@ function bukaModalLangganan() {
         .then(response => response.text())
         .then(text => {
             let data;
-            try {
                 data = JSON.parse(text);
-            } catch (e) {
-                console.error('Error parsing JSON:', text);
-                throw new Error('Response tidak valid: ' + text);
-            }
             if (data.sukses) {
                 modal.remove();
                 muatLangganan();
@@ -211,12 +206,6 @@ function bukaModalLangganan() {
                 btnSimpan.innerHTML = '<i class="fa-solid fa-check"></i> Simpan';
             }
         })
-        .catch(error => {
-            console.error('Kesalahan:', error);
-            window.alert('Terjadi kesalahan: ' + error.message);
-            btnSimpan.disabled = false;
-            btnSimpan.innerHTML = '<i class="fa-solid fa-check"></i> Simpan';
-        });
     };
     
     modal.onclick = (e) => {
