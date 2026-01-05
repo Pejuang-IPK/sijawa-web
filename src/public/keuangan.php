@@ -46,10 +46,7 @@ extract($dashboard);
 <body>
     <div class="page">
         <?php include 'includes/sidebar.php'; ?>
-
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- Header -->
             <div class="page-header">
                 <div>
                     <div class="page-title">Dashboard Keuangan</div>
@@ -60,39 +57,29 @@ extract($dashboard);
                     Tambah Transaksi
                 </button>
             </div>
-
             <?php if($pesan): ?>
                 <div class="alert alert-<?php echo $tipe_pesan; ?>">
                     <?php echo $pesan; ?>
                 </div>
             <?php endif; ?>
-
             <?php include 'includes/stats_cards.php'; ?>
-
-            <!-- Category Sections -->
             <div class="category-grid">
                 <?php include 'includes/income_categories.php'; ?>
                 <?php include 'includes/expense_categories.php'; ?>
             </div>
 
-            <!-- Bottom Grid -->
             <div class="bottom-grid">
                 <?php include 'includes/transaction_history.php'; ?>
                 <?php include 'includes/analytics_sidebar.php'; ?>
             </div>
         </main>
     </div>
-
     <?php include 'includes/modals.php'; ?>
-
     <script>
-        // Data kategori dari PHP
         window.kategoriPemasukan = <?php echo json_encode($kategori_pemasukan); ?>;
         window.kategoriPengeluaran = <?php echo json_encode($kategori_pengeluaran); ?>;
         window.currentPeriod = '<?php echo $period; ?>';
         window.currentValue = '<?php echo $value; ?>';
-        
-        // Initialize filter
         UtilFilter.inisialisasi('<?php echo $period; ?>', '<?php echo $value; ?>');
     </script>
     
