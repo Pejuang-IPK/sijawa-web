@@ -95,25 +95,3 @@
         </form>
     </div>
 </div>
-
-<div id="modalKategoriDetail" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
-    <div class="modal-content" style="max-width: 600px; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; z-index: 1001;">
-        <div class="modal-header" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; color: white !important; border-radius: 16px 16px 0 0 !important; padding: 24px !important; display: flex !important; justify-content: space-between !important; align-items: flex-start !important; border-bottom: none !important;">
-            <div>
-                <h2 id="kategoriDetailTitle" style="color: white !important; margin: 0 0 4px 0 !important; font-size: 20px !important;">Detail Kategori</h2>
-                <p style="font-size: 13px; opacity: 0.9; margin: 0;">Rincian transaksi per kategori</p>
-            </div>
-            <span class="close" onclick="tutupModalDetailKategori()" style="background: transparent; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; width: 32px; height: 32px;">&times;</span>
-        </div>
-        
-        <div id="kategoriDetailContent" style="max-height: 400px; overflow-y: auto; padding: 28px;">
-            <p style="text-align: center; color: #94a3b8; padding: 20px;">Memuat data...</p>
-        </div>
-
-        <div class="modal-footer" style="padding: 20px 28px; border-top: 1px solid #f1f5f9;">
-            <button type="button" class="btn-cancel" onclick="tutupModalDetailKategori()" style="width: 100%; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; background: #f1f5f9; color: #64748b; border: none; font-family: 'Poppins', sans-serif;">
-                <i class="fa-solid fa-times"></i> Tutup
-            </button>
-        </div>
-    </div>
-</div>
