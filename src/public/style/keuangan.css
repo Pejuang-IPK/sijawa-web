@@ -1041,3 +1041,383 @@ body {
   color: var(--danger);
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
+
+/* ========================================
+   RESPONSIVE WEB DESIGN
+   ======================================== */
+
+/* TABLET (max-width: 1024px) */
+@media screen and (max-width: 1024px) {
+  .page {
+    grid-template-columns: 70px 1fr;
+  }
+
+  .stats-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .bottom-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .btn-add-transaction {
+    width: 100%;
+  }
+}
+
+/* MOBILE / HP (max-width: 768px) */
+@media screen and (max-width: 768px) {
+  body {
+    overflow: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .page {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  .sidebar.active {
+    left: 0;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  }
+
+  .main-content {
+    padding: 16px;
+    margin-left: 0;
+    overflow-y: visible;
+    height: auto;
+    min-height: calc(100vh - 60px);
+  }
+
+  /* Mobile Header */
+  .page-header {
+    position: relative;
+  }
+
+  .page-header::before {
+    content: '☰';
+    position: absolute;
+    left: -40px;
+    top: 0;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    background: white;
+    border-radius: 8px;
+  }
+
+  .stats-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .category-section {
+    padding: 16px;
+  }
+
+  .category-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .btn-add-category {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .category-grid-items {
+    grid-template-columns: 1fr;
+  }
+
+  /* Transaction Item Responsive */
+  .transaction-item {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .transaction-item > div:last-child {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Analytics Sidebar */
+  .subscription-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+
+  .subscription-header > div {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Modal Responsive */
+  .modal-content {
+    width: 95% !important;
+    max-width: 95% !important;
+    margin: 10px;
+  }
+
+  .modal-header {
+    padding: 16px !important;
+  }
+
+  .modal form,
+  .modal-body {
+    padding: 16px !important;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  /* Filter Responsive */
+  .filter-section {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .filter-group select {
+    width: 100%;
+  }
+
+  /* Typography Mobile */
+  body {
+    font-size: 14px;
+  }
+
+  .page-title {
+    font-size: 20px;
+  }
+
+  .page-subtitle {
+    font-size: 12px;
+  }
+
+  .section-title-group h3 {
+    font-size: 16px;
+  }
+
+  /* Stats Cards Mobile */
+  .stat-card {
+    padding: 12px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+  .stat-value {
+    font-size: 20px;
+  }
+
+  .stat-change {
+    font-size: 11px;
+  }
+
+  /* Category & Expense/Income Cards */
+  .category-section,
+  .transaction-section {
+    padding: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .section-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .date-filter-group {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+
+  .filter-select {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 13px;
+    min-width: 0;
+  }
+
+  .category-card,
+  .expense-card,
+  .income-card {
+    padding: 12px;
+  }
+
+  .category-card h4,
+  .expense-info h4,
+  .income-info h4 {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .category-card p {
+    font-size: 16px;
+  }
+
+  .expense-header,
+  .income-header {
+    gap: 10px;
+  }
+
+  .expense-info,
+  .income-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .expense-amounts,
+  .income-amounts {
+    margin-top: 8px;
+  }
+
+  .amount-label {
+    font-size: 15px;
+    font-weight: 600;
+    word-break: break-word;
+  }
+
+  /* Transaction History Mobile */
+  .transaction-list {
+    gap: 10px;
+  }
+
+  .transaction-icon {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 14px !important;
+  }
+
+  .transaction-item {
+    padding: 12px;
+  }
+
+  .transaction-item h4 {
+    font-size: 13px;
+  }
+
+  .transaction-item p {
+    font-size: 11px;
+  }
+
+  .transaction-amount {
+    font-size: 13px;
+  }
+
+  /* Buttons Mobile */
+  .btn-add-transaction,
+  .btn-add-category,
+  .btn-add-subscription {
+    padding: 10px 16px;
+    font-size: 13px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-edit-transaksi,
+  .btn-delete-transaksi {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  /* Modal Mobile */
+  .modal-content {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    margin: 12px;
+  }
+
+  .modal-body,
+  .modal-footer {
+    padding: 16px;
+  }
+
+  .modal-footer button {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  /* Subscription Item Mobile */
+  .subscription-item {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .subscription-item .sub-icon {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .subscription-item > div {
+    width: 100%;
+  }
+
+  .btn-delete-sub {
+    width: 100% !important;
+    height: auto !important;
+    padding: 8px !important;
+  }
+
+  /* Analytics Chart Mobile */
+  .chart-legend {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .legend-item {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
