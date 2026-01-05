@@ -1,17 +1,13 @@
-// Filter utility functions shared between pages
 
 const UtilFilter = {
-    // Current filter values
     currentPeriod: '',
     currentValue: '',
     
-    // Initialize filter with values from PHP
     inisialisasi(period, value) {
         this.currentPeriod = period;
         this.currentValue = value;
     },
     
-    // Update value options based on period type
     updateOpsiNilai(periodSelectId, valueSelectId) {
         const periodElement = document.getElementById(periodSelectId);
         const valueSelect = document.getElementById(valueSelectId);
@@ -35,16 +31,13 @@ const UtilFilter = {
         
         valueSelect.innerHTML = this.buatOpsi(period);
         
-        // Set value setelah options di-render
         if (period === this.currentPeriod && this.currentValue) {
-            // Gunakan setTimeout untuk memastikan DOM sudah terupdate
             setTimeout(() => {
                 valueSelect.value = this.currentValue;
             }, 0);
         }
     },
     
-    // Generate options based on period type
     buatOpsi(period) {
         let options = '';
         
@@ -90,7 +83,6 @@ const UtilFilter = {
         return options;
     },
     
-    // Apply filter and reload page
     terapkanFilter(periodSelectId, valueSelectId) {
         const period = document.getElementById(periodSelectId).value;
         const value = document.getElementById(valueSelectId).value || '0';
@@ -99,7 +91,6 @@ const UtilFilter = {
     }
 };
 
-// Search functionality for transactions
 function cariTransaksi(searchInputId, transactionItemClass, monthGroupClass) {
     const searchTerm = document.getElementById(searchInputId).value.toLowerCase();
     const transactionItems = document.querySelectorAll(`.${transactionItemClass}`);
@@ -117,7 +108,6 @@ function cariTransaksi(searchInputId, transactionItemClass, monthGroupClass) {
         }
     });
     
-    // Hide month groups if all transactions are hidden
     monthGroups.forEach(group => {
         const visibleTransactions = group.querySelectorAll(`.${transactionItemClass}[style*="display: flex"]`);
         if (visibleTransactions.length === 0) {

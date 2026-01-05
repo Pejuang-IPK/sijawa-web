@@ -1,4 +1,3 @@
-// Transaction Management Functions
 
 function bukaModalEditTransaksi(id_keuangan) {
     fetch('keuangan.php', {
@@ -139,7 +138,6 @@ function updateOpsiKategoriEdit() {
     }
 }
 
-// Alias fungsi untuk dipanggil dari HTML
 function updateEditKategoriOptions() {
     updateOpsiKategoriEdit();
 }
