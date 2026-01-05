@@ -19,8 +19,7 @@
                         <div class="day-name">Min</div>
 
                         <?php
-                        // 2. Loop Kotak Kosong / Bulan Lalu (Padding Awal)
-                        // Hitung tanggal akhir bulan lalu
+
                         $daysInPrevMonth = date('t', mktime(0,0,0, $month-1, 1, $year));
                         
                         for ($i = 0; $i < $dayOfWeek; $i++) {
@@ -30,18 +29,15 @@
                             echo '</div>';
                         }
 
-                        // 3. Loop Tanggal Bulan Ini
                         for ($day = 1; $day <= $daysInMonth; $day++) {
-                            // Format tanggal YYYY-MM-DD untuk cek event
+
                             $currentDate = sprintf('%04d-%02d-%02d', $year, $month, $day);
-                            
-                            // Cek apakah hari ini
+
                             $isToday = ($currentDate == date('Y-m-d')) ? 'today' : '';
 
                             echo "<div class='calendar-day $isToday'>";
                             echo "<span class='date-number'>$day</span>";
 
-                            // Tentukan hari (Senin, Selasa, dst)
                             $namaHari = date('l', strtotime($currentDate));
 
                             $mapHari = [
@@ -56,7 +52,6 @@
 
                             $hariIndo = $mapHari[$namaHari] ?? null;
 
-                            // Jika ada jadwal di hari tersebut
                             if ($hariIndo && isset($jadwal_mingguan[$hariIndo])) {
 
                                 $count = 0;
@@ -79,14 +74,12 @@
                             echo "</div>";
                         }
 
-                        // 4. Loop Kotak Kosong / Bulan Depan (Sisa Grid)
-                        // Total grid yang terpakai sejauh ini
                         $totalCells = $dayOfWeek + $daysInMonth;
-                        // Sisa kotak untuk melengkapi grid 7 kolom
+
                         $remainingCells = (7 - ($totalCells % 7)) % 7;
-                        // Tambahan baris jika total baris kurang dari 6 (opsional, agar kotak tetap rapi)
+
                         if($totalCells + $remainingCells < 35) {
-                            $remainingCells += 7; // Tambah 1 baris lagi
+                            $remainingCells += 7;
                         }
 
                         for ($j = 1; $j <= $remainingCells; $j++) {

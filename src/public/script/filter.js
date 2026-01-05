@@ -1,13 +1,15 @@
 
+
 const UtilFilter = {
+
     currentPeriod: '',
     currentValue: '',
-    
+
     inisialisasi(period, value) {
         this.currentPeriod = period;
         this.currentValue = value;
     },
-    
+
     updateOpsiNilai(periodSelectId, valueSelectId) {
         const periodElement = document.getElementById(periodSelectId);
         const valueSelect = document.getElementById(valueSelectId);
@@ -30,14 +32,15 @@ const UtilFilter = {
         }
         
         valueSelect.innerHTML = this.buatOpsi(period);
-        
+
         if (period === this.currentPeriod && this.currentValue) {
+
             setTimeout(() => {
                 valueSelect.value = this.currentValue;
             }, 0);
         }
     },
-    
+
     buatOpsi(period) {
         let options = '';
         
@@ -82,7 +85,7 @@ const UtilFilter = {
         
         return options;
     },
-    
+
     terapkanFilter(periodSelectId, valueSelectId) {
         const period = document.getElementById(periodSelectId).value;
         const value = document.getElementById(valueSelectId).value || '0';
@@ -107,7 +110,7 @@ function cariTransaksi(searchInputId, transactionItemClass, monthGroupClass) {
             item.style.display = 'none';
         }
     });
-    
+
     monthGroups.forEach(group => {
         const visibleTransactions = group.querySelectorAll(`.${transactionItemClass}[style*="display: flex"]`);
         if (visibleTransactions.length === 0) {

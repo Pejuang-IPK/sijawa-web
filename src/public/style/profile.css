@@ -31,7 +31,6 @@ body {
   min-height: 100vh;
 }
 
-/* Sidebar */
 .sidebar {
   background: #fff;
   border-right: 1px solid var(--border);
@@ -42,7 +41,7 @@ body {
   padding: 20px 12px;
   height: 100vh;
   position: sticky;
-  overflow-y: auto; /* Bisa discroll jika konten panjang */
+  overflow-y: auto; 
 }
 
 .brand {
@@ -128,31 +127,29 @@ body {
   color: var(--blue);
 }
 
-/* Content */
 .content {
   padding: 16px 32px;
   height: 100%;
   overflow-y: auto;
 }
 
-/* Styling Scrollbar khusus Webkit (Chrome, Edge, Safari) */
 .content::-webkit-scrollbar {
-  width: 10px; /* Lebar scrollbar tipis */
+  width: 10px; 
 }
 
 .content::-webkit-scrollbar-track {
-  background: transparent; /* Background track transparan */
+  background: transparent; 
 }
 
 .content::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1; /* Warna scrollbar abu-abu soft */
-  border-radius: 20px; /* Sudut bulat */
-  border: 3px solid transparent; /* Trik agar terlihat ada jarak */
+  background-color: #cbd5e1; 
+  border-radius: 20px; 
+  border: 3px solid transparent; 
   background-clip: content-box;
 }
 
 .content::-webkit-scrollbar-thumb:hover {
-  background-color: #94a3b8; /* Warna saat dihover */
+  background-color: #94a3b8; 
 }
 
 .content-header {
@@ -173,29 +170,21 @@ body {
   font-size: 14px;
 }
 
-/* --- PROFILE SECTION --- */
-
-/* --- PROFILE SECTION (FULL WIDTH) --- */
-
-/* Container Utama Profile */
 .profile-card {
   background: var(--panel);
   border-radius: 20px;
   padding: 40px;
 
-  /* PERUBAHAN DISINI: */
-  width: 100%; /* Mengisi 100% lebar area konten */
-  max-width: none; /* Menghapus batasan lebar 800px */
-  margin: 0; /* Menghapus posisi tengah */
+  width: 100%; 
+  max-width: none; 
+  margin: 0; 
 
   border: 1px solid var(--border);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
 
-  /* Opsional: Agar tinggi juga mengisi layar jika konten sedikit */
   min-height: calc(100vh - 150px);
 }
 
-/* Alert Messages */
 .alert {
   padding: 16px 20px;
   border-radius: 12px;
@@ -235,16 +224,14 @@ body {
   font-size: 18px;
 }
 
-/* Form Grid System */
 .form-grid {
   display: grid;
-  /* Menggunakan minmax agar input tidak terlalu gepeng atau terlalu lebar */
+  
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px; /* Jarak antar kolom lebih lega */
+  gap: 30px; 
   margin-bottom: 30px;
 }
 
-/* Sisa CSS di bawah ini TETAP SAMA seperti sebelumnya */
 .profile-header {
   display: flex;
   align-items: center;
@@ -362,7 +349,7 @@ body {
   background: var(--blue);
   color: #fff;
   border: none;
-  padding: 12px 30px; /* Padding tombol diperbesar sedikit */
+  padding: 12px 30px; 
   border-radius: 12px;
   font-weight: 600;
   font-size: 14px;
@@ -376,14 +363,13 @@ body {
   background: #0062cc;
 }
 
-/* Responsive Mobile Update */
 @media (max-width: 768px) {
   .form-grid {
-    grid-template-columns: 1fr; /* Kembali 1 kolom di HP */
+    grid-template-columns: 1fr; 
   }
 
   .profile-card {
-    padding: 20px; /* Padding lebih kecil di HP */
+    padding: 20px; 
   }
 
   .alert {
@@ -406,9 +392,8 @@ body {
     font-size: 12px;
   }
 
-  /* 1. SETUP BODY & PAGE */
   body {
-    overflow-y: auto; /* Scroll body aktif */
+    overflow-y: auto; 
   }
 
   .page {
@@ -418,19 +403,17 @@ body {
     min-height: 100vh;
   }
 
-  /* 1. CONTAINER UTAMA (SIDEBAR) */
   .sidebar {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 70px; /* Tinggi Fix */
+    height: 70px; 
     background: #ffffff;
 
-    /* FLEXBOX UTAMA */
     display: flex;
     flex-direction: row;
-    align-items: center; /* KUNCI: Paksa vertikal tengah */
+    align-items: center; 
     justify-content: space-between;
 
     padding: 0;
@@ -438,44 +421,39 @@ body {
     z-index: 1000;
   }
 
-  /* 2. SEMBUNYIKAN LOGO (PENTING) */
-  /* Jika ini tidak di-hide total, dia akan mendorong ikon lain jadi miring */
   .side-nav .brand {
     display: none !important;
   }
 
-  /* 3. GROUP KIRI (MENU UTAMA) */
   .side-nav {
     display: flex;
-    align-items: center; /* KUNCI: Paksa vertikal tengah */
+    align-items: center; 
     justify-content: space-around;
-    flex-grow: 1; /* Isi ruang kosong */
-    height: 100%; /* Penuhi tinggi sidebar */
+    flex-grow: 1; 
+    height: 100%; 
     margin: 0;
     padding: 0;
     gap: 0;
   }
 
-  /* 4. GROUP KANAN (PROFILE & LOGOUT) */
   .bottom {
-    display: flex !important; /* Paksa muncul */
+    display: flex !important; 
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 5px; /* Jarak antara Profile dan Logout */
+    gap: 5px; 
 
     height: 100%;
-    padding: 0 15px; /* Spasi kanan kiri */
-    border-left: 1px solid #f1f5f9; /* Garis pemisah vertikal */
+    padding: 0 15px; 
+    border-left: 1px solid #f1f5f9; 
     margin: 0;
   }
 
-  /* 5. RESET SEMUA LINK (<a>) AGAR LURUS */
   .side-nav a,
   .bottom a {
     display: flex;
-    align-items: center; /* Vertikal Tengah */
-    justify-content: center; /* Horizontal Tengah */
+    align-items: center; 
+    justify-content: center; 
 
     height: 100%;
     flex: 1;
@@ -484,27 +462,24 @@ body {
     background: transparent !important;
     color: #94a3b8;
     margin: 0;
-    padding: 0; /* Pastikan padding 0 */
+    padding: 0; 
   }
 
-  /* Ukuran Ikon */
   .side-nav a i,
   .bottom a i {
-    /* Membuat kotak pembungkus ikon yang konsisten */
+    
     width: 24px;
     height: 24px;
 
-    /* Memaksa konten ikon (SVG/Font) ke tengah kotak tersebut */
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 20px; /* Sedikit disesuaikan agar pas di kotak 24px */
-    line-height: 1; /* Reset tinggi baris */
-    margin: 0; /* Hapus margin bawaan jika ada */
+    font-size: 20px; 
+    line-height: 1; 
+    margin: 0; 
   }
 
-  /* Indikator Aktif */
   .side-nav a.active,
   .bottom a.active {
     color: var(--blue);
@@ -513,34 +488,30 @@ body {
 
   .side-nav a i.fa-wallet {
     position: relative;
-    top: 1.5px; /* Sesuaikan angka ini (2px atau 3px) sampai pas */
+    top: 1.5px; 
   }
 
-  /* Jika ada icon lain yang kurang pas, lakukan hal sama */
-  /* Contoh: icon tugas terlihat kekecilan? */
   .side-nav a i.fa-list-check {
-    font-size: 20px; /* Sesuaikan ukuran khusus */
+    font-size: 20px; 
   }
 
-  /* Titik Biru */
   .side-nav a.active::after,
   .bottom a.active::after {
     content: "";
     position: absolute;
-    bottom: 15px; /* Sesuaikan jarak dari bawah */
+    bottom: 15px; 
     left: 50%;
-    transform: translateX(-50%); /* Pastikan titik di tengah */
+    transform: translateX(-50%); 
     width: 4px;
     height: 4px;
     background: var(--blue);
     border-radius: 50%;
   }
 
-  /* 6. PERBAIKAN TOMBOL LOGOUT */
   .logout {
-    height: 100%; /* Full tinggi */
+    height: 100%; 
     display: flex;
-    align-items: center; /* Tengah vertikal */
+    align-items: center; 
     margin: 0;
   }
 
@@ -556,7 +527,7 @@ body {
     border: none !important;
     color: #ef4444 !important;
     width: 40px;
-    height: 100%; /* Full tinggi agar sejajar link lain */
+    height: 100%; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -564,33 +535,31 @@ body {
     margin: 0;
   }
 
-  /* 7. ADJUSTMENT KONTEN UTAMA */
   .content {
-    margin-bottom: 90px; /* Jarak bawah agar tidak tertutup navbar */
+    margin-bottom: 90px; 
     padding: 20px;
     overflow: visible;
     height: auto;
   }
 
   .content-header h1 {
-    font-size: 22px; /* Perkecil judul */
+    font-size: 22px; 
   }
 
-  /* 4. MENTAL HEALTH CARD (STACK) */
   .mental-health-card {
     padding: 25px;
-    height: auto; /* Biarkan tinggi otomatis */
+    height: auto; 
   }
 
   .card-content-wrapper {
-    flex-direction: column; /* Tumpuk vertikal */
+    flex-direction: column; 
     align-items: flex-start;
     gap: 15px;
     margin-bottom: 20px;
   }
 
   .mh-stats {
-    text-align: left; /* Rata kiri saat ditumpuk */
+    text-align: left; 
     display: flex;
     align-items: center;
     gap: 10px;
@@ -600,7 +569,6 @@ body {
     font-size: 28px;
   }
 
-  /* 5. ME TIME SECTION */
   .metime-header {
     flex-direction: column;
     align-items: flex-start;
@@ -613,18 +581,18 @@ body {
   }
 
   .metime-grid {
-    grid-template-columns: 1fr; /* 1 Kolom penuh ke bawah */
+    grid-template-columns: 1fr; 
     gap: 20px;
   }
 
   .metime-card {
-    min-height: auto; /* Jangan dipaksa tinggi */
+    min-height: auto; 
     padding: 25px;
   }
 
   .icon-illustration {
     width: 60px;
-    height: 60px; /* Perkecil icon ilustrasi */
+    height: 60px; 
   }
 
   .icon-illustration i {

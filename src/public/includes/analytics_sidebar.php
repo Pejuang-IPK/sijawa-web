@@ -7,7 +7,7 @@
         <?php
         $total_monthly = $monthly_analysis['pemasukan'] + $monthly_analysis['pengeluaran'];
         $income_percentage = $total_monthly > 0 ? ($monthly_analysis['pemasukan'] / $total_monthly) * 100 : 50;
-        $circumference = 2 * 3.14159 * 80; // 2πr
+        $circumference = 2 * 3.14159 * 80;
         $income_dash = ($income_percentage / 100) * $circumference;
         $expense_dash = $circumference - $income_dash;
         ?>

@@ -1,4 +1,4 @@
-/* --- VARIABEL WARNA SESUAI PALET --- */
+
 :root {
   --primary-blue: #0079ff;
   --accent-green: #00dfa2;
@@ -9,7 +9,6 @@
   --white: #ffffff;
 }
 
-/* --- RESET & GLOBAL STYLES --- */
 * {
   margin: 0;
   padding: 0;
@@ -31,7 +30,6 @@ ul {
   list-style: none;
 }
 
-/* --- NAVIGATION BAR --- */
 nav {
   display: flex;
   justify-content: space-between;
@@ -105,7 +103,6 @@ nav {
   background-color: #0066d6;
 }
 
-/* --- HERO SECTION --- */
 .hero {
   padding: 60px 5% 40px;
   text-align: center;
@@ -164,8 +161,6 @@ nav {
   color: var(--accent-green);
 }
 
-/* --- MOCKUP DASHBOARD (CSS ONLY) --- */
-/* Meniru gaya gambar referensi image 1.jpg */
 .dashboard-preview {
   margin-top: 50px;
   background: #fff;
@@ -180,7 +175,6 @@ nav {
   overflow: hidden;
 }
 
-/* Dekorasi background di belakang dashboard */
 .dashboard-preview::before {
   content: "";
   position: absolute;
@@ -231,13 +225,12 @@ nav {
 
 .mock-content {
   display: grid;
-  grid-template-columns: 200px 1fr 250px; /* Sidebar, Main, Right Panel */
+  grid-template-columns: 200px 1fr 250px; 
   gap: 20px;
   text-align: left;
   min-height: 400px;
 }
 
-/* Sidebar Mockup */
 .mock-sidebar div {
   height: 40px;
   margin-bottom: 10px;
@@ -250,7 +243,6 @@ nav {
   opacity: 0.1;
 }
 
-/* Main Content Mockup */
 .mock-main {
   display: flex;
   flex-direction: column;
@@ -270,10 +262,10 @@ nav {
 }
 .card-1 {
   background: var(--dark-text);
-} /* To-do List */
+} 
 .card-2 {
   background: var(--accent-green);
-} /* Study Resources */
+} 
 .card-3 {
   background: var(--white);
   border: 2px solid var(--alert-pink);
@@ -294,14 +286,12 @@ nav {
   font-weight: bold;
 }
 
-/* Right Panel Mockup */
 .mock-right {
   background: #fafafa;
   border-radius: 12px;
   padding: 15px;
 }
 
-/* --- FEATURES SECTION --- */
 .features {
   padding: 80px 5%;
   background-color: var(--light-bg);
@@ -352,7 +342,6 @@ nav {
   margin-bottom: 20px;
 }
 
-/* Warna Ikon sesuai fitur */
 .bg-blue {
   background: rgba(0, 121, 255, 0.1);
   color: var(--primary-blue);
@@ -380,7 +369,6 @@ nav {
   line-height: 1.5;
 }
 
-/* --- CTA SECTION --- */
 .cta-section {
   padding: 80px 5%;
   text-align: center;
@@ -411,7 +399,6 @@ nav {
   margin-top: 20px;
 }
 
-/* --- FOOTER --- */
 footer {
   background: #f8f9fa;
   padding: 50px 5% 20px;
@@ -447,11 +434,10 @@ footer {
   margin-top: 20px;
 }
 
-/* --- RESPONSIVE --- */
 @media (max-width: 768px) {
   .nav-links {
     display: none;
-  } /* Simplified mobile nav */
+  } 
   .hero h1 {
     font-size: 2.5rem;
   }
@@ -461,7 +447,7 @@ footer {
   .mock-sidebar,
   .mock-right {
     display: none;
-  } /* Hide detail on mobile mock */
+  } 
   .stat-cards {
     grid-template-columns: 1fr;
   }
@@ -470,9 +456,8 @@ footer {
   }
 }
 
-/* --- FEATURES SLIDER SECTION (NEW) --- */
 .features {
-  padding: 80px 0; /* Full width background */
+  padding: 80px 0; 
   background-color: var(--light-bg);
   position: relative;
   overflow: hidden;
@@ -491,25 +476,22 @@ footer {
   align-items: center;
 }
 
-/* Container Scroll Horizontal */
 .feature-slider {
   display: flex;
   gap: 25px;
   overflow-x: auto;
   scroll-behavior: smooth;
-  padding: 20px 5px 40px 5px; /* Extra bottom padding for shadow */
+  padding: 20px 5px 40px 5px; 
 
-  /* Hide Scrollbar but allow scroll */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
   scroll-snap-type: x mandatory;
 }
 
 .feature-slider::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  display: none; 
 }
 
-/* Card Styling Minimalis */
 .feature-card {
   min-width: 300px;
   max-width: 300px;
@@ -531,7 +513,6 @@ footer {
   border-color: rgba(0, 121, 255, 0.1);
 }
 
-/* Icon Styling */
 .icon-wrapper {
   width: 55px;
   height: 55px;
@@ -561,7 +542,6 @@ footer {
   line-height: 1.6;
 }
 
-/* Navigation Buttons */
 .slider-btn {
   position: absolute;
   top: 50%;
@@ -594,7 +574,6 @@ footer {
   right: -20px;
 }
 
-/* Hide buttons on mobile where swipe is natural */
 @media (max-width: 768px) {
   .slider-btn {
     display: none;

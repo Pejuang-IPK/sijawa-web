@@ -1,10 +1,9 @@
-// --- KONFIGURASI AWAL ---
+
 let timeLeft = 58;
 let timerId = null;
 let isRunning = false;
 let isAlarmEnabled = true;
 
-// --- ELEMENT HTML ---
 const timerDisplay = document.getElementById("timer");
 const playIcon = document.getElementById("icon-play-pause");
 const audioMusic = document.getElementById("audio-music");
@@ -14,23 +13,18 @@ const btnAlarm = document.getElementById("btn-alarm");
 
 audioMusic.volume = 0.5;
 
-// --- 1. FORMAT & PARSING WAKTU ---
-
-// Mengubah detik ke format "MM : SS"
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
   return `${m.toString().padStart(2, "0")} : ${s.toString().padStart(2, "0")}`;
 }
 
-// Mengubah string "MM : SS" (input user) kembali menjadi detik
 function parseTimeFromDisplay(text) {
-  // Hapus semua karakter selain angka dan titik dua
+
   const cleanText = text.replace(/[^0-9:]/g, "");
 
   let parts = cleanText.split(":");
 
-  // Jika user cuma ketik angka (misal "5"), anggap menit
   if (parts.length === 1) {
     return parseInt(parts[0]) * 60;
   }
@@ -40,12 +34,9 @@ function parseTimeFromDisplay(text) {
   return m * 60 + s;
 }
 
-// --- 2. CORE TIMER LOGIC ---
-
 function startTimer() {
   if (timerId) return;
 
-  // Matikan mode edit saat timer jalan
   timerDisplay.contentEditable = "false";
   timerDisplay.style.cursor = "default";
 
@@ -63,7 +54,6 @@ function pauseTimer() {
   clearInterval(timerId);
   timerId = null;
 
-  // Aktifkan mode edit saat pause
   timerDisplay.contentEditable = "true";
   timerDisplay.style.cursor = "pointer";
 }
@@ -73,7 +63,7 @@ function timeIsUp() {
   timerId = null;
   isRunning = false;
   playIcon.classList.replace("fa-pause", "fa-play");
-  timerDisplay.contentEditable = "true"; // Izinkan edit lagi
+  timerDisplay.contentEditable = "true";
 
   if (isAlarmEnabled) audioAlarm.play();
 }
@@ -84,7 +74,7 @@ function toggleTimer() {
     playIcon.classList.replace("fa-pause", "fa-play");
     isRunning = false;
   } else {
-    // Sebelum start, pastikan validasi input user terakhir
+
     validateInput();
     startTimer();
     playIcon.classList.replace("fa-play", "fa-pause");
@@ -92,36 +82,29 @@ function toggleTimer() {
   }
 }
 
-// --- 3. FITUR EDIT (Ubah Waktu) ---
-
-// Dipanggil saat user klik angka (onfocus)
 function pauseTimerManual() {
   if (isRunning) {
-    toggleTimer(); // Otomatis pause jika user klik angka
+    toggleTimer();
   }
 }
 
-// Dipanggil saat user klik di luar angka (onblur)
 function validateInput() {
   let newTime = parseTimeFromDisplay(timerDisplay.innerText);
 
-  // Batas maksimal waktu (misal 99 menit)
   if (newTime > 5999) newTime = 5999;
   if (newTime < 0) newTime = 0;
 
   timeLeft = newTime;
-  timerDisplay.innerText = formatTime(timeLeft); // Rapikan formatnya
+  timerDisplay.innerText = formatTime(timeLeft);
 }
 
-// Agar tombol Enter berfungsi sebagai "Selesai Edit"
 function handleEnter(e) {
   if (e.key === "Enter") {
-    e.preventDefault(); // Jangan buat baris baru
-    timerDisplay.blur(); // Lepas fokus (memicu validateInput)
+    e.preventDefault();
+    timerDisplay.blur();
   }
 }
 
-// --- 4. AUDIO & ALARM (Tetap sama) ---
 function toggleMusic() {
   if (audioMusic.paused) {
     audioMusic.play();
@@ -143,6 +126,4 @@ function toggleAlarm() {
   }
 }
 
-// --- INISIALISASI ---
-// startTimer(); // Mulai otomatis
 btnAlarm.classList.add("active");

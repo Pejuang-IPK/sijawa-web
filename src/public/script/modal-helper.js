@@ -8,7 +8,6 @@ const PembantuModal = {
         overlay.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: ${zIndex};`;
         return overlay;
     },
-    
 
     buatTombolTutup(onClick) {
         const btn = document.createElement('button');
@@ -17,7 +16,6 @@ const PembantuModal = {
         btn.onclick = onClick;
         return btn;
     },
-    
 
     buatHeader(title, onClose) {
         const header = document.createElement('div');
@@ -33,7 +31,6 @@ const PembantuModal = {
         header.appendChild(closeBtn);
         return header;
     },
-    
 
     buatInputForm(label, id, value, type = 'text', required = true) {
         const container = document.createElement('div');
@@ -56,7 +53,6 @@ const PembantuModal = {
         container.appendChild(input);
         return container;
     },
-    
 
     buatGrupTombol(buttons) {
         const group = document.createElement('div');
@@ -72,15 +68,14 @@ const PembantuModal = {
         
         return group;
     },
-    
 
     formatTanggal(dateString) {
         const date = new Date(dateString);
         return date.toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
     },
-    
 
     formatRupiah(amount) {
         return 'Rp ' + parseInt(amount).toLocaleString('id-ID');
     }
 };
+

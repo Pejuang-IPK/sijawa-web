@@ -31,7 +31,6 @@ body {
   min-height: 100vh;
 }
 
-/* Sidebar */
 .sidebar {
   background: #fff;
   border-right: 1px solid var(--border);
@@ -42,7 +41,7 @@ body {
   padding: 20px 12px;
   height: 100vh;
   position: sticky;
-  overflow-y: auto; /* Bisa discroll jika konten panjang */
+  overflow-y: auto; 
 }
 
 .brand {
@@ -128,31 +127,29 @@ body {
   color: var(--blue);
 }
 
-/* Content */
 .content {
   padding: 16px 32px;
   height: 100%;
   overflow-y: auto;
 }
 
-/* Styling Scrollbar khusus Webkit (Chrome, Edge, Safari) */
 .content::-webkit-scrollbar {
-  width: 10px; /* Lebar scrollbar tipis */
+  width: 10px; 
 }
 
 .content::-webkit-scrollbar-track {
-  background: transparent; /* Background track transparan */
+  background: transparent; 
 }
 
 .content::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1; /* Warna scrollbar abu-abu soft */
-  border-radius: 20px; /* Sudut bulat */
-  border: 3px solid transparent; /* Trik agar terlihat ada jarak */
+  background-color: #cbd5e1; 
+  border-radius: 20px; 
+  border: 3px solid transparent; 
   background-clip: content-box;
 }
 
 .content::-webkit-scrollbar-thumb:hover {
-  background-color: #94a3b8; /* Warna saat dihover */
+  background-color: #94a3b8; 
 }
 
 .content-header {
@@ -173,14 +170,13 @@ body {
   font-size: 14px;
 }
 
-/* --- MENTAL HEALTH CARD (Group 50.png) --- */
 .mental-health-card {
-  /* Gradient Kuning Segar */
+  
   background: linear-gradient(90deg, #ffc107 0%, #ffca28 100%);
   border-radius: 20px;
   padding: 40px 30px 80px 30px;
   color: white;
-  margin-bottom: 30px; /* Jarak ke section bawahnya */
+  margin-bottom: 30px; 
   box-shadow: 0 10px 20px rgba(255, 193, 7, 0.2);
   position: relative;
   overflow: hidden;
@@ -189,11 +185,10 @@ body {
 .card-content-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end; /* Rata bawah agar teks sejajar */
-  margin-bottom: 35px; /* Jarak ke progress bar */
+  align-items: flex-end; 
+  margin-bottom: 35px; 
 }
 
-/* Typography Kiri */
 .mh-text h2 {
   font-size: 24px;
   font-weight: 800;
@@ -208,16 +203,15 @@ body {
   font-weight: 400;
 }
 
-/* Typography Kanan (Stats) */
 .mh-stats {
   text-align: right;
-  color: #5d4037; /* Coklat tua agar kontras di kuning (sesuai gambar) */
+  color: #5d4037; 
 }
 
 .mh-stats .percent {
   font-size: 32px;
   font-weight: 800;
-  color: white; /* Angka tetap putih */
+  color: white; 
   margin-right: 5px;
 }
 
@@ -226,30 +220,26 @@ body {
   font-weight: 500;
 }
 
-/* Progress Bar Styling */
 .mh-progress-track {
   width: 100%;
   height: 12px;
-  background-color: rgba(0, 0, 0, 0.15); /* Abu-abu transparan */
+  background-color: rgba(0, 0, 0, 0.15); 
   border-radius: 50px;
   overflow: hidden;
 }
 
 .mh-progress-fill {
   height: 100%;
-  background-color: #ffffff; /* Isian Putih Bersih */
+  background-color: #ffffff; 
   border-radius: 50px;
 
-  /* Animasi saat load */
   transition: width 1s ease-in-out;
 }
 
-/* --- ME TIME SECTION (Group 52.png) --- */
 .metime-section {
   margin-bottom: 40px;
 }
 
-/* Header Section */
 .metime-header {
   display: flex;
   justify-content: space-between;
@@ -265,7 +255,7 @@ body {
 }
 
 .badge-count {
-  background-color: #3b82f6; /* Biru Header sesuai gambar */
+  background-color: #3b82f6; 
   color: white;
   font-weight: 600;
   font-size: 14px;
@@ -273,17 +263,15 @@ body {
   border-radius: 12px;
 }
 
-/* Grid Layout */
 .metime-grid {
   display: grid;
-  /* Responsive: Minimal lebar 280px, sisanya bagi rata */
+  
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 25px;
 }
 
-/* Base Card Style */
 .metime-card {
-  border-radius: 30px; /* Sudut sangat bulat sesuai gambar */
+  border-radius: 30px; 
   padding: 30px 25px;
   color: white;
   position: relative;
@@ -299,7 +287,6 @@ body {
   transform: translateY(-5px);
 }
 
-/* Varian Warna Background */
 .metime-card.bg-blue {
   background-color: #0079ff;
 }
@@ -310,12 +297,11 @@ body {
   background-color: #ff0060;
 }
 
-/* Ilustrasi Icon (Lingkaran Terang di background icon) */
 .icon-illustration {
   width: 80px;
   height: 80px;
-  background: rgba(255, 255, 255, 0.2); /* Putih transparan */
-  border-radius: 25px; /* Squircle shape */
+  background: rgba(255, 255, 255, 0.2); 
+  border-radius: 25px; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -329,12 +315,11 @@ body {
   z-index: 2;
 }
 
-/* Hiasan Dekorasi (Bintang & Bulatan Kecil) */
 .decor-circle {
   position: absolute;
   width: 12px;
   height: 12px;
-  background: #facc15; /* Kuning */
+  background: #facc15; 
   border-radius: 50%;
   bottom: 10px;
   left: 10px;
@@ -350,7 +335,6 @@ body {
   z-index: 2;
 }
 
-/* Typography Kartu */
 .card-text h3 {
   font-size: 22px;
   font-weight: 800;
@@ -365,44 +349,39 @@ body {
   font-weight: 500;
 }
 
-/* Responsive Mobile: Stack ke bawah */
 @media (max-width: 768px) {
   body {
     overflow: auto;
   }
 
-  /* 1. RESET LAYOUT UTAMA */
   .page {
     display: flex;
-    flex-direction: column; /* Ubah dari Grid ke Stack Vertikal */
+    flex-direction: column; 
     height: auto;
     min-height: 100vh;
   }
 
-  /* 2. SIDEBAR -> BOTTOM NAVIGATION BAR */
   .sidebar {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 70px; /* Tinggi Navigasi Bawah */
-    flex-direction: row; /* Icon berjejer kesamping */
-    justify-content: space-around; /* Jarak rata antar icon */
+    height: 70px; 
+    flex-direction: row; 
+    justify-content: space-around; 
     align-items: center;
     padding: 0 10px;
     background: #fff;
     border-right: none;
     border-top: 1px solid var(--border);
-    z-index: 1000; /* Pastikan di atas konten */
+    z-index: 1000; 
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
   }
 
-  /* Sembunyikan Logo & Logout Text di Mobile agar muat */
   .sidebar .brand {
     display: none;
   }
 
-  /* Ratakan Navigasi */
   .side-nav {
     display: flex;
     flex-direction: row;
@@ -411,13 +390,11 @@ body {
     justify-content: space-around;
   }
 
-  /* Container tombol bawah (Logout/Setting) digabung ke baris */
   .bottom {
-    display: none; /* Opsional: Sembunyikan tombol logout/setting di menu utama jika sempit */
-    /* Atau jika ingin ditampilkan, ubah jadi flex row juga */
+    display: none; 
+    
   }
 
-  /* Penyesuaian Icon Navigasi */
   .side-nav a {
     width: auto;
     height: 50px;
@@ -425,34 +402,32 @@ body {
     border-radius: 15px;
   }
 
-  /* 3. KONTEN UTAMA */
   .content {
-    padding: 20px; /* Kurangi padding sisi */
+    padding: 20px; 
     height: auto;
-    overflow-y: auto; /* Biarkan browser handle scroll */
-    margin-bottom: 80px; /* Beri ruang agar konten paling bawah tidak tertutup Bottom Nav */
+    overflow-y: auto; 
+    margin-bottom: 80px; 
     width: 100%;
   }
 
   .content-header h1 {
-    font-size: 22px; /* Perkecil judul */
+    font-size: 22px; 
   }
 
-  /* 4. MENTAL HEALTH CARD (STACK) */
   .mental-health-card {
     padding: 25px;
-    height: auto; /* Biarkan tinggi otomatis */
+    height: auto; 
   }
 
   .card-content-wrapper {
-    flex-direction: column; /* Tumpuk vertikal */
+    flex-direction: column; 
     align-items: flex-start;
     gap: 15px;
     margin-bottom: 20px;
   }
 
   .mh-stats {
-    text-align: left; /* Rata kiri saat ditumpuk */
+    text-align: left; 
     display: flex;
     align-items: center;
     gap: 10px;
@@ -462,7 +437,6 @@ body {
     font-size: 28px;
   }
 
-  /* 5. ME TIME SECTION */
   .metime-header {
     flex-direction: column;
     align-items: flex-start;
@@ -475,18 +449,18 @@ body {
   }
 
   .metime-grid {
-    grid-template-columns: 1fr; /* 1 Kolom penuh ke bawah */
+    grid-template-columns: 1fr; 
     gap: 20px;
   }
 
   .metime-card {
-    min-height: auto; /* Jangan dipaksa tinggi */
+    min-height: auto; 
     padding: 25px;
   }
 
   .icon-illustration {
     width: 60px;
-    height: 60px; /* Perkecil icon ilustrasi */
+    height: 60px; 
   }
 
   .icon-illustration i {
@@ -498,23 +472,20 @@ body {
   }
 }
 
-/* Container Slider Horizontal */
 .history-slider {
   display: flex;
   gap: 15px;
-  overflow-x: auto; /* Scroll ke samping */
-  padding-bottom: 15px; /* Ruang untuk scrollbar */
-  scroll-snap-type: x mandatory; /* Efek magnet saat scroll */
-  -webkit-overflow-scrolling: touch; /* Smooth scroll di iOS */
+  overflow-x: auto; 
+  padding-bottom: 15px; 
+  scroll-snap-type: x mandatory; 
+  -webkit-overflow-scrolling: touch; 
 }
 
-/* Item Kartu */
 .slider-item {
-  min-width: 260px; /* Lebar tetap agar rapi */
-  flex: 0 0 auto; /* Jangan mengecil */
-  scroll-snap-align: start; /* Posisi magnet di kiri */
+  min-width: 260px; 
+  flex: 0 0 auto; 
+  scroll-snap-align: start; 
 
-  /* Styling Kartu (Copy dari yang lama + perbaikan) */
   background: white;
   padding: 15px;
   border-radius: 16px;
@@ -522,11 +493,58 @@ body {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* Sembunyikan Scrollbar tapi tetap bisa scroll (Opsional) */
 .history-slider::-webkit-scrollbar {
-  height: 6px; /* Scrollbar tipis di bawah */
+  height: 6px; 
 }
 .history-slider::-webkit-scrollbar-thumb {
   background: #e2e8f0;
   border-radius: 10px;
+}
+
+.alert {
+  padding: 14px 18px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+  transition: opacity 0.3s;
+}
+
+.alert i {
+  font-size: 18px;
+}
+
+.alert-success {
+  background: #dcfce7;
+  color: #15803d;
+  border-left: 4px solid #15803d;
+}
+
+.alert-success i {
+  color: #15803d;
+}
+
+.alert-error {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-left: 4px solid #b91c1c;
+}
+
+.alert-error i {
+  color: #b91c1c;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

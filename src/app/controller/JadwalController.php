@@ -19,11 +19,9 @@ function query($query) {
 
 function tambah($data) {
     global $conn;
-    
-    // 1. Ambil ID Mahasiswa (Hardcode 1 atau dari Session)
+
     $id_mahasiswa = $_SESSION['user_id']; 
 
-    // 2. Ambil data dari Form HTML
     $hari        = htmlspecialchars($data["hari"]);
     $matkul      = htmlspecialchars($data["matkul"]);
     $ruangan     = htmlspecialchars($data["ruangan"]);
@@ -34,9 +32,6 @@ function tambah($data) {
 
     $id_jadwal = random_int(100000, 999999);
 
-    // 3. Masukkan ke Database (Perhatikan urutan kolomnya!)
-    // Format Insert: (id_jadwal, id_mahasiswa, hari, namaMatkul, jam_mulai, jam_selesai, kelasMatkul, sks, dosenMatkul)
-    // Sesuaikan nama kolom dengan database Anda
     $query = "INSERT INTO Jadwal 
               (id_jadwal, id_mahasiswa, hari, namaMatkul, jam_mulai, jam_selesai, kelasMatkul, sks, dosenMatkul)
               VALUES 
@@ -49,16 +44,15 @@ function tambah($data) {
 
 function hapus($id) {
     global $conn;
-    // Hapus berdasarkan id_jadwal
+
     mysqli_query($conn, "DELETE FROM Jadwal WHERE id_jadwal = $id");
     return mysqli_affected_rows($conn);
 }
 
 function ubah($data) {
     global $conn;
-    
-    // Ambil data dari $_POST
-    $id          = $data["id_jadwal"]; // ID yang di-hidden tadi
+
+    $id          = $data["id_jadwal"];
     $hari        = htmlspecialchars($data["hari"]);
     $matkul      = htmlspecialchars($data["matkul"]);
     $ruangan     = htmlspecialchars($data["ruangan"]);
@@ -67,7 +61,6 @@ function ubah($data) {
     $jam_selesai = htmlspecialchars($data["jam_selesai"]);
     $dosen       = htmlspecialchars($data["dosen"]);
 
-    // Query Update
     $query = "UPDATE Jadwal SET 
                 hari = '$hari',
                 namaMatkul = '$matkul',
@@ -87,19 +80,20 @@ function importExcel($files) {
     global $conn;
 
     if (!isset($files['file_excel']) || $files['file_excel']['error'] !== 0) {
-        return false;
+        return 'error';
     }
 
     $tmpName = $files['file_excel']['tmp_name'];
     $id_mahasiswa = $_SESSION["user_id"];
 
     if (!$xlsx = SimpleXLSX::parse($tmpName)) {
-        die(SimpleXLSX::parseError());
+        return 'error';
     }
 
     $rows = array_values($xlsx->rows());
+    $duplicateCount = 0;
+    $successCount = 0;
 
-    // skip header (baris 0)
     foreach ($rows as $i => $row) {
 
         if ($i === 0) continue;
@@ -117,6 +111,25 @@ function importExcel($files) {
         if (strpos($raw_waktu, '-') === false) continue;
 
         [$jam_mulai, $jam_selesai] = array_map('trim', explode('-', $raw_waktu));
+
+        $checkQuery = "SELECT COUNT(*) as count FROM Jadwal 
+                       WHERE id_mahasiswa = ? 
+                       AND hari = ? 
+                       AND namaMatkul = ? 
+                       AND jam_mulai = ? 
+                       AND jam_selesai = ?";
+        
+        $checkStmt = $conn->prepare($checkQuery);
+        $checkStmt->bind_param("issss", $id_mahasiswa, $hari, $namaMatkul, $jam_mulai, $jam_selesai);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
+        $data = $result->fetch_assoc();
+        $checkStmt->close();
+
+        if ($data['count'] > 0) {
+            $duplicateCount++;
+            continue;
+        }
 
         $stmt = $conn->prepare("
             INSERT INTO Jadwal 
@@ -136,11 +149,21 @@ function importExcel($files) {
             $dosenMatkul
         );
 
-        $stmt->execute();
+        if ($stmt->execute()) {
+            $successCount++;
+        }
         $stmt->close();
     }
 
-    return true;
+    if ($successCount > 0 && $duplicateCount > 0) {
+        return 'partial';
+    } elseif ($duplicateCount > 0 && $successCount == 0) {
+        return 'duplicate';
+    } elseif ($successCount > 0) {
+        return 'success';
+    } else {
+        return 'error';
+    }
 }
 
 ?>

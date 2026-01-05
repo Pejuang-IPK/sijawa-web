@@ -6,6 +6,16 @@ require_once __DIR__ . '../../app/controller/TaskController.php';
 // DEMO: tanpa session. Gunakan ID mahasiswa contoh untuk insert.
 $DEMO_USER_ID = $_SESSION['user_id'];
 
+// Initialize flash message variables
+$pesan = null;
+$tipe_pesan = null;
+if (isset($_SESSION['flash_message'])) {
+	$pesan = $_SESSION['flash_message'];
+	$tipe_pesan = $_SESSION['flash_type'];
+	unset($_SESSION['flash_message']);
+	unset($_SESSION['flash_type']);
+}
+
 
 // Handle: tambah tugas manual
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add') {
@@ -25,6 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 	if ($title && $dueDate) {
 		addTask($conn, $DEMO_USER_ID, $title, $course, $dueDate, $dueTime);
+		$_SESSION['flash_message'] = 'Tugas berhasil ditambahkan!';
+		$_SESSION['flash_type'] = 'success';
+	} else {
+		$_SESSION['flash_message'] = 'Gagal menambahkan tugas. Periksa kembali input Anda.';
+		$_SESSION['flash_type'] = 'error';
 	}
 
 	header('Location: tugas.php');
@@ -36,13 +51,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 	$taskId = intval($_POST['task_id'] ?? 0);
 	if ($taskId > 0) {
 		deleteTask($conn, $taskId);
+		$_SESSION['flash_message'] = 'Tugas berhasil dihapus!';
+		$_SESSION['flash_type'] = 'success';
+	} else {
+		$_SESSION['flash_message'] = 'Gagal menghapus tugas.';
+		$_SESSION['flash_type'] = 'error';
 	}
 	header('Location: tugas.php');
 	exit();
 }
 
 // Ambil semua tugas
-$tasks = getAllTasks($conn);
+$tasks = getAllTasks($conn, $DEMO_USER_ID);
 
 // Hitung status counter
 $today = new DateTime('today');
@@ -68,6 +88,7 @@ foreach ($tasks as $t) {
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<link rel="stylesheet" href="style/tugas.css?v=<?php echo time(); ?>">
+	<script src="script/tugas.js" defer></script>
 </head>
 <body>
 	<div class="page">
@@ -86,6 +107,13 @@ foreach ($tasks as $t) {
 					<p>Pantau dan kelola deadline tugasmu!</p>
 				</div>
 			</header>
+
+			<?php if ($pesan): ?>
+				<div class="alert alert-<?php echo $tipe_pesan; ?>">
+					<i class="fa-solid fa-<?php echo ($tipe_pesan === 'success') ? 'check-circle' : 'circle-exclamation'; ?>"></i>
+					<span><?php echo clean($pesan); ?></span>
+				</div>
+			<?php endif; ?>
 
 			<section class="add-box">
 				<form class="add-form" method="post" action="tugas.php">
@@ -202,43 +230,6 @@ foreach ($tasks as $t) {
 		<input type="hidden" name="action" value="delete" />
 		<input type="hidden" name="task_id" id="deleteTaskId" />
 	</form>
-
-	<script>
-		let currentDeleteId = null;
-
-		function showDeleteModal(taskId, taskTitle) {
-			currentDeleteId = taskId;
-			document.getElementById('deleteModal').style.display = 'flex';
-			document.body.style.overflow = 'hidden';
-		}
-
-		function closeDeleteModal() {
-			document.getElementById('deleteModal').style.display = 'none';
-			document.body.style.overflow = 'auto';
-			currentDeleteId = null;
-		}
-
-		function confirmDelete() {
-			if (currentDeleteId) {
-				document.getElementById('deleteTaskId').value = currentDeleteId;
-				document.getElementById('deleteForm').submit();
-			}
-		}
-
-		// Close modal when clicking outside
-		document.getElementById('deleteModal').addEventListener('click', function(e) {
-			if (e.target === this) {
-				closeDeleteModal();
-			}
-		});
-
-		// Close modal with Escape key
-		document.addEventListener('keydown', function(e) {
-			if (e.key === 'Escape') {
-				closeDeleteModal();
-			}
-		});
-	</script>
 </body>
 </html>
 

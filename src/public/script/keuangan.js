@@ -1,18 +1,20 @@
+
 function formatRupiah(input) {
     let value = input.value.replace(/[^0-9]/g, '');
     if (value === '') {
         input.value = '';
+
         const rawInput = document.getElementById(input.id + '_raw');
         if (rawInput) {
             rawInput.value = '';
         }
         return;
     }
-    
+
     value = Math.abs(parseInt(value) || 0).toString();
     let formatted = parseInt(value).toLocaleString('id-ID');
     input.value = formatted;
-    
+
     const rawInput = document.getElementById(input.id + '_raw');
     if (rawInput) {
         rawInput.value = value;
@@ -20,20 +22,22 @@ function formatRupiah(input) {
 }
 
 function persiapkanKirimForm(event) {
+
     const displayInput = document.getElementById('transaksi');
     const rawInput = document.getElementById('transaksi_raw');
     
     if (displayInput && rawInput) {
+
         const cleanValue = displayInput.value.replace(/[^0-9]/g, '');
         rawInput.value = cleanValue;
-        
+
         if (!cleanValue || cleanValue === '0') {
             alert('Jumlah transaksi harus diisi dan lebih dari 0');
             event.preventDefault();
             return false;
         }
     }
-    
+
     const jenisTransaksi = document.getElementById('jenisTransaksi');
     const kategoriTransaksi = document.getElementById('kategoriTransaksi');
     const keteranganTransaksi = document.getElementById('keteranganTransaksi');
@@ -100,7 +104,7 @@ function updateOpsiKategori() {
     if(categories.length === 0) {
         kategoriSelect.innerHTML = '<option value="">Belum ada kategori</option>';
         kategoriSelect.disabled = true;
-        
+
         const jenisText = jenisTransaksi;
         const msgElement = document.getElementById('kategoriEmptyMessage');
         if (!msgElement) {
@@ -124,6 +128,7 @@ function updateOpsiKategori() {
             msgElement.style.display = 'block';
         }
     } else {
+
         const msgElement = document.getElementById('kategoriEmptyMessage');
         if (msgElement) {
             msgElement.style.display = 'none';
@@ -151,12 +156,12 @@ function updateOpsiNilai() {
     const periodExpense = document.getElementById('periodTypeExpense');
     const valueSelectIncome = document.getElementById('valueSelectIncome');
     const valueSelectExpense = document.getElementById('valueSelectExpense');
-    
+
     if (!periodIncome || !periodExpense || !valueSelectIncome || !valueSelectExpense) {
         console.error('Filter elements tidak ditemukan');
         return;
     }
-    
+
     const period = periodIncome.value || periodExpense.value || 'bulan';
     periodIncome.value = period;
     periodExpense.value = period;
@@ -172,11 +177,11 @@ function updateOpsiNilai() {
         valueSelectIncome.style.display = 'inline-block';
         valueSelectExpense.style.display = 'inline-block';
     }
-    
+
     const options = UtilFilter.buatOpsi(period);
     valueSelectIncome.innerHTML = options;
     valueSelectExpense.innerHTML = options;
-    
+
     if(period === window.currentPeriod && window.currentValue) {
         setTimeout(() => {
             valueSelectIncome.value = window.currentValue;
@@ -202,6 +207,63 @@ function terapkanFilter() {
     window.location.href = '?period=' + period + '&value=' + value;
 }
 
+function tampilkanDetailKategori(kategori, jenis) {
+    const modal = document.getElementById('modalKategoriDetail');
+    const title = document.getElementById('kategoriDetailTitle');
+    const content = document.getElementById('kategoriDetailContent');
+    
+    title.textContent = 'Transaksi - ' + kategori;
+    content.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 20px;">Memuat data...</p>';
+    modal.style.display = 'flex';
+    
+    const period = window.currentPeriod || 'bulan';
+    const value = window.currentValue || '0';
+    
+    fetch('get_kategori_detail.php?kategori=' + encodeURIComponent(kategori) + '&period=' + period + '&value=' + value)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length === 0) {
+                content.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 20px;">Belum ada transaksi</p>';
+                return;
+            }
+            
+            let html = '<div class="transaction-list" style="display: flex; flex-direction: column; gap: 12px;">';
+            data.forEach(trans => {
+                const isIncome = trans.jenisTransaksi === 'Pemasukan';
+                const iconClass = isIncome ? 'success' : 'danger';
+                const icon = isIncome ? 'fa-arrow-down-long' : 'fa-arrow-up-long';
+                const iconRotation = 'transform: rotate(45deg);';
+                const prefix = isIncome ? '+' : '-';
+                
+                html += `
+                    <div class="transaction-item" style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                        <div class="transaction-icon ${iconClass}" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            <i class="fa-solid ${icon}" style="${iconRotation}"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0 0 4px 0; font-size: 14px;">${trans.keteranganTransaksi}</h4>
+                            <p style="margin: 0; font-size: 12px; color: #64748b;">${new Date(trans.tanggalKeuangan).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'})}</p>
+                        </div>
+                        <div style="text-align: right; display: flex; align-items: center; gap: 8px;">
+                            <p class="transaction-amount ${iconClass}" style="margin: 0; font-weight: 600; margin-right: 12px;">${prefix}Rp ${Number(trans.transaksi).toLocaleString('id-ID')}</p>
+                            <button onclick="bukaModalEditTransaksi('${trans.id_keuangan}')" class="btn-edit-transaksi" style="background: #3b82f6; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="hapusTransaksi('${trans.id_keuangan}')" class="btn-delete-transaksi" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            content.innerHTML = html;
+        })
+        .catch(error => {
+            content.innerHTML = '<p style="text-align: center; color: #ef4444; padding: 20px;">Gagal memuat data</p>';
+        });
+}
+
 window.onclick = function(event) {
     const modalTransaksi = document.getElementById('modalTransaksi');
     const modalKategori = document.getElementById('modalKategori');
@@ -214,7 +276,7 @@ window.onclick = function(event) {
 
 window.addEventListener('DOMContentLoaded', function() {
     console.log('Keuangan.js loaded');
-    
+
     setTimeout(() => {
         try {
             updateOpsiNilai();
@@ -222,7 +284,7 @@ window.addEventListener('DOMContentLoaded', function() {
             console.error('Error initializing filter:', e);
         }
     }, 100);
-    
+
     try {
         if (typeof muatLangganan === 'function') {
             muatLangganan();
@@ -230,7 +292,7 @@ window.addEventListener('DOMContentLoaded', function() {
     } catch(e) {
         console.error('Error loading subscriptions:', e);
     }
-    
+
     const alert = document.querySelector('.alert');
     if (alert) {
         setTimeout(() => {

@@ -5,7 +5,6 @@ require_once __DIR__ . '/../helper/Minio.php';
 
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-// Ambil data user yang sedang login
 function getUserProfile($userId) {
     global $conn;
     $userId = htmlspecialchars($userId);
@@ -18,15 +17,13 @@ function getUserProfile($userId) {
     return null;
 }
 
-// Update profil user
 function updateProfile($userId, $nama, $email) {
     global $conn;
     
     $userId = htmlspecialchars($userId);
     $nama = htmlspecialchars($nama);
     $email = htmlspecialchars($email);
-    
-    // Cek apakah email baru sudah terdaftar (jika berubah)
+
     $query = "SELECT id_mahasiswa FROM Mahasiswa WHERE email = '$email' AND id_mahasiswa != '$userId'";
     $result = mysqli_query($conn, $query);
     
@@ -34,7 +31,6 @@ function updateProfile($userId, $nama, $email) {
         return ['success' => false, 'message' => 'Email sudah terdaftar'];
     }
 
-    // Update data
     $updateQuery = "UPDATE Mahasiswa SET nama = '$nama', email = '$email' WHERE id_mahasiswa = '$userId'";
     
     if (mysqli_query($conn, $updateQuery)) {
@@ -44,27 +40,22 @@ function updateProfile($userId, $nama, $email) {
     }
 }
 
-// Update password user
 function updatePassword($userId, $oldPassword, $newPassword) {
     global $conn;
     
     $userId = htmlspecialchars($userId);
-    
-    // Ambil password lama dari database
+
     $query = "SELECT password FROM Mahasiswa WHERE id_mahasiswa = '$userId'";
     $result = mysqli_query($conn, $query);
     $user = mysqli_fetch_assoc($result);
 
-    // Verifikasi password lama
     if (!$user || !password_verify($oldPassword, $user['password'])) {
         return ['success' => false, 'message' => 'Password lama tidak sesuai'];
     }
 
-    // Hash password baru
     $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
     $hashedPassword = htmlspecialchars($hashedPassword);
-    
-    // Update password
+
     $updateQuery = "UPDATE Mahasiswa SET password = '$hashedPassword' WHERE id_mahasiswa = '$userId'";
     
     if (mysqli_query($conn, $updateQuery)) {
@@ -74,59 +65,48 @@ function updatePassword($userId, $oldPassword, $newPassword) {
     }
 }
 
-// Upload foto profil user
 function uploadProfilePhoto($userId, $file) {
     global $conn;
-    
-    // Validasi file ada
+
     if (!isset($file) || $file['error'] === UPLOAD_ERR_NO_FILE) {
         return ['success' => false, 'message' => 'File tidak ditemukan'];
     }
-    
-    // Validasi error upload
+
     if ($file['error'] !== UPLOAD_ERR_OK) {
         return ['success' => false, 'message' => 'Error saat upload file'];
     }
-    
-    // Validasi ukuran file (maksimal 2MB)
+
     $maxSize = 2 * 1024 * 1024;
     if ($file['size'] > $maxSize) {
         return ['success' => false, 'message' => 'Ukuran file terlalu besar (max 2MB)'];
     }
-    
-    // Validasi tipe file
+
     $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
     $fileMimeType = mime_content_type($file['tmp_name']);
     
     if (!in_array($fileMimeType, $allowedTypes)) {
         return ['success' => false, 'message' => 'Tipe file tidak didukung. Gunakan JPG, PNG, GIF, atau WEBP'];
     }
-    
-    // Buat nama file unik
+
     $fileExtension = pathinfo($file['name'], PATHINFO_EXTENSION);
     $newFileName = $userId . '_' . time() . '.' . $fileExtension;
     $bucketName = 'profile-photos';
-    
-    // Pastikan direktori ada
-    // --- PROSES UPLOAD PAKE NATIVE cURL ---
+
     $uploadResult = uploadToMinioNative(
         $bucketName, 
         $newFileName, 
         $file['tmp_name'], 
-        $fileMimeType // Variable dari mime_content_type di validasi sebelumnya
+        $fileMimeType
     );
-    
-    
+
     if (!$uploadResult['success']) {
         return ['success' => false, 'message' => 'Gagal upload ke Storage: ' . $uploadResult['message']];
     }
-    
-    // Hapus foto lama jika ada
+
     $userId = htmlspecialchars($userId);
     $query = "SELECT foto FROM Mahasiswa WHERE id_mahasiswa = '$userId'";
     $result = mysqli_query($conn, $query);
-    // $userData = mysqli_fetch_assoc($result);
-    
+
     $userIdClean = htmlspecialchars($userId);
     $updateQuery = "UPDATE Mahasiswa SET foto = '$newFileName' WHERE id_mahasiswa = '$userIdClean'";
 

@@ -4,9 +4,6 @@ require_once __DIR__ . '/../../config/database.php';
 function hitungStressLevel($id_mahasiswa) {
     global $conn;
 
-    // ============================================================
-    // 1. AMBIL DATA JADWAL (SKS & DURASI) - [TIDAK DIUBAH]
-    // ============================================================
     $queryJadwal = "SELECT sks, jam_mulai, jam_selesai FROM Jadwal WHERE id_mahasiswa = $id_mahasiswa";
     $resultJadwal = mysqli_query($conn, $queryJadwal);
     
@@ -23,10 +20,6 @@ function hitungStressLevel($id_mahasiswa) {
         }
     }
 
-    // ============================================================
-    // 2. AMBIL DATA TUGAS (URGENSI) - HANYA URGENT
-    // ============================================================
-    // Query hanya untuk tugas yang deadline-nya hari ini atau besok (truly urgent)
     $queryTugas = "SELECT tenggatTugas FROM Tugas 
                    WHERE id_mahasiswa = $id_mahasiswa 
                    AND tenggatTugas >= CURDATE() 
@@ -41,26 +34,13 @@ function hitungStressLevel($id_mahasiswa) {
     
     $total_tugas = $tugas_mendesak;
 
-    // ============================================================
-    // 3. HITUNG SKOR STRESS KOTOR (GROSS STRESS)
-    // ============================================================
-
-    // A. Beban Rutin (Max 60%)
     $skor_beban_rutin = ($total_sks * 1.2) + ($total_jam_kuliah * 0.8);
     if ($skor_beban_rutin > 60) $skor_beban_rutin = 60; 
 
-    // B. Tekanan Waktu - HANYA TUGAS URGENT
-    // Setiap tugas urgent (deadline hari ini/besok) = 25 poin
     $skor_tekanan_tugas = $tugas_mendesak * 25;
 
-    // Total Stress Awal (Sebelum dikurangi Me-Time)
     $stress_kotor = $skor_beban_rutin + $skor_tekanan_tugas;
 
-    // ============================================================
-    // 4. [BARU] HITUNG PENGURANGAN DARI ME-TIME (RECOVERY)
-    // ============================================================
-    // Kita cari aktivitas Mood dalam 3 hari terakhir
-    
     $queryRecovery = "SELECT waktuMeTime FROM Mood 
                       WHERE id_mahasiswa = $id_mahasiswa 
                       AND tanggalLogMood >= DATE_SUB(NOW(), INTERVAL 3 DAY)";
@@ -70,7 +50,7 @@ function hitungStressLevel($id_mahasiswa) {
 
     if ($resultRecovery) {
         while ($row = mysqli_fetch_assoc($resultRecovery)) {
-            // Konversi "01:30:00" menjadi angka desimal (1.5 jam)
+
             $timeParts = explode(':', $row['waktuMeTime']);
             $jam   = isset($timeParts[0]) ? (int)$timeParts[0] : 0;
             $menit = isset($timeParts[1]) ? (int)$timeParts[1] : 0;
@@ -79,23 +59,14 @@ function hitungStressLevel($id_mahasiswa) {
         }
     }
 
-    // RUMUS PENGURANGAN:
-    // Setiap 1 jam Me-Time mengurangi 5 poin stress
     $skor_recovery = $total_jam_metime * 5;
 
-    // Batasi pengurangan maksimal 30 poin (supaya stress tidak jadi minus berlebihan)
     if ($skor_recovery > 30) {
         $skor_recovery = 30;
     }
 
-    // ============================================================
-    // 5. HITUNGAN FINAL
-    // ============================================================
-    
-    // Kurangi Stress Awal dengan Skor Recovery
     $totalStress = $stress_kotor - $skor_recovery;
 
-    // Normalisasi (Pastikan range 0 - 100)
     if ($totalStress > 100) $totalStress = 100;
     if ($totalStress < 0) $totalStress = 0;
 
@@ -105,12 +76,11 @@ function hitungStressLevel($id_mahasiswa) {
         'total_jam'      => round($total_jam_kuliah, 1),
         'total_tugas'    => $total_tugas,
         'tugas_mendesak' => $tugas_mendesak,
-        // (Opsional) Kirim data recovery buat debugging kalau perlu
+
         'recovery_poin'  => round($skor_recovery) 
     ];
 }
 
-// ... (SISA KODE KE BAWAH: getRekomendasi & Handle POST TETAP SAMA) ...
 function getRekomendasi($stressLevel) {
     $rekomendasi = [];
 
