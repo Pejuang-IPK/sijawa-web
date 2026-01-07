@@ -10,7 +10,7 @@
     <title>SIJAWA - Sistem Jadwal Mahasiswa</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/style/style.css">   
+    <link rel="stylesheet" href="style/style.css?v=<?php echo time(); ?>">   
 </head>
 <body>
     <nav>
@@ -24,8 +24,8 @@
             <li><a href="#pricing">Harga</a></li>
         </ul>
         <div class="auth-buttons">
-            <button class="btn btn-login" onclick="handleNavigation('login')">Masuk</button>
-            <button class="btn btn-register" onclick="handleNavigation('register')">Daftar</button>
+            <a class="btn btn-login" href="login.php">Masuk</a>
+            <a class="btn btn-register" href="register.php">Daftar</a>
         </div>
     </nav>
 
@@ -213,6 +213,6 @@
         </div>
     </footer>
 
-    <script src="/script/script.js"></script>
+    <script src="/script/script.js?v=2"></script>
 </body>
 </html>
